@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from '@/hooks/use-toast';
 import { defaultOpeningHours, sectionTypes, fontStyles, type OpeningHour, type SectionType } from '@/lib/types';
 import { t } from '@/lib/i18n';
@@ -44,6 +45,7 @@ export default function Register() {
   // Step 1: Account
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   // Step 2: Subdomain
   const [subdomain, setSubdomain] = useState('');
@@ -256,7 +258,20 @@ export default function Register() {
                   <Label>Lösenord</Label>
                   <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
                 </div>
-                <Button onClick={handleCreateAccount} disabled={loading || !email || !password} className="w-full">
+                <div className="flex items-start gap-2">
+                  <Checkbox
+                    id="terms"
+                    checked={acceptedTerms}
+                    onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+                    className="mt-0.5"
+                  />
+                  <label htmlFor="terms" className="text-sm text-muted-foreground leading-snug cursor-pointer">
+                    Jag godkänner{' '}
+                    <Link to="/anvandarvillkor" target="_blank" className="text-primary underline">användarvillkoren</Link> och{' '}
+                    <Link to="/integritetspolicy" target="_blank" className="text-primary underline">integritetspolicyn</Link>
+                  </label>
+                </div>
+                <Button onClick={handleCreateAccount} disabled={loading || !email || !password || !acceptedTerms} className="w-full">
                   {loading ? 'Skapar konto...' : 'Skapa konto & fortsätt'}
                 </Button>
                 <p className="text-sm text-center text-muted-foreground">
