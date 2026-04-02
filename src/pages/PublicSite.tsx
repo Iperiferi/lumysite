@@ -223,7 +223,7 @@ export default function PublicSite() {
             <div className="grid md:grid-cols-3 gap-6">
               {accommodations.map(a => (
                 <div key={a.id} className="border rounded-xl overflow-hidden">
-                  {a.image_url && <img src={a.image_url} alt={a.name} className="w-full h-48 object-cover" loading="lazy" />}
+                  {a.image_url && <img src={a.image_url} alt={a.name} className="w-full h-48 object-cover" style={{ objectPosition: (a as any).focal_point || '50% 50%' }} loading="lazy" />}
                   <div className="p-4">
                     <h3 className="font-semibold text-lg">{a.name}</h3>
                     {a.description && <p className="text-muted-foreground text-sm mt-1">{a.description}</p>}
