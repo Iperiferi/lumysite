@@ -21,7 +21,7 @@ export default function TermsOfService() {
             <h2 className="text-xl font-semibold mb-3">1. Om tjänsten</h2>
             <p className="text-muted-foreground">
               LumySite är en webbaserad tjänst som låter företag inom turism- och besöksnäring skapa
-              och publicera egna hemsidor. Tjänsten tillhandahålls av <strong>[FYLL I: Företagsnamn, Org.nr]</strong>.
+              och publicera egna hemsidor. Tjänsten tillhandahålls av <strong>Iperiferi AB</strong> (org.nr 559336-5090).
             </p>
           </section>
 
@@ -114,18 +114,17 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold mb-3">10. Tillämplig lag och tvister</h2>
             <p className="text-muted-foreground">
-              Dessa villkor regleras av svensk lag. Tvister avgörs av svensk allmän domstol med
-              [FYLL I: ort] tingsrätt som första instans.
+              Dessa villkor regleras av svensk lag. Tvister avgörs av svensk allmän domstol.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold mb-3">11. Kontakt</h2>
             <p className="text-muted-foreground">
-              <strong>[FYLL I: Företagsnamn]</strong><br />
-              [FYLL I: Adress]<br />
-              E-post: <strong>[FYLL I: e-postadress]</strong><br />
-              Telefon: <strong>[FYLL I: telefonnummer]</strong>
+              <strong>Iperiferi AB</strong><br />
+              Org.nr: 559336-5090<br />
+              Telefon: 070-508 54 93<br />
+              E-post: josefin@iperiferi.se
             </p>
           </section>
         </div>
@@ -136,7 +135,7 @@ export default function TermsOfService() {
           <Link to="/cookies" className="hover:underline">Cookiepolicy</Link>
           <Link to="/integritetspolicy" className="hover:underline">Integritetspolicy</Link>
         </div>
-        <p>© {new Date().getFullYear()} LumySite</p>
+        <p>© {new Date().getFullYear()} LumySite — Iperiferi AB</p>
       </footer>
     </div>
   );
