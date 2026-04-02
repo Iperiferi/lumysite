@@ -206,9 +206,22 @@ export default function PublicSite() {
             <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{menu.title || t('nav.menu', lang)}</h2>
             {menu.content && <div className="whitespace-pre-line text-muted-foreground">{menu.content}</div>}
             {menu.pdf_url && (
-              <div className="mt-4 space-y-3">
+              <div className="mt-4 space-y-4">
+                <object
+                  data={menu.pdf_url}
+                  type="application/pdf"
+                  className="w-full rounded-lg border"
+                  style={{ height: '600px' }}
+                >
+                  <p className="text-muted-foreground text-sm">
+                    Din webbläsare kan inte visa PDF:en direkt.{' '}
+                    <a href={menu.pdf_url} target="_blank" rel="noopener noreferrer" className="underline font-medium" style={{ color: accent }}>
+                      Klicka här för att öppna den
+                    </a>.
+                  </p>
+                </object>
                 <a href={menu.pdf_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors" style={{ backgroundColor: accent, color: '#fff' }}>
-                  Visa meny (PDF)
+                  Öppna meny i ny flik
                 </a>
               </div>
             )}
