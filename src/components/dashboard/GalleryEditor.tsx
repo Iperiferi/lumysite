@@ -82,15 +82,21 @@ export default function GalleryEditor({ businessId }: { businessId: string }) {
         {items.map(item => (
           <div key={item.id} className="relative group space-y-1">
             {editingFocal === item.id ? (
-              <div className="space-y-1">
+              <>
                 <FocalPointPicker
                   imageUrl={item.image_url}
                   focalPoint={item.focal_point || '50% 50%'}
                   onChange={(fp) => handleFocalChange(item.id, fp)}
                   className="w-full"
                 />
+                <Input
+                  placeholder="Bildbeskrivning (alt-text)"
+                  defaultValue={item.alt_text || ''}
+                  onBlur={e => handleAltTextChange(item.id, e.target.value)}
+                  className="text-xs h-7"
+                />
                 <Button size="sm" variant="outline" className="w-full text-xs" onClick={() => setEditingFocal(null)}>Klar</Button>
-              </div>
+              </>
             ) : (
               <>
                 <img
@@ -104,14 +110,14 @@ export default function GalleryEditor({ businessId }: { businessId: string }) {
                 <Button variant="destructive" size="icon" className="h-6 w-6 absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition" onClick={() => handleDelete(item.id)}>
                   <Trash2 className="w-3 h-3" />
                 </Button>
+                <Input
+                  placeholder="Bildbeskrivning (alt-text)"
+                  defaultValue={item.alt_text || ''}
+                  onBlur={e => handleAltTextChange(item.id, e.target.value)}
+                  className="text-xs h-7"
+                />
               </>
             )}
-            <Input
-              placeholder="Bildbeskrivning (alt-text)"
-              defaultValue={item.alt_text || ''}
-              onBlur={e => handleAltTextChange(item.id, e.target.value)}
-              className="text-xs h-7"
-            />
           </div>
         ))}
       </div>
