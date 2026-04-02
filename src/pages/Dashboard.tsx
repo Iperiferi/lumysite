@@ -365,7 +365,11 @@ export default function Dashboard() {
                 <div className="space-y-2">
                   <Label>Hero-bild</Label>
                   {data.business.hero_image_url && (
-                    <img src={data.business.hero_image_url} alt="Hero" className="w-full h-40 object-cover border rounded" />
+                    <FocalPointPicker
+                      imageUrl={data.business.hero_image_url}
+                      focalPoint={heroFocalPoint}
+                      onChange={setHeroFocalPoint}
+                    />
                   )}
                   <Input type="file" accept="image/*" onChange={e => e.target.files?.[0] && handleHeroUpload(e.target.files[0])} />
                 </div>
