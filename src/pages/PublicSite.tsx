@@ -45,6 +45,12 @@ function SeoHead({ business, subdomain }: { business: any; subdomain: string }) 
     if (canonical) { canonical.href = canonicalUrl; }
     else { canonical = document.createElement('link'); canonical.rel = 'canonical'; canonical.href = canonicalUrl; document.head.appendChild(canonical); }
 
+    // Alternate link to prerendered static version for crawlers
+    const prerenderUrl = `https://bqakitontnhjruiphpbq.supabase.co/functions/v1/render-site?subdomain=${encodeURIComponent(subdomain)}`;
+    let alternate = document.querySelector('link[rel="alternate"][type="text/html"]') as HTMLLinkElement | null;
+    if (alternate) { alternate.href = prerenderUrl; }
+    else { alternate = document.createElement('link'); alternate.rel = 'alternate'; alternate.type = 'text/html'; alternate.href = prerenderUrl; document.head.appendChild(alternate); }
+
     // JSON-LD with url and sameAs
     let script = document.getElementById('jsonld');
     if (!script) { script = document.createElement('script'); script.id = 'jsonld'; script.setAttribute('type', 'application/ld+json'); document.head.appendChild(script); }
