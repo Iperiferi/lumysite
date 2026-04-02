@@ -49,7 +49,7 @@ export default function Contact() {
             </div>
             <div className="flex items-center gap-3 text-muted-foreground">
               <Mail className="w-5 h-5 text-primary shrink-0" />
-              <a href="mailto:josefin@iperiferi.se" className="hover:underline">josefin@iperiferi.se</a>
+              <a href="mailto:info@iperiferi.se" className="hover:underline">info@iperiferi.se</a>
             </div>
             <div className="flex items-center gap-3 text-muted-foreground">
               <Globe className="w-5 h-5 text-primary shrink-0" />

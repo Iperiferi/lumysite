@@ -98,7 +98,7 @@ export default function PrivacyPolicy() {
               <li><strong>Begränsning:</strong> Begära att behandlingen begränsas tillfälligt</li>
             </ul>
             <p className="text-muted-foreground mt-3">
-              Kontakta oss på <strong>josefin@iperiferi.se</strong> för att utöva dina rättigheter. Vi svarar inom 30 dagar.
+              Kontakta oss på <strong>info@iperiferi.se</strong> för att utöva dina rättigheter. Vi svarar inom 30 dagar.
             </p>
           </section>
 
