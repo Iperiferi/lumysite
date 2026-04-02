@@ -1,30 +1,42 @@
 
 
-# Fix: Blockera dashboard utan aktivt abonnemang
+# Innehållsredigerare för sektioner i dashboarden
 
-## Problem
-Verksamheten skapas i databasen **innan** användaren betalar. Om de avbryter betalningen finns verksamheten redan, och dashboarden visar den utan att kontrollera `subscribed`-statusen.
+## Vad som byggs
+Varje aktiverad sektion i "Sektioner"-fliken ska kunna fyllas med innehåll direkt i dashboarden. Under varje toggle visas en inline-redigerare när sektionen är aktiverad.
 
-## Lösning
+## Sektionstyper och deras fält
 
-### 1. Lägg till betalningsspärr i Dashboard
-I `src/pages/Dashboard.tsx`: Om `subscribed` är `false` och användaren inte just kom från en lyckad checkout, visa en "betala för att fortsätta"-vy istället för den vanliga dashboarden. Denna vy innehåller en knapp som startar Stripe checkout igen.
+| Sektion | Fält | Uppladdning |
+|---------|------|-------------|
+| **Tjänster** | Namn, Beskrivning | Nej |
+| **Galleri** | Bild, Alt-text | Ja (bild) |
+| **Meny** | Titel, Innehåll (text), PDF | Ja (PDF) |
+| **Evenemang** | Titel, Beskrivning, Datum, Bild | Ja (bild) |
+| **Boende** | Namn, Beskrivning, Bild | Ja (bild) |
+| **Upplevelser** | Namn, Beskrivning, Bild | Ja (bild) |
+| **Omdömen** | Författare, Innehåll | Nej |
+| **Nyheter** | Titel, Innehåll, Datum, Bild | Ja (bild) |
 
-### 2. Hantera avbruten checkout i Register
-I `src/pages/Register.tsx`: Lägg till en `useEffect` som kollar `searchParams` efter `checkout=cancelled`. Om användaren redan har en verksamhet (finns i DB), visa ett meddelande om att betalningen avbröts med en knapp att försöka igen, istället för att visa registreringsformuläret på nytt.
+## Implementering
 
-### 3. Alternativt: Skjut upp skapandet av verksamheten
-Flytta `handlePublish`-logiken så att verksamheten skapas **efter** lyckad betalning istället för innan. Det kräver att vi mellanlagrar formulärdata (t.ex. i `localStorage`) och skapar verksamheten i dashboardens `checkout=success`-hanterare.
+### 1. Skapa editorkomponenter (`src/components/dashboard/`)
+En komponent per sektionstyp. Alla följer samma mönster:
+- Tar emot `businessId` som prop
+- Använder `useQuery` för att hämta befintliga poster
+- CRUD-operationer direkt mot databasen (inte via "Spara"-knappen)
+- Lista med kort + "Lägg till"-knapp
+- Bilduppladdning till storage-bucket `section-images` (behöver skapas)
 
-**Rekommendation:** Alternativ 1+2 är enklast och säkrast. Alternativ 3 är renare men mer komplex.
+### 2. Integrera i Dashboard Sektioner-fliken
+Under varje toggle i `Dashboard.tsx` visas editorn inline när sektionen är aktiverad. Toggle-ändringen sparas direkt (inte bara i state).
+
+### 3. Storage bucket
+Skapa en ny storage bucket `section-images` för bilder till evenemang, boende, upplevelser, nyheter och galleri. PDF:er för meny kan gå i en `menu-files` bucket.
 
 ### Tekniska detaljer
-
-**Dashboard.tsx** — Lägg till spärr efter laddning:
-- Om `!subscribed` och `!searchParams.get('checkout')`, visa ett kort med "Ditt abonnemang är inte aktivt" + knapp som anropar `create-checkout` och redirectar till Stripe.
-
-**Register.tsx** — Hantera `checkout=cancelled`:
-- Kolla om användaren redan har en verksamhet (hämta via `useOwnerBusiness`)
-- Om ja, visa meddelande "Betalningen avbröts" med knapp att försöka igen (anropa `create-checkout`)
-- Om nej, visa registreringsformuläret som vanligt
+- 8 nya komponenter i `src/components/dashboard/`: `ServicesEditor`, `GalleryEditor`, `MenuEditor`, `EventsEditor`, `AccommodationsEditor`, `ExperiencesEditor`, `TestimonialsEditor`, `NewsEditor`
+- Alla tabeller har redan RLS-policies på plats
+- Varje editor gör egna `insert`/`update`/`delete` och `invalidateQueries`
+- Dashboard.tsx importerar editorerna och visar dem villkorligt under respektive toggle
 
