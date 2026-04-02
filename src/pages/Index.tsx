@@ -95,9 +95,6 @@ export default function Index() {
             </div>
           </div>
 
-          <p className="text-center text-sm text-muted-foreground">
-            Du behöver inte veta vad "schema markup" betyder — vi sköter tekniken åt dig automatiskt.
-          </p>
         </div>
       </section>
 
