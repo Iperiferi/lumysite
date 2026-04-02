@@ -120,10 +120,16 @@ export default function ImageItemEditor({
         {dateField && <Input type="date" value={date} onChange={e => setDate(e.target.value)} />}
         <div className="flex gap-2">
           <Button size="sm" onClick={() => handleAdd()} disabled={!name.trim() || uploading}>+ Utan bild</Button>
-          <label className="cursor-pointer">
-            <Input type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && handleAdd(e.target.files[0])} />
-            <Button size="sm" variant="outline" asChild disabled={!name.trim() || uploading}><span>+ Med bild</span></Button>
-          </label>
+          <Button size="sm" variant="outline" disabled={!name.trim() || uploading} onClick={() => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => {
+              const file = (e.target as HTMLInputElement).files?.[0];
+              if (file) handleAdd(file);
+            };
+            input.click();
+          }}>+ Med bild</Button>
         </div>
       </div>
     </div>
