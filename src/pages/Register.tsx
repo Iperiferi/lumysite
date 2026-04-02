@@ -261,8 +261,11 @@ export default function Register() {
 
                 {/* Opening hours */}
                 <div className="space-y-2">
-                  <Label>Öppettider</Label>
-                  {openingHours.map((h, i) => (
+                  <div className="flex items-center justify-between">
+                    <Label>Visa öppettider på sidan</Label>
+                    <Switch checked={showOpeningHours} onCheckedChange={setShowOpeningHours} />
+                  </div>
+                  {showOpeningHours && openingHours.map((h, i) => (
                     <div key={h.day} className="flex items-center gap-2 text-sm">
                       <span className="w-20">{dayLabels[h.day]}</span>
                       <Switch checked={!h.closed} onCheckedChange={v => updateHour(i, 'closed', !v)} />
