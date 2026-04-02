@@ -134,17 +134,19 @@ export default function PublicSite() {
         <section id="info" className="py-16 border-t">
           <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.info', lang)}</h2>
           <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="font-semibold mb-3 flex items-center gap-2"><Clock className="w-5 h-5" /> {t('site.openingHours', lang)}</h3>
-              <div className="space-y-1">
-                {(business.opening_hours || []).map((h: any, i: number) => (
-                  <div key={i} className="flex justify-between text-sm">
-                    <span>{dayLabels[i]}</span>
-                    <span>{h.closed ? t('site.closed', lang) : `${h.open} – ${h.close}`}</span>
-                  </div>
-                ))}
+            {(business.opening_hours || []).length > 0 && (
+              <div>
+                <h3 className="font-semibold mb-3 flex items-center gap-2"><Clock className="w-5 h-5" /> {t('site.openingHours', lang)}</h3>
+                <div className="space-y-1">
+                  {(business.opening_hours || []).map((h: any, i: number) => (
+                    <div key={i} className="flex justify-between text-sm">
+                      <span>{dayLabels[i]}</span>
+                      <span>{h.closed ? t('site.closed', lang) : `${h.open} – ${h.close}`}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             <div className="space-y-3">
               {business.address && (
                 <div className="flex items-start gap-2"><MapPin className="w-5 h-5 mt-0.5 shrink-0" /><span>{business.address}</span></div>
