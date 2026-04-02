@@ -251,6 +251,9 @@ export default function Dashboard() {
           >
             {data.business.is_published ? 'Avpublicera' : 'Publicera'}
           </Button>
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/konto"><Settings className="w-4 h-4" /></Link>
+          </Button>
           <Button variant="ghost" size="sm" onClick={() => { signOut(); navigate('/'); }}>
             <LogOut className="w-4 h-4" />
           </Button>
