@@ -1,5 +1,5 @@
 import { useParams, Navigate } from 'react-router-dom';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useBusinessBySubdomain } from '@/hooks/useBusiness';
 
