@@ -77,7 +77,7 @@ export default function Contact() {
             <div>
               <h3 className="font-medium mb-1">Kan jag använda en egen domän?</h3>
               <p className="text-muted-foreground text-sm">
-                Just nu får du en subdomän (dittföretag.lumysite.se). Stöd för egna domäner kommer snart.
+                Just nu får du en egen adress (lumysite.com/dittforetag). Stöd för egna domäner kommer snart.
               </p>
             </div>
             <div>

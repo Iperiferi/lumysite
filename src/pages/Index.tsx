@@ -146,7 +146,7 @@ export default function Index() {
             <p className="text-sm text-muted-foreground mb-6">exkl. moms</p>
             <ul className="text-sm text-left space-y-2 mb-8">
               {[
-                'Egen subdomän (dittföretag.lumysite.se)',
+                'Egen webbadress (lumysite.com/dittforetag)',
                 'Mobilanpassad design',
                 'Flerspråkig (SV/EN/DE)',
                 'SEO & AI-optimerad med strukturerad data',

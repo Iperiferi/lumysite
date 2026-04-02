@@ -256,15 +256,23 @@ export default function PublicSite() {
             <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{menu.title || t('nav.menu', lang)}</h2>
             {menu.content && <div className="whitespace-pre-line text-muted-foreground">{menu.content}</div>}
             {menu.pdf_url && (
-              <div className="mt-4">
+              <div className="mt-4 flex flex-wrap gap-3">
+                <a
+                  href={menu.pdf_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                  style={{ backgroundColor: accent, color: '#fff' }}
+                >
+                  Öppna meny (PDF)
+                </a>
                 <button
                   type="button"
                   onClick={handleMenuDownload}
                   disabled={isDownloadingMenu}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-70"
-                  style={{ backgroundColor: accent, color: '#fff' }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-colors disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {isDownloadingMenu ? 'Laddar ner meny...' : 'Ladda ner meny (PDF)'}
+                  {isDownloadingMenu ? 'Laddar ner...' : 'Ladda ner PDF'}
                 </button>
               </div>
             )}

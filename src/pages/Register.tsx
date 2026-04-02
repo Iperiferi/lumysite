@@ -16,7 +16,7 @@ import { t } from '@/lib/i18n';
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const STEPS = ['Konto', 'Subdomän', 'Information', 'Varumärke', 'Sektioner', 'Publicera'];
+const STEPS = ['Konto', 'Webbadress', 'Information', 'Varumärke', 'Sektioner', 'Publicera'];
 
 export default function Register() {
   const navigate = useNavigate();
@@ -284,10 +284,10 @@ export default function Register() {
             {step === 1 && (
               <>
                 <div className="space-y-2">
-                  <Label>Välj subdomännamn</Label>
+                  <Label>Välj din webbadress</Label>
                   <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">lumysite.com/</span>
                     <Input value={subdomain} onChange={e => checkSubdomain(e.target.value)} placeholder="mittforetag" />
-                    <span className="text-sm text-muted-foreground whitespace-nowrap">.lumysite.se</span>
                   </div>
                   {subdomainAvailable === true && <p className="text-sm text-green-600">✓ Tillgängligt!</p>}
                   {subdomainAvailable === false && <p className="text-sm text-destructive">✗ Redan upptaget</p>}

@@ -31,7 +31,7 @@ export default function TermsOfService() {
               <li>Du måste vara minst 18 år för att registrera ett konto</li>
               <li>Du ansvarar för att hålla dina inloggningsuppgifter säkra</li>
               <li>Du ansvarar för all aktivitet som sker via ditt konto</li>
-              <li>Varje konto får en unik subdomän (dittföretag.lumysite.se)</li>
+              <li>Varje konto får en unik webbadress (lumysite.com/dittforetag)</li>
             </ul>
           </section>
 
