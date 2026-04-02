@@ -210,7 +210,6 @@ export default function PublicSite() {
                 <a href={menu.pdf_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors" style={{ backgroundColor: accent, color: '#fff' }}>
                   Visa meny (PDF)
                 </a>
-                <iframe src={`${menu.pdf_url}#toolbar=1`} className="w-full h-[600px] border rounded" title="Menu PDF" />
               </div>
             )}
           </section>
