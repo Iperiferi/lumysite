@@ -95,7 +95,7 @@ export default function Dashboard() {
         phone,
         email: bizEmail,
         google_maps_embed: googleMaps,
-        opening_hours: openingHours as any,
+        opening_hours: showOpeningHours ? (openingHours as any) : [],
         accent_color: accentColor,
         font_style: fontStyle,
         cta_text: ctaText,
