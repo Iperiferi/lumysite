@@ -39,6 +39,7 @@ export default function Dashboard() {
     accommodations: false, experiences: false, testimonials: false, news: false,
   });
   const [faqItems, setFaqItems] = useState<{ id?: string; question: string; answer: string }[]>([]);
+  const [showOpeningHours, setShowOpeningHours] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
