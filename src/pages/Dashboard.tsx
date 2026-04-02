@@ -15,6 +15,12 @@ import { defaultOpeningHours, sectionTypes, fontStyles, type OpeningHour, type S
 import { t } from '@/lib/i18n';
 import { LogOut, Eye } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
+import ServicesEditor from '@/components/dashboard/ServicesEditor';
+import GalleryEditor from '@/components/dashboard/GalleryEditor';
+import MenuEditor from '@/components/dashboard/MenuEditor';
+import EventsEditor from '@/components/dashboard/EventsEditor';
+import TestimonialsEditor from '@/components/dashboard/TestimonialsEditor';
+import ImageItemEditor from '@/components/dashboard/ImageItemEditor';
 
 export default function Dashboard() {
   const { user, loading: authLoading, signOut, subscribed, checkSubscription } = useAuth();
@@ -361,12 +367,35 @@ export default function Dashboard() {
               <CardContent className="space-y-3">
                 <p className="text-sm text-muted-foreground">Aktivera eller inaktivera sektioner på din publika sida.</p>
                 {sectionTypes.map(s => (
-                  <div key={s.type} className="flex items-center justify-between p-3 border rounded-lg">
-                    <span className="font-medium">{t(s.labelKey)}</span>
-                    <Switch
-                      checked={enabledSections[s.type]}
-                      onCheckedChange={v => setEnabledSections({ ...enabledSections, [s.type]: v })}
-                    />
+                  <div key={s.type} className="p-3 border rounded-lg space-y-0">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium">{t(s.labelKey)}</span>
+                      <Switch
+                        checked={enabledSections[s.type]}
+                        onCheckedChange={v => setEnabledSections({ ...enabledSections, [s.type]: v })}
+                      />
+                    </div>
+                    {enabledSections[s.type] && data && (
+                      <>
+                        {s.type === 'services' && <ServicesEditor businessId={data.business.id} />}
+                        {s.type === 'gallery' && <GalleryEditor businessId={data.business.id} />}
+                        {s.type === 'menu' && <MenuEditor businessId={data.business.id} />}
+                        {s.type === 'events' && <EventsEditor businessId={data.business.id} />}
+                        {s.type === 'accommodations' && (
+                          <ImageItemEditor businessId={data.business.id} table="accommodations" bucket="accommodation-images"
+                            nameField="name" namePlaceholder="Namn på boende" descField="description" descPlaceholder="Beskrivning" addLabel="Boende" />
+                        )}
+                        {s.type === 'experiences' && (
+                          <ImageItemEditor businessId={data.business.id} table="experiences" bucket="experience-images"
+                            nameField="name" namePlaceholder="Namn på upplevelse" descField="description" descPlaceholder="Beskrivning" addLabel="Upplevelse" />
+                        )}
+                        {s.type === 'testimonials' && <TestimonialsEditor businessId={data.business.id} />}
+                        {s.type === 'news' && (
+                          <ImageItemEditor businessId={data.business.id} table="news" bucket="news-images"
+                            nameField="title" namePlaceholder="Rubrik" descField="content" descPlaceholder="Innehåll" addLabel="Nyhet" dateField="published_date" />
+                        )}
+                      </>
+                    )}
                   </div>
                 ))}
               </CardContent>
