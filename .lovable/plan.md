@@ -1,23 +1,35 @@
 
 
-## SEO-förbättringar för PublicSite
+## Prerender Edge Function & Sitemap för bot-synlighet
 
-Uppdatera `SeoHead`-komponenten i `src/pages/PublicSite.tsx` med följande:
+### Översikt
+Två nya backend-funktioner som serverar fullständig HTML till crawlers och en sitemap för sökmotorer. Ingen påverkan på hur sidan ser ut för vanliga besökare.
 
-### Ändringar
+### Steg
 
-**1. Open Graph-taggar** — Lägg till `og:title`, `og:description`, `og:image`, `og:type`, `og:url` dynamiskt i `useEffect`. Dessa gör att sidan ser bra ut vid delning på Facebook, LinkedIn, och i AI-chattar.
+**1. Skapa `supabase/functions/render-site/index.ts`**
+- Tar `?subdomain=xxx` som query-parameter
+- Hämtar business-data från `businesses_public` + alla relaterade tabeller (services, accommodations, experiences, gallery, menu, events, testimonials, news, faq) via Supabase service role key
+- Bygger och returnerar en komplett HTML-sida (`Content-Type: text/html`) med:
+  - Korrekt `<title>`, meta description, Open Graph, Twitter Card-taggar
+  - JSON-LD (LocalBusiness)
+  - All textinnehåll i semantisk HTML (`<main>`, `<section>`, `<h1>`–`<h3>`, `<p>`, `<address>`, `<img>` med alt-text)
+  - Enkel inline CSS för läsbarhet (ingen JavaScript)
+  - Öppettider, kontaktinfo, sociala länkar
+- Returnerar 404 om subdomain inte finns eller inte är publicerad
 
-**2. Canonical URL** — Lägg till `<link rel="canonical">` som pekar på `https://lumysite.lovable.app/site/{subdomain}` för att undvika duplicerat innehåll.
+**2. Skapa `supabase/functions/sitemap/index.ts`**
+- Hämtar alla publicerade businesses från `businesses_public`
+- Genererar XML-sitemap med URLs som pekar på render-site-funktionen
+- `Content-Type: application/xml`
 
-**3. Bättre alt-texter på logo och hero** — Sätt `alt={business.business_name}` på logotypen och `alt={business.short_description || business.business_name}` på hero-bilden (istället för tomma strängar).
+**3. Uppdatera `src/pages/PublicSite.tsx`**
+- I `SeoHead`: lägg till en `<link rel="alternate">` som pekar på render-site URL:en så att crawlers som hittar SPA-versionen kan följa länken till den statiska versionen
 
-**4. Utökad JSON-LD** — Lägg till `url` och `sameAs` (Facebook, Instagram, TikTok, YouTube, LinkedIn) i det befintliga JSON-LD-blocket.
+### Filer som skapas/ändras
+- `supabase/functions/render-site/index.ts` (ny)
+- `supabase/functions/sitemap/index.ts` (ny)
+- `src/pages/PublicSite.tsx` (liten ändring i SeoHead)
 
-**5. Semantic `<main>`-tagg** — Wrappa sidinnehållet i `<main>` för bättre tillgänglighet och SEO-signaler.
-
-### Filer som ändras
-- `src/pages/PublicSite.tsx` (enda filen)
-
-Inga databasändringar behövs.
+Inga databasändringar behövs — alla tabeller och RLS-policies finns redan.
 
