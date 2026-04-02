@@ -1,5 +1,6 @@
 import { useParams, Navigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { Menu, X } from 'lucide-react';
 import { useBusinessBySubdomain } from '@/hooks/useBusiness';
 
 const RESERVED_ROUTES = ['dashboard', 'logga-in', 'registrera', 'cookies', 'integritetspolicy', 'anvandarvillkor', 'kontakt', 'konto'];
