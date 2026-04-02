@@ -274,7 +274,7 @@ export default function PublicSite() {
             <div className="grid md:grid-cols-2 gap-6">
               {news.map(n => (
                 <article key={n.id} className="border rounded-xl overflow-hidden">
-                  {n.image_url && <img src={n.image_url} alt={n.title} className="w-full h-48 object-cover" loading="lazy" />}
+                  {n.image_url && <img src={n.image_url} alt={n.title} className="w-full h-48 object-cover" style={{ objectPosition: (n as any).focal_point || '50% 50%' }} loading="lazy" />}
                   <div className="p-4">
                     {n.published_date && <p className="text-sm" style={{ color: accent }}>{new Date(n.published_date).toLocaleDateString('sv-SE')}</p>}
                     <h3 className="font-semibold text-lg">{n.title}</h3>
