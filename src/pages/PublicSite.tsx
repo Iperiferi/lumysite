@@ -47,6 +47,12 @@ function SeoHead({ business }: { business: any }) {
 
 export default function PublicSite() {
   const { subdomain } = useParams();
+
+  // Guard against reserved routes that might leak through
+  if (subdomain && RESERVED_ROUTES.includes(subdomain)) {
+    return <Navigate to={`/${subdomain}`} replace />;
+  }
+
   const { data, isLoading, error } = useBusinessBySubdomain(subdomain);
   const [lang, setLang] = useState<Language>('sv');
   const [isDownloadingMenu, setIsDownloadingMenu] = useState(false);
