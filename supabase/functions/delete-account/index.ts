@@ -3,6 +3,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 }
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import Stripe from 'https://esm.sh/stripe@18.5.0'
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -61,6 +62,28 @@ Deno.serve(async (req) => {
 
       // Delete the business itself
       await adminClient.from('businesses').delete().eq('id', businessId)
+    }
+
+    // Cancel Stripe subscription if exists
+    const stripeKey = Deno.env.get('STRIPE_SECRET_KEY')
+    if (stripeKey && user.email) {
+      try {
+        const stripe = new Stripe(stripeKey, { apiVersion: '2025-08-27.basil' })
+        const customers = await stripe.customers.list({ email: user.email, limit: 1 })
+        if (customers.data.length > 0) {
+          const customerId = customers.data[0].id
+          const subscriptions = await stripe.subscriptions.list({ customer: customerId, status: 'active' })
+          for (const sub of subscriptions.data) {
+            await stripe.subscriptions.cancel(sub.id)
+            console.log('Cancelled Stripe subscription:', sub.id)
+          }
+          // Optionally delete the Stripe customer too
+          await stripe.customers.del(customerId)
+          console.log('Deleted Stripe customer:', customerId)
+        }
+      } catch (stripeErr) {
+        console.error('Stripe cleanup error (non-fatal):', stripeErr)
+      }
     }
 
     // Delete the auth user
