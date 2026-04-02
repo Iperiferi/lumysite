@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { defaultOpeningHours, sectionTypes, fontStyles, type OpeningHour, type SectionType } from '@/lib/types';
 import { t } from '@/lib/i18n';
-import { LogOut, Eye } from 'lucide-react';
+import { LogOut, Eye, Settings } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import ServicesEditor from '@/components/dashboard/ServicesEditor';
 import GalleryEditor from '@/components/dashboard/GalleryEditor';
