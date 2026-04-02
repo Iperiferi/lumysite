@@ -26,21 +26,50 @@ export default function ServicesEditor({ businessId }: { businessId: string }) {
   };
 
   const handleAdd = async () => {
-    if (!name.trim()) return;
-    await supabase.from('services').insert({ business_id: businessId, name, description, sort_order: items.length });
-    setName(''); setDescription('');
-    invalidate();
-    toast({ title: 'Tjänst tillagd' });
+    const trimmedName = name.trim();
+    const trimmedDescription = description.trim();
+
+    if (!trimmedName) return;
+
+    try {
+      const { error } = await supabase.from('services').insert({
+        business_id: businessId,
+        name: trimmedName,
+        description: trimmedDescription || null,
+        sort_order: items.length,
+      });
+
+      if (error) throw error;
+
+      setName('');
+      setDescription('');
+      invalidate();
+      toast({ title: 'Tjänst tillagd' });
+    } catch (err: any) {
+      toast({ title: 'Fel', description: err.message, variant: 'destructive' });
+    }
   };
 
   const handleDelete = async (id: string) => {
-    await supabase.from('services').delete().eq('id', id);
-    invalidate();
-    toast({ title: 'Tjänst borttagen' });
+    try {
+      const { error } = await supabase.from('services').delete().eq('id', id);
+      if (error) throw error;
+
+      invalidate();
+      toast({ title: 'Tjänst borttagen' });
+    } catch (err: any) {
+      toast({ title: 'Fel', description: err.message, variant: 'destructive' });
+    }
   };
 
+  const hasDraft = !!name.trim() || !!description.trim();
+
   return (
-    <div className="mt-3 space-y-3 pl-4 border-l-2 border-primary/20">
+    <div
+      className="mt-3 space-y-3 pl-4 border-l-2 border-primary/20"
+      data-inline-dirty={hasDraft ? 'true' : 'false'}
+      data-inline-dirty-label="tjänst"
+    >
       {items.map(item => (
         <div key={item.id} className="flex items-start gap-2 p-2 bg-muted/50 rounded">
           <div className="flex-1">
@@ -55,6 +84,7 @@ export default function ServicesEditor({ businessId }: { businessId: string }) {
       <div className="space-y-2">
         <Input placeholder="Namn på tjänst" value={name} onChange={e => setName(e.target.value)} />
         <Textarea placeholder="Beskrivning (valfritt)" value={description} onChange={e => setDescription(e.target.value)} rows={2} />
+        <p className="text-xs text-muted-foreground">Tjänsten sparas först när du klickar på “+ Lägg till tjänst”.</p>
         <Button size="sm" onClick={handleAdd} disabled={!name.trim()}>+ Lägg till tjänst</Button>
       </div>
     </div>

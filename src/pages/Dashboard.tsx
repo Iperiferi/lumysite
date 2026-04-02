@@ -91,6 +91,18 @@ export default function Dashboard() {
 
   const handleSave = async () => {
     if (!data) return;
+
+    const dirtyInlineEditor = document.querySelector<HTMLElement>('[data-inline-dirty="true"]');
+    if (dirtyInlineEditor) {
+      const label = dirtyInlineEditor.dataset.inlineDirtyLabel || 'innehållet';
+      toast({
+        title: 'Lägg till posten först',
+        description: `Klicka på "+ Lägg till ${label}" innan du sparar sidan.`,
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setSaving(true);
     try {
       await supabase.from('businesses').update({
