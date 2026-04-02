@@ -47,7 +47,7 @@ export default function Index() {
           </p>
           <Button size="lg" asChild className="text-lg px-8 py-6">
             <Link to="/registrera">
-              Kom igång gratis <ArrowRight className="ml-2 w-5 h-5" />
+              Kom igång <ArrowRight className="ml-2 w-5 h-5" />
             </Link>
           </Button>
         </div>
