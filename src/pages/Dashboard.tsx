@@ -553,6 +553,34 @@ export default function Dashboard() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Published URL dialog */}
+      <AlertDialog open={showPublishedUrl} onOpenChange={setShowPublishedUrl}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>🎉 Sidan är publicerad!</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-4">
+                <p>Din sida är nu live. Dela adressen med dina kunder:</p>
+                <div className="flex items-center gap-2">
+                  <Input value={publicUrl} readOnly className="text-sm font-mono" />
+                  <Button size="icon" variant="outline" onClick={handleCopyUrl}>
+                    {urlCopied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                  </Button>
+                </div>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction asChild>
+              <a href={publicUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
+                Öppna sidan <ExternalLink className="w-4 h-4" />
+              </a>
+            </AlertDialogAction>
+            <AlertDialogCancel>Stäng</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
