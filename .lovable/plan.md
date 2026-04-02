@@ -1,30 +1,23 @@
 
 
-## Problem
+## SEO-förbättringar för PublicSite
 
-Kartan visas inte eftersom det sparade värdet är en **delningslänk** (`https://maps.app.goo.gl/...`) men iframe kräver en **inbäddningslänk** (`https://www.google.com/maps/embed?pb=...`). Google tillåter inte att vanliga delningslänkar visas i iframes.
+Uppdatera `SeoHead`-komponenten i `src/pages/PublicSite.tsx` med följande:
 
-## Lösning
+### Ändringar
 
-Uppdatera kartsektionen i `PublicSite.tsx` så den hanterar båda typerna av Google Maps-länkar:
+**1. Open Graph-taggar** — Lägg till `og:title`, `og:description`, `og:image`, `og:type`, `og:url` dynamiskt i `useEffect`. Dessa gör att sidan ser bra ut vid delning på Facebook, LinkedIn, och i AI-chattar.
 
-1. **Om användaren klistrar in en embed-URL** (`google.com/maps/embed`) — visa direkt i iframe som idag
-2. **Om användaren klistrar in en vanlig Maps-länk** (share-länk eller google.com/maps-länk) — visa den som en klickbar länk/knapp istället för iframe, eftersom Google blockerar dessa i iframes
+**2. Canonical URL** — Lägg till `<link rel="canonical">` som pekar på `https://lumysite.lovable.app/site/{subdomain}` för att undvika duplicerat innehåll.
 
-Alternativt kan vi använda Google Maps Embed API med `place`-läge baserat på adressen istället för att förlita sig på länken.
+**3. Bättre alt-texter på logo och hero** — Sätt `alt={business.business_name}` på logotypen och `alt={business.short_description || business.business_name}` på hero-bilden (istället för tomma strängar).
 
-### Tekniska detaljer
+**4. Utökad JSON-LD** — Lägg till `url` och `sameAs` (Facebook, Instagram, TikTok, YouTube, LinkedIn) i det befintliga JSON-LD-blocket.
 
-**Fil: `src/pages/PublicSite.tsx`**
-- Kontrollera om `google_maps_embed` innehåller `/maps/embed` — om ja, visa iframe
-- Om nej, använd Google Maps Embed API med adressen: `https://www.google.com/maps/embed/v1/place?key=API_KEY&q={address}` — men detta kräver en API-nyckel
-- Enklaste lösningen utan API-nyckel: byt till `https://maps.google.com/maps?q={address}&output=embed` som fungerar utan nyckel
+**5. Semantic `<main>`-tagg** — Wrappa sidinnehållet i `<main>` för bättre tillgänglighet och SEO-signaler.
 
-**Fil: `src/pages/Dashboard.tsx` och `src/pages/Register.tsx`**
-- Lägg till en hjälptext som förklarar att man ska klistra in en inbäddningslänk, eller
-- Automatiskt konvertera adressen till en fungerande embed-URL
+### Filer som ändras
+- `src/pages/PublicSite.tsx` (enda filen)
 
-### Rekommenderad approach
-
-Ignorera det sparade `google_maps_embed`-fältet för iframe-visning om det inte är en riktig embed-URL. Använd istället affärens `address`-fält för att generera en karta via `https://maps.google.com/maps?q=${encodeURIComponent(address)}&output=embed`. Behåll `google_maps_embed` som fallback om det faktiskt är en embed-URL.
+Inga databasändringar behövs.
 
