@@ -204,7 +204,7 @@ export default function PublicSite() {
             <div className="space-y-6">
               {events.map(e => (
                 <div key={e.id} className="flex gap-4 border rounded-xl p-4">
-                  {e.image_url && <img src={e.image_url} alt={e.title} className="w-32 h-24 object-cover rounded" loading="lazy" />}
+                  {e.image_url && <img src={e.image_url} alt={e.title} className="w-32 h-24 object-cover rounded" style={{ objectPosition: (e as any).focal_point || '50% 50%' }} loading="lazy" />}
                   <div>
                     {e.event_date && <p className="text-sm font-medium" style={{ color: accent }}>{new Date(e.event_date).toLocaleDateString('sv-SE')}</p>}
                     <h3 className="font-semibold text-lg">{e.title}</h3>
