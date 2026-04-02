@@ -68,11 +68,19 @@ export default function GalleryEditor({ businessId }: { businessId: string }) {
     invalidate();
   };
 
+  const handleAltTextChange = async (id: string, altText: string) => {
+    await supabase.from('gallery_images').update({ alt_text: altText }).eq('id', id);
+    invalidate();
+  };
+
   return (
     <div className="mt-3 space-y-3 pl-4 border-l-2 border-primary/20">
-      <div className="grid grid-cols-4 gap-2">
+      <p className="text-xs text-muted-foreground">
+        💡 Bildbeskrivningar hjälper sökmotorer att förstå dina bilder och gör sidan tillgänglig för synskadade besökare. Beskriv kort vad bilden visar.
+      </p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {items.map(item => (
-          <div key={item.id} className="relative group">
+          <div key={item.id} className="relative group space-y-1">
             {editingFocal === item.id ? (
               <div className="space-y-1">
                 <FocalPointPicker
@@ -98,6 +106,12 @@ export default function GalleryEditor({ businessId }: { businessId: string }) {
                 </Button>
               </>
             )}
+            <Input
+              placeholder="Bildbeskrivning (alt-text)"
+              defaultValue={item.alt_text || ''}
+              onBlur={e => handleAltTextChange(item.id, e.target.value)}
+              className="text-xs h-7"
+            />
           </div>
         ))}
       </div>
