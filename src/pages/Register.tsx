@@ -19,8 +19,13 @@ const STEPS = ['Konto', 'Subdomän', 'Information', 'Varumärke', 'Sektioner', '
 export default function Register() {
   const navigate = useNavigate();
   const { signUp, signIn, user } = useAuth();
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(user ? 1 : 0);
   const [loading, setLoading] = useState(false);
+
+  // Skip account step if already logged in
+  useEffect(() => {
+    if (user && step === 0) setStep(1);
+  }, [user]);
 
   // Step 1: Account
   const [email, setEmail] = useState('');
