@@ -56,6 +56,7 @@ export default function Dashboard() {
     setPhone(b.phone || '');
     setBizEmail(b.email || '');
     setGoogleMaps(b.google_maps_embed || '');
+    setShowOpeningHours(Array.isArray(b.opening_hours) && b.opening_hours.length > 0);
     setOpeningHours(b.opening_hours.length ? b.opening_hours : defaultOpeningHours);
     setAccentColor(b.accent_color || '#2563EB');
     setFontStyle(b.font_style);
