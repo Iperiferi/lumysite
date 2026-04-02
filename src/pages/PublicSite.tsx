@@ -400,24 +400,33 @@ export default function PublicSite() {
         )}
 
         {/* Map */}
-        {business.google_maps_embed && (
-          <section id="hitta-hit" className="py-16 border-t">
-            <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.map', lang)}</h2>
-            {business.address && <p className="mb-4 flex items-center gap-2"><MapPin className="w-5 h-5" /> {business.address}</p>}
-            <div className="rounded-xl overflow-hidden border">
-              <iframe
-                src={business.google_maps_embed}
-                width="100%"
-                height="400"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Google Maps"
-              />
-            </div>
-          </section>
-        )}
+        {(business.google_maps_embed || business.address) && (() => {
+          const isEmbedUrl = business.google_maps_embed?.includes('/maps/embed');
+          const mapSrc = isEmbedUrl
+            ? business.google_maps_embed!
+            : business.address
+              ? `https://maps.google.com/maps?q=${encodeURIComponent(business.address)}&output=embed`
+              : null;
+
+          return mapSrc ? (
+            <section id="hitta-hit" className="py-16 border-t">
+              <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.map', lang)}</h2>
+              {business.address && <p className="mb-4 flex items-center gap-2"><MapPin className="w-5 h-5" /> {business.address}</p>}
+              <div className="rounded-xl overflow-hidden border">
+                <iframe
+                  src={mapSrc}
+                  width="100%"
+                  height="400"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Google Maps"
+                />
+              </div>
+            </section>
+          ) : null;
+        })()}
 
         {/* FAQ */}
         {faq.length > 0 && (
