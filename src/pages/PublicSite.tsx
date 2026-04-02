@@ -4,7 +4,7 @@ import { useBusinessBySubdomain } from '@/hooks/useBusiness';
 import { type Language, t, dayKeys } from '@/lib/i18n';
 import { fontStyles, type SectionType } from '@/lib/types';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Phone, Mail, MapPin, Clock, Globe } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Globe, Facebook, Instagram, Youtube, Linkedin } from 'lucide-react';
 
 function SeoHead({ business }: { business: any }) {
   useEffect(() => {
