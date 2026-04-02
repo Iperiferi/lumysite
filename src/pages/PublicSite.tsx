@@ -241,7 +241,7 @@ export default function PublicSite() {
             <div className="grid md:grid-cols-3 gap-6">
               {experiences.map(ex => (
                 <div key={ex.id} className="border rounded-xl overflow-hidden">
-                  {ex.image_url && <img src={ex.image_url} alt={ex.name} className="w-full h-48 object-cover" loading="lazy" />}
+                  {ex.image_url && <img src={ex.image_url} alt={ex.name} className="w-full h-48 object-cover" style={{ objectPosition: (ex as any).focal_point || '50% 50%' }} loading="lazy" />}
                   <div className="p-4">
                     <h3 className="font-semibold text-lg">{ex.name}</h3>
                     {ex.description && <p className="text-muted-foreground text-sm mt-1">{ex.description}</p>}
