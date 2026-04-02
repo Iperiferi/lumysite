@@ -166,7 +166,7 @@ export default function PublicSite() {
 
   return (
     <div style={{ fontFamily: fontConfig.fontFamily, '--accent': accent, '--accent-fg': '#fff' } as any}>
-      <SeoHead business={business} />
+      <SeoHead business={business} subdomain={subdomain || ''} />
 
       {/* Nav */}
       <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b shadow-sm">
