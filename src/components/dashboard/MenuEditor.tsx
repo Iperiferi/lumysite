@@ -51,40 +51,6 @@ export default function MenuEditor({ businessId }: { businessId: string }) {
     setSaving(false);
   };
 
-  const handlePdfUpload = async (file: File) => {
-    setSaving(true);
-    try {
-      const path = `${businessId}/${Date.now()}-${file.name}`;
-      const { error: uploadError } = await supabase.storage.from('menu-pdfs').upload(path, file);
-      if (uploadError) throw uploadError;
-      const { data: urlData } = supabase.storage.from('menu-pdfs').getPublicUrl(path);
-      const newUrl = urlData.publicUrl;
-      setPdfUrl(newUrl);
-
-      // Auto-save the PDF URL to database immediately
-      if (menu) {
-        const { error } = await supabase.from('menu').update({ pdf_url: newUrl }).eq('id', menu.id);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.from('menu').insert({ business_id: businessId, title, content, pdf_url: newUrl });
-        if (error) throw error;
-      }
-      invalidate();
-      toast({ title: 'PDF uppladdad och sparad' });
-    } catch (err: any) {
-      toast({ title: 'Fel vid uppladdning', description: err.message, variant: 'destructive' });
-    }
-    setSaving(false);
-  };
-
-  const handleRemovePdf = async () => {
-    setPdfUrl('');
-    if (menu) {
-      await supabase.from('menu').update({ pdf_url: null }).eq('id', menu.id);
-      invalidate();
-      toast({ title: 'PDF borttagen' });
-    }
-  };
 
   return (
     <div className="mt-3 space-y-3 pl-4 border-l-2 border-primary/20">
