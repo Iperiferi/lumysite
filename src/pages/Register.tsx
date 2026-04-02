@@ -79,7 +79,7 @@ export default function Register() {
     const clean = val.toLowerCase().replace(/[^a-z0-9-]/g, '');
     setSubdomain(clean);
     if (clean.length < 3) { setSubdomainAvailable(null); return; }
-    const { data } = await supabase.from('businesses').select('id').eq('subdomain', clean).maybeSingle();
+    const { data } = await supabase.from('businesses_public' as any).select('id').eq('subdomain', clean).maybeSingle();
     setSubdomainAvailable(!data);
   };
 
