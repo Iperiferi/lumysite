@@ -1,27 +1,18 @@
 
 
-# Stripe-prenumeration för LumySite
+# Valfria öppettider i registreringswizarden
 
-## Vad som byggs
-Månatlig prenumeration på **99 kr/mån (exkl. moms)** med Stripe. Användare måste betala innan deras sida publiceras.
+## Vad som ändras
+Lägg till en huvudswitch/checkbox ovanför öppettiderna i steg 2 (Information) som låter användaren välja om de vill visa öppettider eller inte. Om avaktiverad visas hela öppettidssektionen inte — och inga öppettider sparas.
 
-## Steg
+## Ändringar
 
-1. **Aktivera Stripe** — Koppla Stripe till projektet (kräver din Stripe secret key)
-2. **Skapa produkt & pris** — "LumySite Bas" à 99 SEK/mån i Stripe
-3. **Checkout-flöde** — Efter registreringswizarden → Stripe Checkout → publicering
-4. **Åtkomstkontroll** — Kontrollera aktiv prenumeration innan sidan visas publikt
-5. **Hantera avslut** — Webhook för att markera sidan som opublicerad vid utebliven betalning
+### `src/pages/Register.tsx`
+- Lägg till ett nytt state: `showOpeningHours` (default `false`)
+- Rendera en switch/checkbox med texten "Visa öppettider på sidan" ovanför öppettidsraderna
+- Visa bara dagraderna om `showOpeningHours === true`
+- Vid publicering: skicka `opening_hours` som tom array `[]` om `showOpeningHours` är `false`
 
-## Flöde
-```text
-Registrera → Wizard → Stripe Checkout → Betalning OK → Sida publiceras
-                                       → Betalning misslyckas → Försök igen
-```
-
-## Tekniska detaljer
-- Stripe Checkout (hosted) för säker betalning
-- Edge function för webhook (invoice.paid / subscription.deleted)
-- `businesses`-tabellen får en `stripe_customer_id` och `subscription_status`-kolumn
-- Publika sidor visas bara om `subscription_status = 'active'`
+### `src/pages/PublicSite.tsx` (om relevant)
+- Visa bara öppettidssektionen om `opening_hours` har minst ett element
 
