@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useOwnerBusiness } from '@/hooks/useBusiness';
 import { supabase } from '@/integrations/supabase/client';
@@ -17,8 +17,9 @@ import { LogOut, Eye } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 
 export default function Dashboard() {
-  const { user, loading: authLoading, signOut } = useAuth();
+  const { user, loading: authLoading, signOut, subscribed, checkSubscription } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const { data, isLoading } = useOwnerBusiness(user?.id);
 
@@ -65,6 +66,20 @@ export default function Dashboard() {
     data.sections.forEach(s => { secs[s.section_type as SectionType] = s.is_enabled; });
     setEnabledSections(secs);
   }, [data]);
+
+  // Handle checkout success: publish business and refresh subscription
+  useEffect(() => {
+    if (searchParams.get('checkout') === 'success' && data?.business) {
+      const publish = async () => {
+        await supabase.from('businesses').update({ is_published: true }).eq('id', data.business.id);
+        await checkSubscription();
+        queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
+        toast({ title: '🎉 Din sida är publicerad!', description: 'Ditt abonnemang är aktivt.' });
+        setSearchParams({});
+      };
+      publish();
+    }
+  }, [searchParams, data]);
 
   const handleSave = async () => {
     if (!data) return;

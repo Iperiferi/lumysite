@@ -121,7 +121,7 @@ export default function Register() {
         logo_url: logoUrl,
         hero_image_url: heroUrl,
         opening_hours: openingHours as any,
-        is_published: true,
+        is_published: false, // Not published until payment
       }).select().single();
 
       if (bizError) throw bizError;
@@ -147,8 +147,12 @@ export default function Register() {
         );
       }
 
-      toast({ title: 'Din sida är publicerad!' });
-      navigate('/dashboard');
+      // Redirect to Stripe Checkout
+      const { data: checkoutData, error: checkoutError } = await supabase.functions.invoke('create-checkout');
+      if (checkoutError || !checkoutData?.url) {
+        throw new Error('Kunde inte starta betalning. Försök igen.');
+      }
+      window.location.href = checkoutData.url;
     } catch (err: any) {
       toast({ title: 'Fel', description: err.message, variant: 'destructive' });
     }
@@ -355,16 +359,16 @@ export default function Register() {
             {/* Step 5: Publish */}
             {step === 5 && (
               <div className="text-center space-y-4">
-                <div className="text-6xl">🎉</div>
-                <h2 className="text-xl font-semibold">Redo att publicera!</h2>
+                <div className="text-6xl">💳</div>
+                <h2 className="text-xl font-semibold">Aktivera ditt abonnemang</h2>
                 <p className="text-muted-foreground">
-                  Din sida kommer finnas på <strong>{subdomain}.lumysite.se</strong>
+                  Din sida sparas och blir tillgänglig på <strong>{subdomain}.lumysite.se</strong> efter betalning.
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Du kan redigera all information i din dashboard efter publicering.
+                  99 kr/mån exkl. moms. Du kan hantera ditt abonnemang via din dashboard.
                 </p>
                 <Button onClick={handlePublish} disabled={loading} size="lg" className="w-full">
-                  {loading ? 'Publicerar...' : '🚀 Publicera min sida'}
+                  {loading ? 'Förbereder betalning...' : '💳 Gå till betalning'}
                 </Button>
               </div>
             )}
