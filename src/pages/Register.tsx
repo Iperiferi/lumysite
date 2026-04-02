@@ -121,7 +121,7 @@ export default function Register() {
         font_style: fontStyle,
         logo_url: logoUrl,
         hero_image_url: heroUrl,
-        opening_hours: openingHours as any,
+        opening_hours: showOpeningHours ? (openingHours as any) : [],
         is_published: false, // Not published until payment
       }).select().single();
 
