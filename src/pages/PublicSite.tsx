@@ -52,6 +52,7 @@ export default function PublicSite() {
   const { data, isLoading, error } = useBusinessBySubdomain(isReserved ? undefined : subdomain);
   const [lang, setLang] = useState<Language>('sv');
   const [isDownloadingMenu, setIsDownloadingMenu] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   if (isReserved) return <Navigate to={`/${subdomain}`} replace />;
   if (isLoading) return <div className="min-h-screen flex items-center justify-center">Laddar...</div>;
