@@ -1,18 +1,24 @@
 
 
-# Valfria öppettider i registreringswizarden
+# Aktivera testkonto utan betalning
 
-## Vad som ändras
-Lägg till en huvudswitch/checkbox ovanför öppettiderna i steg 2 (Information) som låter användaren välja om de vill visa öppettider eller inte. Om avaktiverad visas hela öppettidssektionen inte — och inga öppettider sparas.
+Ditt konto (`info@iperiferi.se`) har skapat verksamheten "Lumysite" (subdomän: `lumysite`). Den behöver markeras som publicerad (`is_published = true`) och prenumerationskontrollen behöver kringgås.
 
-## Ändringar
+## Vad som behöver göras
 
-### `src/pages/Register.tsx`
-- Lägg till ett nytt state: `showOpeningHours` (default `false`)
-- Rendera en switch/checkbox med texten "Visa öppettider på sidan" ovanför öppettidsraderna
-- Visa bara dagraderna om `showOpeningHours === true`
-- Vid publicering: skicka `opening_hours` som tom array `[]` om `showOpeningHours` är `false`
+### 1. Sätt `is_published = true` i databasen
+Uppdatera verksamheten med id `abfcb642-4014-4c92-a30b-5e3f99f2c5c7` till `is_published = true` via en databasuppdatering.
 
-### `src/pages/PublicSite.tsx` (om relevant)
-- Visa bara öppettidssektionen om `opening_hours` har minst ett element
+### 2. Kringgå prenumerationskontrollen i `useAuth`
+`check-subscription` anropar Stripe och hittar ingen prenumeration, vilket gör att `subscribed` förblir `false`. Det enklaste sättet att kringgå detta utan att påverka riktiga användare:
+
+- Uppdatera `check-subscription` edge-funktionen så att den returnerar `subscribed: true` för just din e-postadress (`info@iperiferi.se`), innan den frågar Stripe.
+
+Alternativt, om du inte vill röra edge-funktionen, kan dashboard-koden redan fungera utan `subscribed`-flaggan — den blockerar bara publicering, och det löser steg 1.
+
+### Teknisk detalj
+- Steg 1: SQL `UPDATE businesses SET is_published = true WHERE id = 'abfcb642-...'`
+- Steg 2 (om nödvändigt): Lägg till en tidig return i `check-subscription/index.ts` för test-e-posten
+
+Ska jag genomföra detta?
 
