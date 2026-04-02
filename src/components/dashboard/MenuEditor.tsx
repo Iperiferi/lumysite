@@ -37,13 +37,19 @@ export default function MenuEditor({ businessId }: { businessId: string }) {
 
   const handleSave = async () => {
     setSaving(true);
-    if (menu) {
-      await supabase.from('menu').update({ title, content, pdf_url: pdfUrl }).eq('id', menu.id);
-    } else {
-      await supabase.from('menu').insert({ business_id: businessId, title, content, pdf_url: pdfUrl });
+    try {
+      if (menu) {
+        const { error } = await supabase.from('menu').update({ title, content, pdf_url: pdfUrl }).eq('id', menu.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('menu').insert({ business_id: businessId, title, content, pdf_url: pdfUrl });
+        if (error) throw error;
+      }
+      invalidate();
+      toast({ title: 'Meny sparad' });
+    } catch (err: any) {
+      toast({ title: 'Fel vid sparning', description: err.message, variant: 'destructive' });
     }
-    invalidate();
-    toast({ title: 'Meny sparad' });
     setSaving(false);
   };
 
@@ -51,14 +57,35 @@ export default function MenuEditor({ businessId }: { businessId: string }) {
     setSaving(true);
     try {
       const path = `${businessId}/${Date.now()}-${file.name}`;
-      await supabase.storage.from('menu-pdfs').upload(path, file);
+      const { error: uploadError } = await supabase.storage.from('menu-pdfs').upload(path, file);
+      if (uploadError) throw uploadError;
       const { data: urlData } = supabase.storage.from('menu-pdfs').getPublicUrl(path);
-      setPdfUrl(urlData.publicUrl);
-      toast({ title: 'PDF uppladdad' });
+      const newUrl = urlData.publicUrl;
+      setPdfUrl(newUrl);
+
+      // Auto-save the PDF URL to database immediately
+      if (menu) {
+        const { error } = await supabase.from('menu').update({ pdf_url: newUrl }).eq('id', menu.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('menu').insert({ business_id: businessId, title, content, pdf_url: newUrl });
+        if (error) throw error;
+      }
+      invalidate();
+      toast({ title: 'PDF uppladdad och sparad' });
     } catch (err: any) {
-      toast({ title: 'Fel', description: err.message, variant: 'destructive' });
+      toast({ title: 'Fel vid uppladdning', description: err.message, variant: 'destructive' });
     }
     setSaving(false);
+  };
+
+  const handleRemovePdf = async () => {
+    setPdfUrl('');
+    if (menu) {
+      await supabase.from('menu').update({ pdf_url: null }).eq('id', menu.id);
+      invalidate();
+      toast({ title: 'PDF borttagen' });
+    }
   };
 
   return (
@@ -74,9 +101,10 @@ export default function MenuEditor({ businessId }: { businessId: string }) {
       <div className="space-y-2">
         <Label>Meny-PDF</Label>
         {pdfUrl && (
-          <div className="flex items-center gap-2">
-            <a href={pdfUrl} target="_blank" className="text-sm text-primary underline">Visa uppladdad PDF</a>
-            <Button type="button" variant="ghost" size="sm" className="text-destructive h-6 px-2 text-xs" onClick={() => setPdfUrl('')}>
+          <div className="flex items-center gap-2 p-2 bg-muted/50 rounded">
+            <span className="text-xs text-green-600 font-medium">✓ PDF sparad</span>
+            <a href={pdfUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-primary underline">Öppna PDF</a>
+            <Button type="button" variant="ghost" size="sm" className="text-destructive h-6 px-2 text-xs" onClick={handleRemovePdf}>
               Ta bort
             </Button>
           </div>
