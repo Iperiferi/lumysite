@@ -38,6 +38,7 @@ export default function Register() {
   const [phone, setPhone] = useState('');
   const [bizEmail, setBizEmail] = useState('');
   const [googleMaps, setGoogleMaps] = useState('');
+  const [showOpeningHours, setShowOpeningHours] = useState(false);
   const [openingHours, setOpeningHours] = useState<OpeningHour[]>(defaultOpeningHours);
   const [faqItems, setFaqItems] = useState<{ question: string; answer: string }[]>([]);
 
