@@ -233,7 +233,7 @@ export default function PublicSite() {
                 </div>
               </div>
             )}
-            <div className="space-y-3">
+            <div className="space-y-3 md:pl-12">
               {business.address && (
                 <div className="flex items-start gap-2"><MapPin className="w-5 h-5 mt-0.5 shrink-0" /><span>{business.address}</span></div>
               )}
