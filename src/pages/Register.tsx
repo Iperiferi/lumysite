@@ -121,7 +121,7 @@ export default function Register() {
         logo_url: logoUrl,
         hero_image_url: heroUrl,
         opening_hours: openingHours as any,
-        is_published: true,
+        is_published: false, // Not published until payment
       }).select().single();
 
       if (bizError) throw bizError;
@@ -147,8 +147,12 @@ export default function Register() {
         );
       }
 
-      toast({ title: 'Din sida är publicerad!' });
-      navigate('/dashboard');
+      // Redirect to Stripe Checkout
+      const { data: checkoutData, error: checkoutError } = await supabase.functions.invoke('create-checkout');
+      if (checkoutError || !checkoutData?.url) {
+        throw new Error('Kunde inte starta betalning. Försök igen.');
+      }
+      window.location.href = checkoutData.url;
     } catch (err: any) {
       toast({ title: 'Fel', description: err.message, variant: 'destructive' });
     }
