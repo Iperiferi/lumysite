@@ -70,8 +70,25 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Demo Preview */}
+      {/* Features */}
       <section className="py-16 px-4">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-3">Byggt för dig som vill ha det enkelt</h2>
+          <p className="text-center text-muted-foreground mb-12">Ingen kod. Inga tekniska termer. Bara din information.</p>
+          <div className="grid md:grid-cols-3 gap-8">
+            {features.map(f => (
+              <div key={f.title} className="bg-background rounded-xl p-6 border">
+                <f.icon className="w-10 h-10 text-primary mb-4" />
+                <h3 className="font-semibold text-lg mb-2">{f.title}</h3>
+                <p className="text-muted-foreground text-sm">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Demo Preview */}
+      <section className="py-16 px-4 bg-muted/40">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-3">Se hur en sida kan se ut</h2>
           <p className="text-muted-foreground mb-10 max-w-2xl mx-auto">
@@ -103,23 +120,6 @@ export default function Index() {
               Öppna demosidan <ArrowRight className="ml-2 w-4 h-4" />
             </a>
           </Button>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="py-16 px-4">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-3">Byggt för dig som vill ha det enkelt</h2>
-          <p className="text-center text-muted-foreground mb-12">Ingen kod. Inga tekniska termer. Bara din information.</p>
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map(f => (
-              <div key={f.title} className="bg-background rounded-xl p-6 border">
-                <f.icon className="w-10 h-10 text-primary mb-4" />
-                <h3 className="font-semibold text-lg mb-2">{f.title}</h3>
-                <p className="text-muted-foreground text-sm">{f.desc}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
