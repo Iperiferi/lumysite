@@ -106,6 +106,7 @@ export default function Index() {
             </Button>
           </div>
         </div>
+      </section>
 
       {/* CTA */}
       <section className="py-20 text-center px-4 bg-primary text-primary-foreground">
