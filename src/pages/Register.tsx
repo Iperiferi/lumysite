@@ -258,7 +258,20 @@ export default function Register() {
                   <Label>Lösenord</Label>
                   <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
                 </div>
-                <Button onClick={handleCreateAccount} disabled={loading || !email || !password} className="w-full">
+                <div className="flex items-start gap-2">
+                  <Checkbox
+                    id="terms"
+                    checked={acceptedTerms}
+                    onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+                    className="mt-0.5"
+                  />
+                  <label htmlFor="terms" className="text-sm text-muted-foreground leading-snug cursor-pointer">
+                    Jag godkänner{' '}
+                    <Link to="/anvandarvillkor" target="_blank" className="text-primary underline">användarvillkoren</Link> och{' '}
+                    <Link to="/integritetspolicy" target="_blank" className="text-primary underline">integritetspolicyn</Link>
+                  </label>
+                </div>
+                <Button onClick={handleCreateAccount} disabled={loading || !email || !password || !acceptedTerms} className="w-full">
                   {loading ? 'Skapar konto...' : 'Skapa konto & fortsätt'}
                 </Button>
                 <p className="text-sm text-center text-muted-foreground">
