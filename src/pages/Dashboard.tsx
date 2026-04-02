@@ -186,7 +186,25 @@ export default function Dashboard() {
     if (!data) return;
     await supabase.from('businesses').update({ is_published: publish }).eq('id', data.business.id);
     queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
-    toast({ title: publish ? 'Sidan är publicerad!' : 'Sidan är avpublicerad' });
+    if (publish) {
+      setShowPublishedUrl(true);
+      setUrlCopied(false);
+    } else {
+      toast({ title: 'Sidan är avpublicerad' });
+    }
+  };
+
+  const publicUrl = data ? `https://lumysite.com/${data.business.subdomain}` : '';
+
+  const handleCopyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(publicUrl);
+      setUrlCopied(true);
+      toast({ title: 'Länk kopierad!' });
+      setTimeout(() => setUrlCopied(false), 2000);
+    } catch {
+      toast({ title: 'Kunde inte kopiera', variant: 'destructive' });
+    }
   };
 
   const handleLogoUpload = async (file: File) => {
