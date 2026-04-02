@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { defaultOpeningHours, sectionTypes, fontStyles, type OpeningHour, type SectionType } from '@/lib/types';
 import { t } from '@/lib/i18n';
-import { LogOut, Eye } from 'lucide-react';
+import { LogOut, Eye, Settings } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import ServicesEditor from '@/components/dashboard/ServicesEditor';
 import GalleryEditor from '@/components/dashboard/GalleryEditor';
@@ -250,6 +250,9 @@ export default function Dashboard() {
             onClick={handlePublishToggle}
           >
             {data.business.is_published ? 'Avpublicera' : 'Publicera'}
+          </Button>
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/konto"><Settings className="w-4 h-4" /></Link>
           </Button>
           <Button variant="ghost" size="sm" onClick={() => { signOut(); navigate('/'); }}>
             <LogOut className="w-4 h-4" />
