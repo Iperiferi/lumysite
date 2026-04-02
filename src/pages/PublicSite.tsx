@@ -101,11 +101,11 @@ export default function PublicSite() {
     { id: 'om-oss', label: t('nav.about', lang) },
     { id: 'info', label: t('nav.info', lang) },
     ...(isSectionEnabled('services') && services.length > 0 ? [{ id: 'tjanster', label: t('nav.services', lang) }] : []),
+    ...(isSectionEnabled('accommodations') && accommodations.length > 0 ? [{ id: 'boende', label: t('nav.accommodations', lang) }] : []),
+    ...(isSectionEnabled('experiences') && experiences.length > 0 ? [{ id: 'upplevelser', label: t('nav.experiences', lang) }] : []),
     ...(isSectionEnabled('gallery') && gallery.length > 0 ? [{ id: 'galleri', label: t('nav.gallery', lang) }] : []),
     ...(isSectionEnabled('menu') && menu ? [{ id: 'meny', label: t('nav.menu', lang) }] : []),
     ...(isSectionEnabled('events') && events.length > 0 ? [{ id: 'evenemang', label: t('nav.events', lang) }] : []),
-    ...(isSectionEnabled('accommodations') && accommodations.length > 0 ? [{ id: 'boende', label: t('nav.accommodations', lang) }] : []),
-    ...(isSectionEnabled('experiences') && experiences.length > 0 ? [{ id: 'upplevelser', label: t('nav.experiences', lang) }] : []),
     ...(isSectionEnabled('testimonials') && testimonials.length > 0 ? [{ id: 'omdomen', label: t('nav.testimonials', lang) }] : []),
     ...(isSectionEnabled('news') && news.length > 0 ? [{ id: 'nyheter', label: t('nav.news', lang) }] : []),
     { id: 'kontakt', label: t('nav.contact', lang) },
@@ -289,6 +289,42 @@ export default function PublicSite() {
           </section>
         )}
 
+        {/* Accommodations */}
+        {isSectionEnabled('accommodations') && accommodations.length > 0 && (
+          <section id="boende" className="py-16 border-t">
+            <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.accommodations', lang)}</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {accommodations.map(a => (
+                <div key={a.id} className="border rounded-xl overflow-hidden">
+                  {a.image_url && <img src={a.image_url} alt={a.name} className="w-full h-48 object-cover" style={{ objectPosition: (a as any).focal_point || '50% 50%' }} loading="lazy" />}
+                  <div className="p-4">
+                    <h3 className="font-semibold text-lg">{a.name}</h3>
+                    {a.description && <p className="text-muted-foreground text-sm mt-1">{a.description}</p>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Experiences */}
+        {isSectionEnabled('experiences') && experiences.length > 0 && (
+          <section id="upplevelser" className="py-16 border-t">
+            <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.experiences', lang)}</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {experiences.map(ex => (
+                <div key={ex.id} className="border rounded-xl overflow-hidden">
+                  {ex.image_url && <img src={ex.image_url} alt={ex.name} className="w-full h-48 object-cover" style={{ objectPosition: (ex as any).focal_point || '50% 50%' }} loading="lazy" />}
+                  <div className="p-4">
+                    <h3 className="font-semibold text-lg">{ex.name}</h3>
+                    {ex.description && <p className="text-muted-foreground text-sm mt-1">{ex.description}</p>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Gallery */}
         {isSectionEnabled('gallery') && gallery.length > 0 && (
           <section id="galleri" className="py-16 border-t">
@@ -349,42 +385,6 @@ export default function PublicSite() {
                     )}
                     <h3 className="font-semibold text-lg">{e.title}</h3>
                     {e.description && <p className="text-muted-foreground text-sm mt-1">{e.description}</p>}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Accommodations */}
-        {isSectionEnabled('accommodations') && accommodations.length > 0 && (
-          <section id="boende" className="py-16 border-t">
-            <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.accommodations', lang)}</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {accommodations.map(a => (
-                <div key={a.id} className="border rounded-xl overflow-hidden">
-                  {a.image_url && <img src={a.image_url} alt={a.name} className="w-full h-48 object-cover" style={{ objectPosition: (a as any).focal_point || '50% 50%' }} loading="lazy" />}
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg">{a.name}</h3>
-                    {a.description && <p className="text-muted-foreground text-sm mt-1">{a.description}</p>}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Experiences */}
-        {isSectionEnabled('experiences') && experiences.length > 0 && (
-          <section id="upplevelser" className="py-16 border-t">
-            <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.experiences', lang)}</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {experiences.map(ex => (
-                <div key={ex.id} className="border rounded-xl overflow-hidden">
-                  {ex.image_url && <img src={ex.image_url} alt={ex.name} className="w-full h-48 object-cover" style={{ objectPosition: (ex as any).focal_point || '50% 50%' }} loading="lazy" />}
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg">{ex.name}</h3>
-                    {ex.description && <p className="text-muted-foreground text-sm mt-1">{ex.description}</p>}
                   </div>
                 </div>
               ))}
