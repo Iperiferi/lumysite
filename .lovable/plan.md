@@ -1,24 +1,30 @@
 
 
-# Aktivera testkonto utan betalning
+# Fix: Blockera dashboard utan aktivt abonnemang
 
-Ditt konto (`info@iperiferi.se`) har skapat verksamheten "Lumysite" (subdomän: `lumysite`). Den behöver markeras som publicerad (`is_published = true`) och prenumerationskontrollen behöver kringgås.
+## Problem
+Verksamheten skapas i databasen **innan** användaren betalar. Om de avbryter betalningen finns verksamheten redan, och dashboarden visar den utan att kontrollera `subscribed`-statusen.
 
-## Vad som behöver göras
+## Lösning
 
-### 1. Sätt `is_published = true` i databasen
-Uppdatera verksamheten med id `abfcb642-4014-4c92-a30b-5e3f99f2c5c7` till `is_published = true` via en databasuppdatering.
+### 1. Lägg till betalningsspärr i Dashboard
+I `src/pages/Dashboard.tsx`: Om `subscribed` är `false` och användaren inte just kom från en lyckad checkout, visa en "betala för att fortsätta"-vy istället för den vanliga dashboarden. Denna vy innehåller en knapp som startar Stripe checkout igen.
 
-### 2. Kringgå prenumerationskontrollen i `useAuth`
-`check-subscription` anropar Stripe och hittar ingen prenumeration, vilket gör att `subscribed` förblir `false`. Det enklaste sättet att kringgå detta utan att påverka riktiga användare:
+### 2. Hantera avbruten checkout i Register
+I `src/pages/Register.tsx`: Lägg till en `useEffect` som kollar `searchParams` efter `checkout=cancelled`. Om användaren redan har en verksamhet (finns i DB), visa ett meddelande om att betalningen avbröts med en knapp att försöka igen, istället för att visa registreringsformuläret på nytt.
 
-- Uppdatera `check-subscription` edge-funktionen så att den returnerar `subscribed: true` för just din e-postadress (`info@iperiferi.se`), innan den frågar Stripe.
+### 3. Alternativt: Skjut upp skapandet av verksamheten
+Flytta `handlePublish`-logiken så att verksamheten skapas **efter** lyckad betalning istället för innan. Det kräver att vi mellanlagrar formulärdata (t.ex. i `localStorage`) och skapar verksamheten i dashboardens `checkout=success`-hanterare.
 
-Alternativt, om du inte vill röra edge-funktionen, kan dashboard-koden redan fungera utan `subscribed`-flaggan — den blockerar bara publicering, och det löser steg 1.
+**Rekommendation:** Alternativ 1+2 är enklast och säkrast. Alternativ 3 är renare men mer komplex.
 
-### Teknisk detalj
-- Steg 1: SQL `UPDATE businesses SET is_published = true WHERE id = 'abfcb642-...'`
-- Steg 2 (om nödvändigt): Lägg till en tidig return i `check-subscription/index.ts` för test-e-posten
+### Tekniska detaljer
 
-Ska jag genomföra detta?
+**Dashboard.tsx** — Lägg till spärr efter laddning:
+- Om `!subscribed` och `!searchParams.get('checkout')`, visa ett kort med "Ditt abonnemang är inte aktivt" + knapp som anropar `create-checkout` och redirectar till Stripe.
+
+**Register.tsx** — Hantera `checkout=cancelled`:
+- Kolla om användaren redan har en verksamhet (hämta via `useOwnerBusiness`)
+- Om ja, visa meddelande "Betalningen avbröts" med knapp att försöka igen (anropa `create-checkout`)
+- Om nej, visa registreringsformuläret som vanligt
 
