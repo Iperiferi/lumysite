@@ -12,7 +12,7 @@ export function useBusinessBySubdomain(subdomain: string | undefined) {
         .from('businesses_public' as any)
         .select('*')
         .eq('subdomain', subdomain)
-        .maybeSingle();
+        .maybeSingle() as { data: any; error: any };
 
       if (error || !business) return null;
 
