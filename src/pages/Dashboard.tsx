@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useOwnerBusiness } from '@/hooks/useBusiness';
@@ -167,12 +168,23 @@ export default function Dashboard() {
     setSaving(false);
   };
 
+  const [showPublishConfirm, setShowPublishConfirm] = useState(false);
+
   const handlePublishToggle = async () => {
     if (!data) return;
     const newState = !data.business.is_published;
-    await supabase.from('businesses').update({ is_published: newState }).eq('id', data.business.id);
+    if (newState) {
+      setShowPublishConfirm(true);
+      return;
+    }
+    await doPublish(false);
+  };
+
+  const doPublish = async (publish: boolean) => {
+    if (!data) return;
+    await supabase.from('businesses').update({ is_published: publish }).eq('id', data.business.id);
     queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
-    toast({ title: newState ? 'Sidan är publicerad!' : 'Sidan är avpublicerad' });
+    toast({ title: publish ? 'Sidan är publicerad!' : 'Sidan är avpublicerad' });
   };
 
   const handleLogoUpload = async (file: File) => {
@@ -500,6 +512,27 @@ export default function Dashboard() {
           </Button>
         </div>
       </div>
+      <AlertDialog open={showPublishConfirm} onOpenChange={setShowPublishConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Publicera din sida</AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2">
+              <p>Genom att publicera bekräftar du att:</p>
+              <ul className="list-disc pl-5 space-y-1 text-sm">
+                <li>Du ansvarar själv för allt innehåll som publiceras på din sida.</li>
+                <li>Sidan blir offentlig och tillgänglig för alla på internet.</li>
+                <li>Innehållet inte bryter mot gällande lagar eller andras rättigheter.</li>
+              </ul>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Avbryt</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { setShowPublishConfirm(false); doPublish(true); }}>
+              Jag godkänner — publicera
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
