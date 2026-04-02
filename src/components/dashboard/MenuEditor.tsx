@@ -37,10 +37,10 @@ export default function MenuEditor({ businessId }: { businessId: string }) {
     setSaving(true);
     try {
       if (menu) {
-        const { error } = await supabase.from('menu').update({ title, content, pdf_url: pdfUrl }).eq('id', menu.id);
+        const { error } = await supabase.from('menu').update({ title, content }).eq('id', menu.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('menu').insert({ business_id: businessId, title, content, pdf_url: pdfUrl });
+        const { error } = await supabase.from('menu').insert({ business_id: businessId, title, content });
         if (error) throw error;
       }
       invalidate();
