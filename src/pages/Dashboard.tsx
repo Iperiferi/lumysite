@@ -313,6 +313,12 @@ export default function Dashboard() {
       </header>
 
       <div className="max-w-4xl mx-auto py-6 px-4">
+        {/* Status banner */}
+        <div className={`rounded-lg px-4 py-3 mb-6 text-sm ${data.business.is_published ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-amber-50 border border-amber-200 text-amber-800'}`}>
+          {data.business.is_published
+            ? '✅ Din sida är publicerad. Ändringar du sparar syns direkt på den publicerade sidan.'
+            : '⚠️ Din sida är inte synlig för besökare ännu. Klicka på "Publicera" ovan för att göra den offentlig.'}
+        </div>
         <Tabs defaultValue="info">
           <TabsList className="mb-6">
             <TabsTrigger value="info">Grundinfo</TabsTrigger>
