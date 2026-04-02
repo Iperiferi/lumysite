@@ -20,9 +20,15 @@ export interface Business {
   font_style: 'klassisk' | 'modern' | 'jordnara';
   logo_url: string | null;
   hero_image_url: string | null;
+  hero_focal_point: string | null;
   is_published: boolean;
   opening_hours: OpeningHour[];
   cta_text: string;
+  facebook_url: string | null;
+  instagram_url: string | null;
+  tiktok_url: string | null;
+  youtube_url: string | null;
+  linkedin_url: string | null;
   created_at: string;
   updated_at: string;
 }
