@@ -205,7 +205,14 @@ export default function PublicSite() {
           <section id="meny" className="py-16 border-t">
             <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{menu.title || t('nav.menu', lang)}</h2>
             {menu.content && <div className="whitespace-pre-line text-muted-foreground">{menu.content}</div>}
-            {menu.pdf_url && <iframe src={menu.pdf_url} className="w-full h-[600px] mt-4 border rounded" title="Menu PDF" />}
+            {menu.pdf_url && (
+              <div className="mt-4 space-y-3">
+                <a href={menu.pdf_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors" style={{ backgroundColor: accent, color: '#fff' }}>
+                  Visa meny (PDF)
+                </a>
+                <iframe src={`${menu.pdf_url}#toolbar=1`} className="w-full h-[600px] border rounded" title="Menu PDF" />
+              </div>
+            )}
           </section>
         )}
 
