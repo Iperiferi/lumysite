@@ -65,6 +65,42 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Demo Preview */}
+      <section className="py-16 px-4">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-3">Se hur en sida kan se ut</h2>
+          <p className="text-muted-foreground mb-10 max-w-2xl mx-auto">
+            Här är ett exempel på en hemsida skapad med LumySite — helt utan kodning.
+          </p>
+          <div className="relative mx-auto max-w-4xl">
+            {/* Laptop frame */}
+            <div className="bg-muted rounded-t-xl pt-3 pb-0 px-3">
+              <div className="flex items-center gap-1.5 mb-3 px-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+                <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                <span className="ml-3 text-xs text-muted-foreground truncate">lumysite.com/lumysite</span>
+              </div>
+              <div className="rounded-t-lg overflow-hidden border border-b-0 bg-background">
+                <iframe
+                  src="https://lumysite.com/lumysite"
+                  title="Demo — LumySite exempelsida"
+                  className="w-full h-[500px] md:h-[600px]"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+            <div className="bg-muted/80 h-4 rounded-b-xl" />
+            <div className="bg-muted/50 h-2 mx-16 rounded-b-xl" />
+          </div>
+          <Button size="lg" asChild className="mt-8">
+            <a href="https://lumysite.com/lumysite" target="_blank" rel="noopener noreferrer">
+              Öppna demosidan <ArrowRight className="ml-2 w-4 h-4" />
+            </a>
+          </Button>
+        </div>
+      </section>
+
       {/* AI Discovery */}
       <section className="py-16 bg-primary/5 px-4">
         <div className="max-w-4xl mx-auto">
