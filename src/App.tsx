@@ -10,6 +10,9 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import PublicSite from "./pages/PublicSite";
 import NotFound from "./pages/NotFound";
+import CookiePolicy from "./pages/CookiePolicy";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +29,9 @@ const App = () => (
             <Route path="/registrera" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/site/:subdomain" element={<PublicSite />} />
+            <Route path="/cookies" element={<CookiePolicy />} />
+            <Route path="/integritetspolicy" element={<PrivacyPolicy />} />
+            <Route path="/anvandarvillkor" element={<TermsOfService />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
