@@ -168,7 +168,7 @@ export default function Index() {
 
       {/* CTA */}
       <section className="py-20 text-center px-4 bg-primary text-primary-foreground">
-        <h2 className="text-3xl font-bold mb-4">Redo att synas — även i AI?</h2>
+        <h2 className="text-3xl font-bold mb-4">Redo att komma igång?</h2>
         <p className="text-lg opacity-90 mb-8">Det tar bara några minuter. Ingen teknik, bara din information.</p>
         <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6">
           <Link to="/registrera">Skapa din sida nu <ArrowRight className="ml-2 w-5 h-5" /></Link>
