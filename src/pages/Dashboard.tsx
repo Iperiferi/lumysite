@@ -13,7 +13,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { defaultOpeningHours, sectionTypes, fontStyles, type OpeningHour, type SectionType } from '@/lib/types';
 import { t } from '@/lib/i18n';
-import { LogOut, Eye, Settings } from 'lucide-react';
+import { LogOut, Eye, Settings, Facebook, Instagram, Youtube, Linkedin } from 'lucide-react';
+import FocalPointPicker from '@/components/dashboard/FocalPointPicker';
 import { useQueryClient } from '@tanstack/react-query';
 import ServicesEditor from '@/components/dashboard/ServicesEditor';
 import GalleryEditor from '@/components/dashboard/GalleryEditor';
@@ -47,6 +48,13 @@ export default function Dashboard() {
   const [faqItems, setFaqItems] = useState<{ id?: string; question: string; answer: string }[]>([]);
   const [showOpeningHours, setShowOpeningHours] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [heroFocalPoint, setHeroFocalPoint] = useState('50% 50%');
+  const [facebookUrl, setFacebookUrl] = useState('');
+  const [instagramUrl, setInstagramUrl] = useState('');
+  const [tiktokUrl, setTiktokUrl] = useState('');
+  const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [linkedinUrl, setLinkedinUrl] = useState('');
+
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/logga-in');
@@ -67,6 +75,12 @@ export default function Dashboard() {
     setAccentColor(b.accent_color || '#2563EB');
     setFontStyle(b.font_style);
     setCtaText(b.cta_text);
+    setHeroFocalPoint(b.hero_focal_point || '50% 50%');
+    setFacebookUrl(b.facebook_url || '');
+    setInstagramUrl(b.instagram_url || '');
+    setTiktokUrl(b.tiktok_url || '');
+    setYoutubeUrl(b.youtube_url || '');
+    setLinkedinUrl(b.linkedin_url || '');
     setFaqItems(data.faq.map(f => ({ id: f.id, question: f.question, answer: f.answer })));
 
     const secs: Record<SectionType, boolean> = {} as any;
@@ -117,6 +131,12 @@ export default function Dashboard() {
         accent_color: accentColor,
         font_style: fontStyle,
         cta_text: ctaText,
+        hero_focal_point: heroFocalPoint,
+        facebook_url: facebookUrl || null,
+        instagram_url: instagramUrl || null,
+        tiktok_url: tiktokUrl || null,
+        youtube_url: youtubeUrl || null,
+        linkedin_url: linkedinUrl || null,
       }).eq('id', data.business.id);
 
       // Update sections
@@ -345,7 +365,11 @@ export default function Dashboard() {
                 <div className="space-y-2">
                   <Label>Hero-bild</Label>
                   {data.business.hero_image_url && (
-                    <img src={data.business.hero_image_url} alt="Hero" className="w-full h-40 object-cover border rounded" />
+                    <FocalPointPicker
+                      imageUrl={data.business.hero_image_url}
+                      focalPoint={heroFocalPoint}
+                      onChange={setHeroFocalPoint}
+                    />
                   )}
                   <Input type="file" accept="image/*" onChange={e => e.target.files?.[0] && handleHeroUpload(e.target.files[0])} />
                 </div>
@@ -370,6 +394,32 @@ export default function Dashboard() {
                         <span style={{ fontFamily: f.fontFamily }} className="text-lg block mb-1">{f.label}</span>
                       </button>
                     ))}
+                  </div>
+                </div>
+                <div className="space-y-2 pt-4 border-t">
+                  <Label className="text-base font-semibold">Sociala medier</Label>
+                  <p className="text-sm text-muted-foreground">Lägg till länkar till dina sociala medier (visas på din publika sida).</p>
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="flex items-center gap-2">
+                      <Facebook className="w-5 h-5 text-muted-foreground shrink-0" />
+                      <Input placeholder="https://facebook.com/dittforetag" value={facebookUrl} onChange={e => setFacebookUrl(e.target.value)} />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Instagram className="w-5 h-5 text-muted-foreground shrink-0" />
+                      <Input placeholder="https://instagram.com/dittforetag" value={instagramUrl} onChange={e => setInstagramUrl(e.target.value)} />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.88-2.88 2.89 2.89 0 0 1 2.88-2.88c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.76 1.52v-3.4a4.85 4.85 0 0 1-1-.3z"/></svg>
+                      <Input placeholder="https://tiktok.com/@dittforetag" value={tiktokUrl} onChange={e => setTiktokUrl(e.target.value)} />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Youtube className="w-5 h-5 text-muted-foreground shrink-0" />
+                      <Input placeholder="https://youtube.com/@dittforetag" value={youtubeUrl} onChange={e => setYoutubeUrl(e.target.value)} />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Linkedin className="w-5 h-5 text-muted-foreground shrink-0" />
+                      <Input placeholder="https://linkedin.com/company/dittforetag" value={linkedinUrl} onChange={e => setLinkedinUrl(e.target.value)} />
+                    </div>
                   </div>
                 </div>
               </CardContent>

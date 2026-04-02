@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 import { Trash2 } from 'lucide-react';
+import FocalPointPicker from './FocalPointPicker';
 
 export default function GalleryEditor({ businessId }: { businessId: string }) {
   const queryClient = useQueryClient();
@@ -19,6 +20,7 @@ export default function GalleryEditor({ businessId }: { businessId: string }) {
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 });
+  const [editingFocal, setEditingFocal] = useState<string | null>(null);
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ['gallery', businessId] });
@@ -41,6 +43,7 @@ export default function GalleryEditor({ businessId }: { businessId: string }) {
           image_url: urlData.publicUrl,
           alt_text: '',
           sort_order: items.length + i,
+          focal_point: '50% 50%',
         });
       } catch (err: any) {
         toast({ title: 'Fel vid uppladdning', description: `${file.name}: ${err.message}`, variant: 'destructive' });
@@ -60,15 +63,41 @@ export default function GalleryEditor({ businessId }: { businessId: string }) {
     toast({ title: 'Bild borttagen' });
   };
 
+  const handleFocalChange = async (id: string, focalPoint: string) => {
+    await supabase.from('gallery_images').update({ focal_point: focalPoint }).eq('id', id);
+    invalidate();
+  };
+
   return (
     <div className="mt-3 space-y-3 pl-4 border-l-2 border-primary/20">
       <div className="grid grid-cols-4 gap-2">
         {items.map(item => (
           <div key={item.id} className="relative group">
-            <img src={item.image_url} alt={item.alt_text || ''} className="w-full h-24 object-cover rounded" />
-            <Button variant="destructive" size="icon" className="h-6 w-6 absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition" onClick={() => handleDelete(item.id)}>
-              <Trash2 className="w-3 h-3" />
-            </Button>
+            {editingFocal === item.id ? (
+              <div className="space-y-1">
+                <FocalPointPicker
+                  imageUrl={item.image_url}
+                  focalPoint={item.focal_point || '50% 50%'}
+                  onChange={(fp) => handleFocalChange(item.id, fp)}
+                  className="w-full"
+                />
+                <Button size="sm" variant="outline" className="w-full text-xs" onClick={() => setEditingFocal(null)}>Klar</Button>
+              </div>
+            ) : (
+              <>
+                <img
+                  src={item.image_url}
+                  alt={item.alt_text || ''}
+                  className="w-full h-24 object-cover rounded cursor-pointer"
+                  style={{ objectPosition: item.focal_point || '50% 50%' }}
+                  onClick={() => setEditingFocal(item.id)}
+                  title="Klicka för att ändra fokuspunkt"
+                />
+                <Button variant="destructive" size="icon" className="h-6 w-6 absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition" onClick={() => handleDelete(item.id)}>
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </>
+            )}
           </div>
         ))}
       </div>
