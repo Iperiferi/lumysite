@@ -182,7 +182,7 @@ export default function PublicSite() {
             <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.gallery', lang)}</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {gallery.map(img => (
-                <img key={img.id} src={img.image_url} alt={img.alt_text || ''} className="w-full aspect-square object-cover rounded-lg" loading="lazy" />
+                <img key={img.id} src={img.image_url} alt={img.alt_text || ''} className="w-full aspect-square object-cover rounded-lg" style={{ objectPosition: (img as any).focal_point || '50% 50%' }} loading="lazy" />
               ))}
             </div>
           </section>
