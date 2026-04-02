@@ -47,16 +47,12 @@ function SeoHead({ business }: { business: any }) {
 
 export default function PublicSite() {
   const { subdomain } = useParams();
-
-  // Guard against reserved routes that might leak through
-  if (subdomain && RESERVED_ROUTES.includes(subdomain)) {
-    return <Navigate to={`/${subdomain}`} replace />;
-  }
-
-  const { data, isLoading, error } = useBusinessBySubdomain(subdomain);
+  const isReserved = subdomain ? RESERVED_ROUTES.includes(subdomain) : false;
+  const { data, isLoading, error } = useBusinessBySubdomain(isReserved ? undefined : subdomain);
   const [lang, setLang] = useState<Language>('sv');
   const [isDownloadingMenu, setIsDownloadingMenu] = useState(false);
 
+  if (isReserved) return <Navigate to={`/${subdomain}`} replace />;
   if (isLoading) return <div className="min-h-screen flex items-center justify-center">Laddar...</div>;
   if (!data || error) return <div className="min-h-screen flex items-center justify-center"><h1 className="text-2xl">Sidan hittades inte</h1></div>;
 
