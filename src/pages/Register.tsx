@@ -16,7 +16,7 @@ import { t } from '@/lib/i18n';
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const STEPS = ['Konto', 'Subdomän', 'Information', 'Varumärke', 'Sektioner', 'Publicera'];
+const STEPS = ['Konto', 'Webbadress', 'Information', 'Varumärke', 'Sektioner', 'Publicera'];
 
 export default function Register() {
   const navigate = useNavigate();
