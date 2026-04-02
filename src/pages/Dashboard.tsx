@@ -39,6 +39,7 @@ export default function Dashboard() {
     accommodations: false, experiences: false, testimonials: false, news: false,
   });
   const [faqItems, setFaqItems] = useState<{ id?: string; question: string; answer: string }[]>([]);
+  const [showOpeningHours, setShowOpeningHours] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -55,6 +56,7 @@ export default function Dashboard() {
     setPhone(b.phone || '');
     setBizEmail(b.email || '');
     setGoogleMaps(b.google_maps_embed || '');
+    setShowOpeningHours(Array.isArray(b.opening_hours) && b.opening_hours.length > 0);
     setOpeningHours(b.opening_hours.length ? b.opening_hours : defaultOpeningHours);
     setAccentColor(b.accent_color || '#2563EB');
     setFontStyle(b.font_style);
@@ -93,7 +95,7 @@ export default function Dashboard() {
         phone,
         email: bizEmail,
         google_maps_embed: googleMaps,
-        opening_hours: openingHours as any,
+        opening_hours: showOpeningHours ? (openingHours as any) : [],
         accent_color: accentColor,
         font_style: fontStyle,
         cta_text: ctaText,
@@ -285,8 +287,11 @@ export default function Dashboard() {
                   <Input value={ctaText} onChange={e => setCtaText(e.target.value)} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Öppettider</Label>
-                  {openingHours.map((h, i) => (
+                  <div className="flex items-center justify-between">
+                    <Label>Visa öppettider på sidan</Label>
+                    <Switch checked={showOpeningHours} onCheckedChange={setShowOpeningHours} />
+                  </div>
+                  {showOpeningHours && openingHours.map((h, i) => (
                     <div key={h.day} className="flex items-center gap-2 text-sm">
                       <span className="w-20">{dayLabels[h.day]}</span>
                       <Switch checked={!h.closed} onCheckedChange={v => updateHour(i, 'closed', !v)} />
