@@ -11,7 +11,7 @@ export default function Index() {
     { icon: Smartphone, title: 'Ser bra ut överallt', desc: 'Din sida anpassar sig automatiskt till mobil, surfplatta och dator.' },
     { icon: Palette, title: 'Din egen stil', desc: 'Välj färg, typsnitt och ladda upp din logga. Sidan ser ut som ditt företag.' },
     { icon: Globe, title: 'Tre språk automatiskt', desc: 'Besökare kan byta mellan svenska, engelska och tyska — utan extra jobb.' },
-    { icon: Bot, title: 'Syns i AI-chattar', desc: 'Inbyggd strukturerad data gör att AI som ChatGPT och Gemini kan hitta och rekommendera dig.' },
+    { icon: Bot, title: 'Bättre chanser i AI-chattar', desc: 'Vi bygger in strukturerad data som kan hjälpa AI-tjänster som ChatGPT och Gemini att hitta dig.' },
     { icon: Shield, title: 'Egen webbadress', desc: 'Få din egen adress: dittforetag.lumysite.se — enkelt att dela och komma ihåg.' },
   ];
 
