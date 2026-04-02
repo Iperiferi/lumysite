@@ -60,14 +60,14 @@ export default function PublicSite() {
   const navItems = [
     { id: 'om-oss', label: t('nav.about', lang) },
     { id: 'info', label: t('nav.info', lang) },
-    ...(isSectionEnabled('services') ? [{ id: 'tjanster', label: t('nav.services', lang) }] : []),
-    ...(isSectionEnabled('gallery') ? [{ id: 'galleri', label: t('nav.gallery', lang) }] : []),
-    ...(isSectionEnabled('menu') ? [{ id: 'meny', label: t('nav.menu', lang) }] : []),
-    ...(isSectionEnabled('events') ? [{ id: 'evenemang', label: t('nav.events', lang) }] : []),
-    ...(isSectionEnabled('accommodations') ? [{ id: 'boende', label: t('nav.accommodations', lang) }] : []),
-    ...(isSectionEnabled('experiences') ? [{ id: 'upplevelser', label: t('nav.experiences', lang) }] : []),
-    ...(isSectionEnabled('testimonials') ? [{ id: 'omdomen', label: t('nav.testimonials', lang) }] : []),
-    ...(isSectionEnabled('news') ? [{ id: 'nyheter', label: t('nav.news', lang) }] : []),
+    ...(isSectionEnabled('services') && services.length > 0 ? [{ id: 'tjanster', label: t('nav.services', lang) }] : []),
+    ...(isSectionEnabled('gallery') && gallery.length > 0 ? [{ id: 'galleri', label: t('nav.gallery', lang) }] : []),
+    ...(isSectionEnabled('menu') && menu ? [{ id: 'meny', label: t('nav.menu', lang) }] : []),
+    ...(isSectionEnabled('events') && events.length > 0 ? [{ id: 'evenemang', label: t('nav.events', lang) }] : []),
+    ...(isSectionEnabled('accommodations') && accommodations.length > 0 ? [{ id: 'boende', label: t('nav.accommodations', lang) }] : []),
+    ...(isSectionEnabled('experiences') && experiences.length > 0 ? [{ id: 'upplevelser', label: t('nav.experiences', lang) }] : []),
+    ...(isSectionEnabled('testimonials') && testimonials.length > 0 ? [{ id: 'omdomen', label: t('nav.testimonials', lang) }] : []),
+    ...(isSectionEnabled('news') && news.length > 0 ? [{ id: 'nyheter', label: t('nav.news', lang) }] : []),
     { id: 'kontakt', label: t('nav.contact', lang) },
   ];
 
