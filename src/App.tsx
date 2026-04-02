@@ -14,6 +14,7 @@ import CookiePolicy from "./pages/CookiePolicy";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Contact from "./pages/Contact";
+import AccountSettings from "./pages/AccountSettings";
 
 const queryClient = new QueryClient();
 
