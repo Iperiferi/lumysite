@@ -45,6 +45,7 @@ export default function Register() {
   // Step 1: Account
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   // Step 2: Subdomain
   const [subdomain, setSubdomain] = useState('');
