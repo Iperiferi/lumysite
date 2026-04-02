@@ -19,6 +19,7 @@ export type Database = {
           business_id: string
           created_at: string
           description: string | null
+          focal_point: string | null
           id: string
           image_url: string | null
           name: string
@@ -28,6 +29,7 @@ export type Database = {
           business_id: string
           created_at?: string
           description?: string | null
+          focal_point?: string | null
           id?: string
           image_url?: string | null
           name: string
@@ -37,6 +39,7 @@ export type Database = {
           business_id?: string
           created_at?: string
           description?: string | null
+          focal_point?: string | null
           id?: string
           image_url?: string | null
           name?: string
@@ -61,18 +64,24 @@ export type Database = {
           created_at: string
           cta_text: string | null
           email: string | null
+          facebook_url: string | null
           font_style: string | null
           google_maps_embed: string | null
+          hero_focal_point: string | null
           hero_image_url: string | null
           id: string
+          instagram_url: string | null
           is_published: boolean | null
+          linkedin_url: string | null
           logo_url: string | null
           opening_hours: Json | null
           owner_id: string
           phone: string | null
           short_description: string | null
           subdomain: string
+          tiktok_url: string | null
           updated_at: string
+          youtube_url: string | null
         }
         Insert: {
           about_text?: string | null
@@ -82,18 +91,24 @@ export type Database = {
           created_at?: string
           cta_text?: string | null
           email?: string | null
+          facebook_url?: string | null
           font_style?: string | null
           google_maps_embed?: string | null
+          hero_focal_point?: string | null
           hero_image_url?: string | null
           id?: string
+          instagram_url?: string | null
           is_published?: boolean | null
+          linkedin_url?: string | null
           logo_url?: string | null
           opening_hours?: Json | null
           owner_id: string
           phone?: string | null
           short_description?: string | null
           subdomain: string
+          tiktok_url?: string | null
           updated_at?: string
+          youtube_url?: string | null
         }
         Update: {
           about_text?: string | null
@@ -103,18 +118,24 @@ export type Database = {
           created_at?: string
           cta_text?: string | null
           email?: string | null
+          facebook_url?: string | null
           font_style?: string | null
           google_maps_embed?: string | null
+          hero_focal_point?: string | null
           hero_image_url?: string | null
           id?: string
+          instagram_url?: string | null
           is_published?: boolean | null
+          linkedin_url?: string | null
           logo_url?: string | null
           opening_hours?: Json | null
           owner_id?: string
           phone?: string | null
           short_description?: string | null
           subdomain?: string
+          tiktok_url?: string | null
           updated_at?: string
+          youtube_url?: string | null
         }
         Relationships: []
       }
@@ -124,6 +145,7 @@ export type Database = {
           created_at: string
           description: string | null
           event_date: string | null
+          focal_point: string | null
           id: string
           image_url: string | null
           sort_order: number | null
@@ -134,6 +156,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           event_date?: string | null
+          focal_point?: string | null
           id?: string
           image_url?: string | null
           sort_order?: number | null
@@ -144,6 +167,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           event_date?: string | null
+          focal_point?: string | null
           id?: string
           image_url?: string | null
           sort_order?: number | null
@@ -164,6 +188,7 @@ export type Database = {
           business_id: string
           created_at: string
           description: string | null
+          focal_point: string | null
           id: string
           image_url: string | null
           name: string
@@ -173,6 +198,7 @@ export type Database = {
           business_id: string
           created_at?: string
           description?: string | null
+          focal_point?: string | null
           id?: string
           image_url?: string | null
           name: string
@@ -182,6 +208,7 @@ export type Database = {
           business_id?: string
           created_at?: string
           description?: string | null
+          focal_point?: string | null
           id?: string
           image_url?: string | null
           name?: string
@@ -237,6 +264,7 @@ export type Database = {
           alt_text: string | null
           business_id: string
           created_at: string
+          focal_point: string | null
           id: string
           image_url: string
           sort_order: number | null
@@ -245,6 +273,7 @@ export type Database = {
           alt_text?: string | null
           business_id: string
           created_at?: string
+          focal_point?: string | null
           id?: string
           image_url: string
           sort_order?: number | null
@@ -253,6 +282,7 @@ export type Database = {
           alt_text?: string | null
           business_id?: string
           created_at?: string
+          focal_point?: string | null
           id?: string
           image_url?: string
           sort_order?: number | null
@@ -310,6 +340,7 @@ export type Database = {
           business_id: string
           content: string | null
           created_at: string
+          focal_point: string | null
           id: string
           image_url: string | null
           published_date: string | null
@@ -320,6 +351,7 @@ export type Database = {
           business_id: string
           content?: string | null
           created_at?: string
+          focal_point?: string | null
           id?: string
           image_url?: string | null
           published_date?: string | null
@@ -330,6 +362,7 @@ export type Database = {
           business_id?: string
           content?: string | null
           created_at?: string
+          focal_point?: string | null
           id?: string
           image_url?: string | null
           published_date?: string | null
