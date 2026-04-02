@@ -76,7 +76,7 @@ export default function GalleryEditor({ businessId }: { businessId: string }) {
   return (
     <div className="mt-3 space-y-3 pl-4 border-l-2 border-primary/20">
       <p className="text-xs text-muted-foreground">
-        💡 Bildbeskrivningar hjälper sökmotorer att förstå dina bilder och gör sidan tillgänglig för synskadade besökare. Beskriv kort vad bilden visar.
+        💡 Bildbeskrivningar är frivilliga men hjälper sökmotorer att förstå dina bilder och gör sidan tillgänglig för synskadade besökare.
       </p>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {items.map(item => (
