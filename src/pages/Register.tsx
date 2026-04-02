@@ -282,8 +282,11 @@ export default function Register() {
                 </div>
 
                 {/* FAQ */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label>Vanliga frågor (FAQ)</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Tips på vanliga frågor: "Behöver man boka bord?", "Finns det parkering?", "Har ni glutenfria alternativ?", "Är det barnanpassat?", "Kan man hyra för privata event?", "Vad kostar det?"
+                  </p>
                   {faqItems.map((f, i) => (
                     <div key={i} className="space-y-1 border rounded p-3">
                       <Input placeholder="Fråga" value={f.question} onChange={e => {
