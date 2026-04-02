@@ -219,7 +219,7 @@ export default function PublicSite() {
         {/* Praktisk info */}
         <section id="info" className="py-16 border-t">
           <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.info', lang)}</h2>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-16">
             {(business.opening_hours || []).length > 0 && (
               <div>
                 <h3 className="font-semibold mb-3 flex items-center gap-2"><Clock className="w-5 h-5" /> {t('site.openingHours', lang)}</h3>
