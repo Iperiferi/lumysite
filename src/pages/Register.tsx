@@ -184,6 +184,42 @@ export default function Register() {
     thursday: 'Torsdag', friday: 'Fredag', saturday: 'Lördag', sunday: 'Söndag',
   };
 
+  const handleRetryCheckout = async () => {
+    setLoading(true);
+    try {
+      const { data: checkoutData, error } = await supabase.functions.invoke('create-checkout');
+      if (error || !checkoutData?.url) throw new Error('Kunde inte starta betalning.');
+      window.location.href = checkoutData.url;
+    } catch (err: any) {
+      toast({ title: 'Fel', description: err.message, variant: 'destructive' });
+      setLoading(false);
+    }
+  };
+
+  if (showCancelledView) {
+    return (
+      <div className="min-h-screen bg-muted/30 flex items-center justify-center px-4">
+        <Card className="max-w-md w-full">
+          <CardHeader>
+            <CardTitle>Betalningen avbröts</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-center">
+            <p className="text-muted-foreground">
+              Din sida har skapats men betalningen slutfördes inte. Du behöver ett aktivt abonnemang för att publicera din sida.
+            </p>
+            <p className="text-sm text-muted-foreground">99 kr/mån exkl. moms.</p>
+            <Button onClick={handleRetryCheckout} disabled={loading} size="lg" className="w-full">
+              {loading ? 'Förbereder betalning...' : '💳 Försök igen'}
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => navigate('/dashboard')} className="w-full">
+              Gå till dashboard
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-muted/30 py-8 px-4">
       <div className="max-w-2xl mx-auto">
