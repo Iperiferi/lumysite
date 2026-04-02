@@ -145,6 +145,9 @@ export type Database = {
           created_at: string
           description: string | null
           event_date: string | null
+          event_end_date: string | null
+          event_end_time: string | null
+          event_time: string | null
           focal_point: string | null
           id: string
           image_url: string | null
@@ -156,6 +159,9 @@ export type Database = {
           created_at?: string
           description?: string | null
           event_date?: string | null
+          event_end_date?: string | null
+          event_end_time?: string | null
+          event_time?: string | null
           focal_point?: string | null
           id?: string
           image_url?: string | null
@@ -167,6 +173,9 @@ export type Database = {
           created_at?: string
           description?: string | null
           event_date?: string | null
+          event_end_date?: string | null
+          event_end_time?: string | null
+          event_time?: string | null
           focal_point?: string | null
           id?: string
           image_url?: string | null
