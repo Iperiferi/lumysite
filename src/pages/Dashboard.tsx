@@ -167,12 +167,23 @@ export default function Dashboard() {
     setSaving(false);
   };
 
+  const [showPublishConfirm, setShowPublishConfirm] = useState(false);
+
   const handlePublishToggle = async () => {
     if (!data) return;
     const newState = !data.business.is_published;
-    await supabase.from('businesses').update({ is_published: newState }).eq('id', data.business.id);
+    if (newState) {
+      setShowPublishConfirm(true);
+      return;
+    }
+    await doPublish(false);
+  };
+
+  const doPublish = async (publish: boolean) => {
+    if (!data) return;
+    await supabase.from('businesses').update({ is_published: publish }).eq('id', data.business.id);
     queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
-    toast({ title: newState ? 'Sidan är publicerad!' : 'Sidan är avpublicerad' });
+    toast({ title: publish ? 'Sidan är publicerad!' : 'Sidan är avpublicerad' });
   };
 
   const handleLogoUpload = async (file: File) => {
