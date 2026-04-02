@@ -9,40 +9,67 @@ import { fontStyles, type SectionType } from '@/lib/types';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Phone, Mail, MapPin, Clock, Globe } from 'lucide-react';
 
-function SeoHead({ business }: { business: any }) {
+function SeoHead({ business, subdomain }: { business: any; subdomain: string }) {
   useEffect(() => {
-    document.title = `${business.business_name} – ${business.short_description || ''}`;
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute('content', business.about_text?.slice(0, 160) || '');
-    else {
-      const m = document.createElement('meta');
-      m.name = 'description';
-      m.content = business.about_text?.slice(0, 160) || '';
-      document.head.appendChild(m);
-    }
+    const title = `${business.business_name} – ${business.short_description || ''}`;
+    const description = business.about_text?.slice(0, 160) || business.short_description || '';
+    const canonicalUrl = `https://lumysite.lovable.app/site/${subdomain}`;
 
-    // JSON-LD
+    document.title = title;
+
+    // Helper to set or create a meta tag
+    const setMeta = (attr: string, key: string, content: string) => {
+      let el = document.querySelector(`meta[${attr}="${key}"]`);
+      if (el) { el.setAttribute('content', content); }
+      else { el = document.createElement('meta'); el.setAttribute(attr, key); el.setAttribute('content', content); document.head.appendChild(el); }
+    };
+
+    // Standard meta
+    setMeta('name', 'description', description);
+
+    // Open Graph
+    setMeta('property', 'og:title', title);
+    setMeta('property', 'og:description', description);
+    setMeta('property', 'og:type', 'website');
+    setMeta('property', 'og:url', canonicalUrl);
+    if (business.hero_image_url) setMeta('property', 'og:image', business.hero_image_url);
+
+    // Twitter Card
+    setMeta('name', 'twitter:card', 'summary_large_image');
+    setMeta('name', 'twitter:title', title);
+    setMeta('name', 'twitter:description', description);
+    if (business.hero_image_url) setMeta('name', 'twitter:image', business.hero_image_url);
+
+    // Canonical
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (canonical) { canonical.href = canonicalUrl; }
+    else { canonical = document.createElement('link'); canonical.rel = 'canonical'; canonical.href = canonicalUrl; document.head.appendChild(canonical); }
+
+    // JSON-LD with url and sameAs
     let script = document.getElementById('jsonld');
     if (!script) { script = document.createElement('script'); script.id = 'jsonld'; script.setAttribute('type', 'application/ld+json'); document.head.appendChild(script); }
     const hours = (business.opening_hours || []).filter((h: any) => !h.closed).map((h: any) => {
       const dayMap: Record<string, string> = { monday: 'Mo', tuesday: 'Tu', wednesday: 'We', thursday: 'Th', friday: 'Fr', saturday: 'Sa', sunday: 'Su' };
       return `${dayMap[h.day]} ${h.open}-${h.close}`;
     });
+    const sameAs = [business.facebook_url, business.instagram_url, business.tiktok_url, business.youtube_url, business.linkedin_url].filter(Boolean);
     script.textContent = JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'LocalBusiness',
       name: business.business_name,
       description: business.short_description,
+      url: canonicalUrl,
       address: business.address,
       telephone: business.phone,
       email: business.email,
       openingHours: hours,
       image: business.hero_image_url,
       logo: business.logo_url,
+      ...(sameAs.length > 0 ? { sameAs } : {}),
     });
 
     return () => { document.title = 'LumySite'; };
-  }, [business]);
+  }, [business, subdomain]);
   return null;
 }
 
