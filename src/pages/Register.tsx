@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useOwnerBusiness } from '@/hooks/useBusiness';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,14 +19,27 @@ const STEPS = ['Konto', 'Subdomän', 'Information', 'Varumärke', 'Sektioner', '
 
 export default function Register() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { signUp, signIn, user } = useAuth();
+  const { data: existingBusiness } = useOwnerBusiness(user?.id);
   const [step, setStep] = useState(user ? 1 : 0);
   const [loading, setLoading] = useState(false);
+  const isCancelled = searchParams.get('checkout') === 'cancelled';
+
+  // If user has a business and checkout was cancelled, show retry UI
+  const showCancelledView = isCancelled && existingBusiness;
 
   // Skip account step if already logged in
   useEffect(() => {
     if (user && step === 0) setStep(1);
   }, [user]);
+
+  // If logged-in user already has a business (not from cancelled checkout), redirect to dashboard
+  useEffect(() => {
+    if (user && existingBusiness && !isCancelled) {
+      navigate('/dashboard');
+    }
+  }, [user, existingBusiness, isCancelled]);
 
   // Step 1: Account
   const [email, setEmail] = useState('');
@@ -169,6 +183,42 @@ export default function Register() {
     monday: 'Måndag', tuesday: 'Tisdag', wednesday: 'Onsdag',
     thursday: 'Torsdag', friday: 'Fredag', saturday: 'Lördag', sunday: 'Söndag',
   };
+
+  const handleRetryCheckout = async () => {
+    setLoading(true);
+    try {
+      const { data: checkoutData, error } = await supabase.functions.invoke('create-checkout');
+      if (error || !checkoutData?.url) throw new Error('Kunde inte starta betalning.');
+      window.location.href = checkoutData.url;
+    } catch (err: any) {
+      toast({ title: 'Fel', description: err.message, variant: 'destructive' });
+      setLoading(false);
+    }
+  };
+
+  if (showCancelledView) {
+    return (
+      <div className="min-h-screen bg-muted/30 flex items-center justify-center px-4">
+        <Card className="max-w-md w-full">
+          <CardHeader>
+            <CardTitle>Betalningen avbröts</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-center">
+            <p className="text-muted-foreground">
+              Din sida har skapats men betalningen slutfördes inte. Du behöver ett aktivt abonnemang för att publicera din sida.
+            </p>
+            <p className="text-sm text-muted-foreground">99 kr/mån exkl. moms.</p>
+            <Button onClick={handleRetryCheckout} disabled={loading} size="lg" className="w-full">
+              {loading ? 'Förbereder betalning...' : '💳 Försök igen'}
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => navigate('/dashboard')} className="w-full">
+              Gå till dashboard
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-muted/30 py-8 px-4">
