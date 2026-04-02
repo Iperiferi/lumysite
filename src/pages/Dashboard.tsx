@@ -67,6 +67,20 @@ export default function Dashboard() {
     setEnabledSections(secs);
   }, [data]);
 
+  // Handle checkout success: publish business and refresh subscription
+  useEffect(() => {
+    if (searchParams.get('checkout') === 'success' && data?.business) {
+      const publish = async () => {
+        await supabase.from('businesses').update({ is_published: true }).eq('id', data.business.id);
+        await checkSubscription();
+        queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
+        toast({ title: '🎉 Din sida är publicerad!', description: 'Ditt abonnemang är aktivt.' });
+        setSearchParams({});
+      };
+      publish();
+    }
+  }, [searchParams, data]);
+
   const handleSave = async () => {
     if (!data) return;
     setSaving(true);
