@@ -73,7 +73,14 @@ export default function MenuEditor({ businessId }: { businessId: string }) {
       </div>
       <div className="space-y-2">
         <Label>Meny-PDF</Label>
-        {pdfUrl && <a href={pdfUrl} target="_blank" className="text-sm text-primary underline block">Visa uppladdad PDF</a>}
+        {pdfUrl && (
+          <div className="flex items-center gap-2">
+            <a href={pdfUrl} target="_blank" className="text-sm text-primary underline">Visa uppladdad PDF</a>
+            <Button type="button" variant="ghost" size="sm" className="text-destructive h-6 px-2 text-xs" onClick={() => setPdfUrl('')}>
+              Ta bort
+            </Button>
+          </div>
+        )}
         <Input type="file" accept=".pdf" onChange={e => e.target.files?.[0] && handlePdfUpload(e.target.files[0])} />
       </div>
       <Button size="sm" onClick={handleSave} disabled={saving}>{saving ? 'Sparar...' : 'Spara meny'}</Button>
