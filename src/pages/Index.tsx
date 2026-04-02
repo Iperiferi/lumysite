@@ -73,17 +73,17 @@ export default function Index() {
               <Bot className="w-4 h-4" />
               Nytt sätt att bli hittad
             </div>
-            <h2 className="text-3xl font-bold mb-4">Syns du inte på nätet? Då finns du inte för AI.</h2>
+            <h2 className="text-3xl font-bold mb-4">Öka chansen att synas — även i AI-chattar</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
               Fler och fler frågar AI-chattar som ChatGPT, Gemini och Perplexity om var de ska äta, bo och vad de ska göra.
-              Utan en hemsida kan de aldrig rekommendera just dig.
+              Utan en hemsida har de ingen information att utgå ifrån — med en har du betydligt bättre chanser att bli hittad.
             </p>
           </div>
 
           <div className="bg-background rounded-2xl border p-8 mb-8">
-            <h3 className="font-semibold text-lg mb-2 text-center">LumySite bygger in allt som AI-chattar letar efter</h3>
+            <h3 className="font-semibold text-lg mb-2 text-center">Vi bygger in det som AI-chattar ofta letar efter</h3>
             <p className="text-muted-foreground text-sm text-center mb-6">
-              Varje sektion du fyller i blir strukturerad data som gör dig synlig och rekommenderbar.
+              Varje sektion du fyller i blir strukturerad data som kan hjälpa AI att förstå din verksamhet.
             </p>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {aiDataPoints.map(dp => (
