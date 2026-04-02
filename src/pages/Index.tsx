@@ -119,6 +119,11 @@ export default function Index() {
 
       {/* Footer */}
       <footer className="border-t py-8 text-center text-sm text-muted-foreground">
+        <div className="flex justify-center gap-4 mb-2">
+          <Link to="/cookies" className="hover:underline">Cookiepolicy</Link>
+          <Link to="/integritetspolicy" className="hover:underline">Integritetspolicy</Link>
+          <Link to="/anvandarvillkor" className="hover:underline">Användarvillkor</Link>
+        </div>
         <p>© {new Date().getFullYear()} LumySite — Hemsidor för svensk turism</p>
       </footer>
     </div>

@@ -29,6 +29,9 @@ const App = () => (
             <Route path="/registrera" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/site/:subdomain" element={<PublicSite />} />
+            <Route path="/cookies" element={<CookiePolicy />} />
+            <Route path="/integritetspolicy" element={<PrivacyPolicy />} />
+            <Route path="/anvandarvillkor" element={<TermsOfService />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
