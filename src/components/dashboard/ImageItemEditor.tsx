@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
 import { Trash2 } from 'lucide-react';
+import FocalPointPicker from './FocalPointPicker';
 
 type TableName = 'accommodations' | 'experiences' | 'news';
 
@@ -38,6 +39,7 @@ export default function ImageItemEditor({
   const [desc, setDesc] = useState('');
   const [date, setDate] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [editingFocal, setEditingFocal] = useState<string | null>(null);
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: [table, businessId] });
@@ -55,7 +57,7 @@ export default function ImageItemEditor({
         const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(path);
         image_url = urlData.publicUrl;
       }
-      const row: any = { business_id: businessId, [nameField]: name, [descField]: desc, image_url, sort_order: items.length };
+      const row: any = { business_id: businessId, [nameField]: name, [descField]: desc, image_url, sort_order: items.length, focal_point: '50% 50%' };
       if (dateField && date) row[dateField] = date;
       await supabase.from(table).insert(row);
       setName(''); setDesc(''); setDate('');
@@ -73,11 +75,36 @@ export default function ImageItemEditor({
     toast({ title: 'Borttagen' });
   };
 
+  const handleFocalChange = async (id: string, focalPoint: string) => {
+    await supabase.from(table).update({ focal_point: focalPoint }).eq('id', id);
+    invalidate();
+  };
+
   return (
     <div className="mt-3 space-y-3 pl-4 border-l-2 border-primary/20">
       {items.map((item: any) => (
         <div key={item.id} className="flex items-start gap-2 p-2 bg-muted/50 rounded">
-          {item.image_url && <img src={item.image_url} alt="" className="w-16 h-12 object-cover rounded" />}
+          {item.image_url && (
+            editingFocal === item.id ? (
+              <div className="w-32 space-y-1">
+                <FocalPointPicker
+                  imageUrl={item.image_url}
+                  focalPoint={item.focal_point || '50% 50%'}
+                  onChange={(fp) => handleFocalChange(item.id, fp)}
+                />
+                <Button size="sm" variant="outline" className="w-full text-xs" onClick={() => setEditingFocal(null)}>Klar</Button>
+              </div>
+            ) : (
+              <img
+                src={item.image_url}
+                alt=""
+                className="w-16 h-12 object-cover rounded cursor-pointer"
+                style={{ objectPosition: item.focal_point || '50% 50%' }}
+                onClick={() => setEditingFocal(item.id)}
+                title="Klicka för att ändra fokuspunkt"
+              />
+            )
+          )}
           <div className="flex-1">
             <p className="font-medium text-sm">{item[nameField]}</p>
             {dateField && item[dateField] && <p className="text-xs text-muted-foreground">{item[dateField]}</p>}
