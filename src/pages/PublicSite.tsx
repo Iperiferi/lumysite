@@ -1,5 +1,6 @@
 import { useParams, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { Menu, X } from 'lucide-react';
 import { useBusinessBySubdomain } from '@/hooks/useBusiness';
 
 const RESERVED_ROUTES = ['dashboard', 'logga-in', 'registrera', 'cookies', 'integritetspolicy', 'anvandarvillkor', 'kontakt', 'konto'];
@@ -51,6 +52,7 @@ export default function PublicSite() {
   const { data, isLoading, error } = useBusinessBySubdomain(isReserved ? undefined : subdomain);
   const [lang, setLang] = useState<Language>('sv');
   const [isDownloadingMenu, setIsDownloadingMenu] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   if (isReserved) return <Navigate to={`/${subdomain}`} replace />;
   if (isLoading) return <div className="min-h-screen flex items-center justify-center">Laddar...</div>;
@@ -151,6 +153,13 @@ export default function PublicSite() {
             ))}
           </div>
           <div className="flex items-center gap-2">
+            <button
+              className="md:hidden p-1.5 rounded-md hover:bg-gray-100 transition"
+              onClick={() => setMobileMenuOpen(v => !v)}
+              aria-label="Meny"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
             <Globe className="w-4 h-4 text-muted-foreground" />
             {(['sv', 'en', 'de'] as Language[]).map(l => (
               <button
@@ -164,6 +173,21 @@ export default function PublicSite() {
             ))}
           </div>
         </div>
+        {/* Mobile nav dropdown */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t bg-white px-4 py-3 space-y-2">
+            {navItems.map(n => (
+              <a
+                key={n.id}
+                href={`#${n.id}`}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-sm hover:opacity-70 transition"
+              >
+                {n.label}
+              </a>
+            ))}
+          </div>
+        )}
       </nav>
 
       {/* Hero */}
