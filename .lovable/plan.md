@@ -1,13 +1,27 @@
 
 
-## Ändra e-postadress från josefin@iperiferi.se till info@iperiferi.se
+## Ändra URL-struktur: `/site/:subdomain` → `/:subdomain`
 
-Enkel textändring i 4 filer:
+Företagssidor nås direkt som `lumysite.com/mittforetag` istället för `lumysite.com/site/mittforetag`.
 
-1. **src/pages/Contact.tsx** — Uppdatera mailto-länk och synlig text
-2. **src/pages/TermsOfService.tsx** — Uppdatera e-post i kontaktuppgifter
-3. **src/pages/PrivacyPolicy.tsx** — Uppdatera e-post på 2 ställen (kontaktinfo + rättigheter)
-4. **src/pages/CookiePolicy.tsx** — Uppdatera e-post i kontaktsektion
+### Utmaning
+Ruttmönstret `/:subdomain` överlappar med fasta rutter som `/dashboard`, `/logga-in` etc. Vi måste hantera detta så att fasta rutter har prioritet.
 
-Alla förekomster av `josefin@iperiferi.se` ersätts med `info@iperiferi.se`.
+### Plan
+
+**1. Uppdatera `src/App.tsx`**
+- Ta bort `/site/:subdomain`-rutten
+- Lägg till `/:subdomain` som **sista rutt före catch-all** (`*`)
+- Fasta rutter (`/dashboard`, `/logga-in`, etc.) matchar först tack vare React Router-ordning
+
+**2. Uppdatera `src/pages/PublicSite.tsx`**
+- Ändra `useParams` från `subdomain` (om det heter annorlunda) — verifiera parameterns namn
+- Lägg till en guard: om parametern matchar en känd rutt (t.ex. `dashboard`, `logga-in`), rendera `NotFound` istället
+
+**3. Uppdatera alla länkar till `/site/...`**
+- Sök igenom hela kodbasen efter `/site/` och uppdatera till `/`
+- Gäller troligen Dashboard, Register, och eventuella andra ställen
+
+### Teknisk detalj
+React Router matchar rutter i ordning. Genom att placera `/:subdomain` sist (före `*`) får fasta rutter alltid prioritet. Som extra säkerhet lägger vi en blocklista i PublicSite.
 
