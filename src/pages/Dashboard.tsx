@@ -166,11 +166,49 @@ export default function Dashboard() {
 
   if (authLoading || isLoading) return <div className="min-h-screen flex items-center justify-center">Laddar...</div>;
 
+  const handleStartCheckout = async () => {
+    setSaving(true);
+    try {
+      const { data: checkoutData, error } = await supabase.functions.invoke('create-checkout');
+      if (error || !checkoutData?.url) throw new Error('Kunde inte starta betalning.');
+      window.location.href = checkoutData.url;
+    } catch (err: any) {
+      toast({ title: 'Fel', description: err.message, variant: 'destructive' });
+      setSaving(false);
+    }
+  };
+
   if (!data) {
     return (
       <div className="min-h-screen flex items-center justify-center flex-col gap-4">
         <p>Du har ingen sida ännu.</p>
         <Button onClick={() => navigate('/registrera')}>Skapa din sida</Button>
+      </div>
+    );
+  }
+
+  // Block dashboard if not subscribed (unless just returned from successful checkout)
+  const isCheckoutSuccess = searchParams.get('checkout') === 'success';
+  if (!subscribed && !isCheckoutSuccess) {
+    return (
+      <div className="min-h-screen bg-muted/30 flex items-center justify-center">
+        <Card className="max-w-md w-full">
+          <CardHeader>
+            <CardTitle>Abonnemanget är inte aktivt</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-center">
+            <p className="text-muted-foreground">
+              Du behöver ett aktivt abonnemang för att använda din dashboard och publicera din sida.
+            </p>
+            <p className="text-sm text-muted-foreground">99 kr/mån exkl. moms.</p>
+            <Button onClick={handleStartCheckout} disabled={saving} size="lg" className="w-full">
+              {saving ? 'Förbereder betalning...' : '💳 Gå till betalning'}
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => { signOut(); navigate('/'); }} className="w-full">
+              Logga ut
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }

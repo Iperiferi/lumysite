@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useOwnerBusiness } from '@/hooks/useBusiness';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,14 +19,27 @@ const STEPS = ['Konto', 'Subdomän', 'Information', 'Varumärke', 'Sektioner', '
 
 export default function Register() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { signUp, signIn, user } = useAuth();
+  const { data: existingBusiness } = useOwnerBusiness(user?.id);
   const [step, setStep] = useState(user ? 1 : 0);
   const [loading, setLoading] = useState(false);
+  const isCancelled = searchParams.get('checkout') === 'cancelled';
+
+  // If user has a business and checkout was cancelled, show retry UI
+  const showCancelledView = isCancelled && existingBusiness;
 
   // Skip account step if already logged in
   useEffect(() => {
     if (user && step === 0) setStep(1);
   }, [user]);
+
+  // If logged-in user already has a business (not from cancelled checkout), redirect to dashboard
+  useEffect(() => {
+    if (user && existingBusiness && !isCancelled) {
+      navigate('/dashboard');
+    }
+  }, [user, existingBusiness, isCancelled]);
 
   // Step 1: Account
   const [email, setEmail] = useState('');
