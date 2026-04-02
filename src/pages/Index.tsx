@@ -1,18 +1,27 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { ArrowRight, Globe, Palette, Smartphone, Search, Zap, Shield } from 'lucide-react';
+import { ArrowRight, Globe, Palette, Smartphone, Search, Zap, Shield, Bot, Star, Clock, MapPin, MessageSquare, Utensils } from 'lucide-react';
 
 export default function Index() {
   const { user } = useAuth();
 
   const features = [
-    { icon: Zap, title: 'Klar på minuter', desc: 'Fyll i din information, välj design och publicera — klart!' },
-    { icon: Smartphone, title: 'Mobilanpassad', desc: 'Din sida ser perfekt ut på alla enheter, automatiskt.' },
-    { icon: Palette, title: 'Din stil', desc: 'Välj accentfärg, typsnitt och ladda upp din logga och bilder.' },
-    { icon: Globe, title: 'Flerspråkig', desc: 'Besökare kan byta mellan svenska, engelska och tyska.' },
-    { icon: Search, title: 'SEO inbyggt', desc: 'Automatisk sökmotoroptimering med schema markup och metataggar.' },
-    { icon: Shield, title: 'Egen subdomän', desc: 'Få din egen adress: dittforetag.lumysite.se' },
+    { icon: Zap, title: 'Ingen teknik krävs', desc: 'Fyll i din information i enkla fält — ingen kod, inga tekniska termer. Klart på minuter.' },
+    { icon: Smartphone, title: 'Ser bra ut överallt', desc: 'Din sida anpassar sig automatiskt till mobil, surfplatta och dator.' },
+    { icon: Palette, title: 'Din egen stil', desc: 'Välj färg, typsnitt och ladda upp din logga. Sidan ser ut som ditt företag.' },
+    { icon: Globe, title: 'Tre språk automatiskt', desc: 'Besökare kan byta mellan svenska, engelska och tyska — utan extra jobb.' },
+    { icon: Bot, title: 'Syns i AI-chattar', desc: 'Inbyggd strukturerad data gör att AI som ChatGPT och Gemini kan hitta och rekommendera dig.' },
+    { icon: Shield, title: 'Egen webbadress', desc: 'Få din egen adress: dittforetag.lumysite.se — enkelt att dela och komma ihåg.' },
+  ];
+
+  const aiDataPoints = [
+    { icon: Clock, label: 'Öppettider' },
+    { icon: Star, label: 'Omdömen' },
+    { icon: MapPin, label: 'Plats & adress' },
+    { icon: Utensils, label: 'Meny & utbud' },
+    { icon: MessageSquare, label: 'Kontaktinfo' },
+    { icon: Search, label: 'Schema.org markup' },
   ];
 
   return (
@@ -38,12 +47,15 @@ export default function Index() {
       <section className="py-20 md:py-32 text-center px-4">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-            Skapa din hemsida<br />
-            <span className="text-primary">på minuter</span>
+            Äntligen en hemsida<br />
+            <span className="text-primary">— utan krångel</span>
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Den enklaste hemsidebyggaren för svensk turism- och besöksnäring.
-            Fyll i din information, välj design och publicera direkt.
+          <p className="text-lg md:text-xl text-muted-foreground mb-4 max-w-2xl mx-auto">
+            Har du aldrig haft en hemsida? Eller tyckt att andra verktyg är för krångliga?
+            LumySite är gjort för dig.
+          </p>
+          <p className="text-base text-muted-foreground mb-8 max-w-xl mx-auto">
+            Fyll i din information, välj design och publicera — klart. Inga tekniska kunskaper behövs.
           </p>
           <Button size="lg" asChild className="text-lg px-8 py-6">
             <Link to="/registrera">
@@ -53,10 +65,47 @@ export default function Index() {
         </div>
       </section>
 
+      {/* AI Discovery */}
+      <section className="py-16 bg-primary/5 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-1.5 text-sm font-medium mb-4">
+              <Bot className="w-4 h-4" />
+              Nytt sätt att bli hittad
+            </div>
+            <h2 className="text-3xl font-bold mb-4">Syns du inte på nätet? Då finns du inte för AI.</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+              Fler och fler frågar AI-chattar som ChatGPT, Gemini och Perplexity om var de ska äta, bo och vad de ska göra.
+              Utan en hemsida kan de aldrig rekommendera just dig.
+            </p>
+          </div>
+
+          <div className="bg-background rounded-2xl border p-8 mb-8">
+            <h3 className="font-semibold text-lg mb-2 text-center">LumySite bygger in allt som AI-chattar letar efter</h3>
+            <p className="text-muted-foreground text-sm text-center mb-6">
+              Varje sektion du fyller i blir strukturerad data som gör dig synlig och rekommenderbar.
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {aiDataPoints.map(dp => (
+                <div key={dp.label} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                  <dp.icon className="w-5 h-5 text-primary shrink-0" />
+                  <span className="text-sm font-medium">{dp.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p className="text-center text-sm text-muted-foreground">
+            Du behöver inte veta vad "schema markup" betyder — vi sköter tekniken åt dig automatiskt.
+          </p>
+        </div>
+      </section>
+
       {/* Features */}
-      <section className="py-16 bg-muted/30 px-4">
+      <section className="py-16 px-4">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Allt du behöver</h2>
+          <h2 className="text-3xl font-bold text-center mb-3">Byggt för dig som vill ha det enkelt</h2>
+          <p className="text-center text-muted-foreground mb-12">Ingen kod. Inga tekniska termer. Bara din information.</p>
           <div className="grid md:grid-cols-3 gap-8">
             {features.map(f => (
               <div key={f.title} className="bg-background rounded-xl p-6 border">
@@ -70,20 +119,21 @@ export default function Index() {
       </section>
 
       {/* Sections showcase */}
-      <section className="py-16 px-4">
+      <section className="py-16 bg-muted/30 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">Välj dina sektioner</h2>
-          <p className="text-muted-foreground mb-8">Aktivera de delar som passar ditt företag</p>
+          <h2 className="text-3xl font-bold mb-4">Välj vad du vill visa</h2>
+          <p className="text-muted-foreground mb-3">Aktivera de delar som passar ditt företag.</p>
+          <p className="text-sm text-muted-foreground mb-8">Varje sektion hjälper också AI-chattar att förstå och rekommendera din verksamhet.</p>
           <div className="flex flex-wrap justify-center gap-3">
             {['Om oss', 'Öppettider', 'Vi erbjuder', 'Bildgalleri', 'Meny', 'Evenemang', 'Boende', 'Upplevelser', 'Omdömen', 'Nyheter', 'FAQ', 'Kontakt', 'Karta'].map(s => (
-              <span key={s} className="px-4 py-2 bg-muted rounded-full text-sm font-medium">{s}</span>
+              <span key={s} className="px-4 py-2 bg-background border rounded-full text-sm font-medium">{s}</span>
             ))}
           </div>
         </div>
       </section>
 
       {/* Pricing */}
-      <section className="py-16 bg-muted/30 px-4">
+      <section className="py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Enkel prissättning</h2>
           <p className="text-muted-foreground mb-8">Inga dolda avgifter, inga bindningstider</p>
@@ -95,7 +145,14 @@ export default function Index() {
             </div>
             <p className="text-sm text-muted-foreground mb-6">exkl. moms</p>
             <ul className="text-sm text-left space-y-2 mb-8">
-              {['Egen subdomän (dittföretag.lumysite.se)', 'Mobilanpassad design', 'Flerspråkig (SV/EN/DE)', 'SEO-optimerad', 'Alla sektioner inkluderade', 'Obegränsade ändringar'].map(item => (
+              {[
+                'Egen subdomän (dittföretag.lumysite.se)',
+                'Mobilanpassad design',
+                'Flerspråkig (SV/EN/DE)',
+                'SEO & AI-optimerad med strukturerad data',
+                'Alla sektioner inkluderade',
+                'Obegränsade ändringar',
+              ].map(item => (
                 <li key={item} className="flex items-center gap-2">
                   <span className="text-primary">✓</span> {item}
                 </li>
@@ -104,14 +161,15 @@ export default function Index() {
             <Button size="lg" asChild className="w-full">
               <Link to="/registrera">Kom igång <ArrowRight className="ml-2 w-4 h-4" /></Link>
             </Button>
+            <p className="text-xs text-muted-foreground mt-4">Du behöver ingen teknisk kunskap — vi har gjort det enkelt.</p>
           </div>
         </div>
       </section>
 
       {/* CTA */}
       <section className="py-20 text-center px-4 bg-primary text-primary-foreground">
-        <h2 className="text-3xl font-bold mb-4">Redo att skapa din hemsida?</h2>
-        <p className="text-lg opacity-90 mb-8">Det tar bara några minuter att komma igång.</p>
+        <h2 className="text-3xl font-bold mb-4">Redo att synas — även i AI?</h2>
+        <p className="text-lg opacity-90 mb-8">Det tar bara några minuter. Ingen teknik, bara din information.</p>
         <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6">
           <Link to="/registrera">Skapa din sida nu <ArrowRight className="ml-2 w-5 h-5" /></Link>
         </Button>
