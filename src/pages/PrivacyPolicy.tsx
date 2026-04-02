@@ -20,10 +20,11 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-semibold mb-3">1. Personuppgiftsansvarig</h2>
             <p className="text-muted-foreground">
-              <strong>[FYLL I: Företagsnamn / Org.nr]</strong><br />
-              [FYLL I: Adress]<br />
-              E-post: <strong>[FYLL I: e-postadress]</strong><br />
-              Telefon: <strong>[FYLL I: telefonnummer]</strong>
+              <strong>Iperiferi AB</strong><br />
+              Org.nr: 559336-5090<br />
+              Telefon: 070-508 54 93<br />
+              E-post: josefin@iperiferi.se<br />
+              Webb: <a href="https://www.iperiferi.se" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">www.iperiferi.se</a>
             </p>
           </section>
 
@@ -97,7 +98,7 @@ export default function PrivacyPolicy() {
               <li><strong>Begränsning:</strong> Begära att behandlingen begränsas tillfälligt</li>
             </ul>
             <p className="text-muted-foreground mt-3">
-              Kontakta oss på <strong>[FYLL I: e-postadress]</strong> för att utöva dina rättigheter. Vi svarar inom 30 dagar.
+              Kontakta oss på <strong>josefin@iperiferi.se</strong> för att utöva dina rättigheter. Vi svarar inom 30 dagar.
             </p>
           </section>
 
@@ -121,7 +122,7 @@ export default function PrivacyPolicy() {
             <ul className="list-disc pl-5 text-muted-foreground space-y-1 mt-2">
               <li><strong>Nuläge:</strong> Inga AI-funktioner är för närvarande aktiva mot slutanvändare</li>
               <li><strong>Transparens:</strong> Om AI-funktioner aktiveras kommer vi tydligt märka vilka funktioner som är AI-genererade</li>
-              <li><strong>Ingen automatiserat beslutsfattande:</strong> Vi fattar inga beslut som påverkar dig baserat enbart på automatiserad behandling</li>
+              <li><strong>Inget automatiserat beslutsfattande:</strong> Vi fattar inga beslut som påverkar dig baserat enbart på automatiserad behandling</li>
               <li><strong>Dataskydd:</strong> AI-funktioner kommer inte att tränas på dina personuppgifter utan ditt samtycke</li>
             </ul>
             <p className="text-muted-foreground mt-3">
@@ -144,7 +145,7 @@ export default function PrivacyPolicy() {
           <Link to="/cookies" className="hover:underline">Cookiepolicy</Link>
           <Link to="/anvandarvillkor" className="hover:underline">Användarvillkor</Link>
         </div>
-        <p>© {new Date().getFullYear()} LumySite</p>
+        <p>© {new Date().getFullYear()} LumySite — Iperiferi AB</p>
       </footer>
     </div>
   );

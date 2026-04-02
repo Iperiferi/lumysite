@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import CookiePolicy from "./pages/CookiePolicy";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/cookies" element={<CookiePolicy />} />
             <Route path="/integritetspolicy" element={<PrivacyPolicy />} />
             <Route path="/anvandarvillkor" element={<TermsOfService />} />
+            <Route path="/kontakt" element={<Contact />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

@@ -79,7 +79,7 @@ export default function CookiePolicy() {
             <h2 className="text-xl font-semibold mb-3">5. Kontakt</h2>
             <p className="text-muted-foreground">
               Har du frågor om vår användning av cookies? Kontakta oss på{' '}
-              <strong>[FYLL I: e-postadress]</strong>.
+              <strong>josefin@iperiferi.se</strong> eller ring <strong>070-508 54 93</strong>.
             </p>
           </section>
         </div>
@@ -90,7 +90,7 @@ export default function CookiePolicy() {
           <Link to="/integritetspolicy" className="hover:underline">Integritetspolicy</Link>
           <Link to="/anvandarvillkor" className="hover:underline">Användarvillkor</Link>
         </div>
-        <p>© {new Date().getFullYear()} LumySite</p>
+        <p>© {new Date().getFullYear()} LumySite — Iperiferi AB</p>
       </footer>
     </div>
   );
