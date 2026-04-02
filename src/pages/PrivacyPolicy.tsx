@@ -23,7 +23,7 @@ export default function PrivacyPolicy() {
               <strong>Iperiferi AB</strong><br />
               Org.nr: 559336-5090<br />
               Telefon: 070-508 54 93<br />
-              E-post: josefin@iperiferi.se<br />
+              E-post: info@iperiferi.se<br />
               Webb: <a href="https://www.iperiferi.se" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">www.iperiferi.se</a>
             </p>
           </section>
@@ -98,7 +98,7 @@ export default function PrivacyPolicy() {
               <li><strong>Begränsning:</strong> Begära att behandlingen begränsas tillfälligt</li>
             </ul>
             <p className="text-muted-foreground mt-3">
-              Kontakta oss på <strong>josefin@iperiferi.se</strong> för att utöva dina rättigheter. Vi svarar inom 30 dagar.
+              Kontakta oss på <strong>info@iperiferi.se</strong> för att utöva dina rättigheter. Vi svarar inom 30 dagar.
             </p>
           </section>
 

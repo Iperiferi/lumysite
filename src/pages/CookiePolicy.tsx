@@ -79,7 +79,7 @@ export default function CookiePolicy() {
             <h2 className="text-xl font-semibold mb-3">5. Kontakt</h2>
             <p className="text-muted-foreground">
               Har du frågor om vår användning av cookies? Kontakta oss på{' '}
-              <strong>josefin@iperiferi.se</strong> eller ring <strong>070-508 54 93</strong>.
+              <strong>info@iperiferi.se</strong> eller ring <strong>070-508 54 93</strong>.
             </p>
           </section>
         </div>

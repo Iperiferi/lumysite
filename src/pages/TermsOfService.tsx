@@ -124,7 +124,7 @@ export default function TermsOfService() {
               <strong>Iperiferi AB</strong><br />
               Org.nr: 559336-5090<br />
               Telefon: 070-508 54 93<br />
-              E-post: josefin@iperiferi.se
+              E-post: info@iperiferi.se
             </p>
           </section>
         </div>
