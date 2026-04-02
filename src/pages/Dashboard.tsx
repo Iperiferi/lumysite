@@ -194,7 +194,7 @@ export default function Dashboard() {
     }
   };
 
-  const publicUrl = data ? `https://lumysite.lovable.app/${data.business.subdomain}` : '';
+  const publicUrl = data ? `https://lumysite.com/${data.business.subdomain}` : '';
 
   const handleCopyUrl = async () => {
     try {
