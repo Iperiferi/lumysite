@@ -335,11 +335,29 @@ export default function PublicSite() {
               <div className="flex items-center gap-3"><MapPin className="w-5 h-5" /><span>{business.address}</span></div>
             )}
           </div>
+          {socialLinks.length > 0 && (
+            <div className="flex gap-4 mt-6">
+              {socialLinks.map(s => (
+                <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition" style={{ color: accent }} aria-label={s.label}>
+                  {s.icon}
+                </a>
+              ))}
+            </div>
+          )}
         </section>
       </main>
 
       {/* Footer */}
       <footer className="border-t py-8 text-center text-sm text-muted-foreground">
+        {socialLinks.length > 0 && (
+          <div className="flex justify-center gap-4 mb-4">
+            {socialLinks.map(s => (
+              <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition text-foreground" aria-label={s.label}>
+                {s.icon}
+              </a>
+            ))}
+          </div>
+        )}
         <div className="flex justify-center gap-4 mb-2">
           <a href="/cookies" className="hover:underline">Cookiepolicy</a>
           <a href="/integritetspolicy" className="hover:underline">Integritetspolicy</a>
