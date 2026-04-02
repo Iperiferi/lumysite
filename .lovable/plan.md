@@ -1,64 +1,31 @@
 
 
-# Juridiska sidor och GDPR/AI Act-efterlevnad
+## Uppgradera startsidan — tydligare budskap & AI-vinkel
 
-## Nuläge
-Inga juridiska sidor finns. Footern innehåller bara en copyright-rad.
+### Vad ska ändras
 
-## Sidor att skapa
+**Fil:** `src/pages/Index.tsx`
 
-### 1. Cookiepolicy (`/cookies`)
-- Vilka cookies som används (sidebar-state, Supabase auth-token)
-- Syfte, lagringstid, typ (nödvändig/funktionell)
-- Ingen cookie-banner behövs om bara nödvändiga cookies används (vilket är fallet nu)
+### 1. Ny hero-text
+- Rubrik som talar direkt till målgruppen: "Äntligen en hemsida — utan krångel"
+- Undertext som betonar att det är för dig som aldrig haft hemsida eller tyckt det varit för svårt
+- Behåll CTA "Kom igång"
 
-### 2. Integritetspolicy / Personuppgiftspolicy (`/integritetspolicy`)
-- Personuppgiftsansvarig: LumySite + kontaktuppgifter (placeholder för användarens uppgifter)
-- Vilka uppgifter som samlas in: e-post, företagsinfo, uppladdade bilder
-- Rättslig grund: avtal (Art. 6.1b GDPR), berättigat intresse
-- Lagring och radering: hur länge data sparas, rätt till radering
-- Tredjeparter: Stripe (betalning), Lovable Cloud (hosting/databas)
-- Registrerades rättigheter: tillgång, rättelse, radering, dataportabilitet, invändning
-- Kontaktuppgifter för klagomål (IMY — Integritetsskyddsmyndigheten)
+### 2. Ny sektion: "Syns i AI-chattar"
+- Kort förklaring: fler och fler söker via AI (ChatGPT, Gemini, Perplexity) istället för Google
+- Utan hemsida syns du inte alls — med LumySite får du automatiskt strukturerad data som AI-chattar letar efter
+- Lista vad som ingår: schema.org markup, öppettider, recensioner, kontaktinfo, platsinformation — allt som AI-chattar behöver för att rekommendera dig
 
-### 3. Användarvillkor (`/anvandarvillkor`)
-- Tjänstebeskrivning
-- Konto och ansvar
-- Betalning och abonnemang (99 kr/mån)
-- Rätt att avpublicera/ta bort olämpligt innehåll
-- Immateriella rättigheter (användarens innehåll förblir deras)
-- Ansvarsbegränsning
-- Uppsägning
-- Ändring av villkor
+### 3. Uppdatera features-sektionen
+- Byt rubrik till något som "Byggt för dig som vill ha det enkelt"
+- Justera texterna så de betonar enkelhet ("Ingen kod, inga tekniska termer")
+- Lägg till en feature-kort om AI-synlighet med ikon
 
-### 4. AI Act-information (integreras i integritetspolicyn)
-- Om AI används i tjänsten: transparenskrav
-- Nuläge: ingen AI-funktionalitet exponerad mot slutanvändare, men om det läggs till senare behövs deklaration
-- Lägg till en sektion om AI-användning i integritetspolicyn som kan utökas
+### 4. Uppdatera "Välj dina sektioner"-texten
+- Förtydliga att varje sektion (öppettider, omdömen, meny etc.) hjälper AI-chattar förstå och rekommendera verksamheten
 
-## Tekniska ändringar
+### 5. Social proof / trovärdighet
+- Kort stycke i pricing eller CTA om att "Du behöver ingen teknisk kunskap — vi har gjort det enkelt"
 
-### Nya filer
-- `src/pages/CookiePolicy.tsx` — Cookiepolicy
-- `src/pages/PrivacyPolicy.tsx` — Integritetspolicy + AI Act
-- `src/pages/TermsOfService.tsx` — Användarvillkor
-
-### Ändrade filer
-- `src/App.tsx` — Lägg till routes: `/cookies`, `/integritetspolicy`, `/anvandarvillkor`
-- `src/pages/Index.tsx` — Uppdatera footer med länkar till alla tre sidor
-- `src/pages/PublicSite.tsx` — Lägg till footer-länkar på publika sidor också (kundernas besökare ska se cookiepolicy/integritetspolicy)
-
-### Designmönster
-- Enkel layout med prose-stil (max-w-3xl, typografi-klasser)
-- Tillbaka-länk till startsidan
-- Samma header/footer som Index-sidan
-- Alla texter på svenska
-- Platshållartext för kontaktuppgifter markerade med `[FYLL I]` så att du enkelt kan uppdatera dem
-
-### Innehåll att notera
-- **Rätt att avpublicera**: Tydligt i användarvillkoren att LumySite förbehåller sig rätten att avpublicera sidor med olämpligt, olagligt eller vilseledande innehåll
-- **Dataportabilitet**: Användare kan begära export av sin data
-- **Radering vid uppsägning**: Klargör vad som händer med data efter uppsägning
-- **Stripe som underbiträde**: Nämns i integritetspolicyn
-- **Inga tredjepartscookies**: Tydliggör att inga spårningscookies (Google Analytics etc.) används
+### Inga databasändringar krävs — enbart UI/text-uppdatering i Index.tsx.
 
