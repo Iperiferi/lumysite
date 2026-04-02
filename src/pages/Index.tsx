@@ -54,9 +54,14 @@ export default function Index() {
             Har du aldrig haft en hemsida? Eller tyckt att andra verktyg är för krångliga?
             LumySite är gjort för dig.
           </p>
-          <p className="text-base text-muted-foreground mb-8 max-w-xl mx-auto">
+          <p className="text-base text-muted-foreground mb-6 max-w-xl mx-auto">
             Fyll i din information, välj design och publicera — klart. Inga tekniska kunskaper behövs.
           </p>
+          <div className="flex flex-wrap justify-center gap-4 mb-8 text-sm font-medium text-muted-foreground">
+            <span className="flex items-center gap-1.5"><Globe className="w-4 h-4 text-primary" /> 3 språk automatiskt</span>
+            <span className="flex items-center gap-1.5"><Smartphone className="w-4 h-4 text-primary" /> Mobilanpassad</span>
+            <span className="flex items-center gap-1.5"><Zap className="w-4 h-4 text-primary" /> Webbadress direkt</span>
+          </div>
           <Button size="lg" asChild className="text-lg px-8 py-6">
             <Link to="/registrera">
               Kom igång <ArrowRight className="ml-2 w-5 h-5" />
