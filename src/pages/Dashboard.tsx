@@ -17,8 +17,9 @@ import { LogOut, Eye } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 
 export default function Dashboard() {
-  const { user, loading: authLoading, signOut } = useAuth();
+  const { user, loading: authLoading, signOut, subscribed, checkSubscription } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const { data, isLoading } = useOwnerBusiness(user?.id);
 
