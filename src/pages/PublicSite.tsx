@@ -1,6 +1,8 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useBusinessBySubdomain } from '@/hooks/useBusiness';
+
+const RESERVED_ROUTES = ['dashboard', 'logga-in', 'registrera', 'cookies', 'integritetspolicy', 'anvandarvillkor', 'kontakt', 'konto'];
 import { type Language, t, dayKeys } from '@/lib/i18n';
 import { fontStyles, type SectionType } from '@/lib/types';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';

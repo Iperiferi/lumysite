@@ -272,7 +272,7 @@ export default function Dashboard() {
         <Link to="/" className="text-primary font-bold text-xl">LumySite</Link>
         <div className="flex items-center gap-3">
           <Button variant="outline" size="sm" asChild>
-            <a href={`/site/${data.business.subdomain}`} target="_blank">
+            <a href={`/${data.business.subdomain}`} target="_blank">
               <Eye className="w-4 h-4 mr-1" /> Förhandsgranska
             </a>
           </Button>

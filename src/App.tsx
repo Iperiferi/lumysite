@@ -35,6 +35,7 @@ const App = () => (
             <Route path="/anvandarvillkor" element={<TermsOfService />} />
             <Route path="/kontakt" element={<Contact />} />
             <Route path="/konto" element={<AccountSettings />} />
+            <Route path="/:subdomain" element={<PublicSite />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
