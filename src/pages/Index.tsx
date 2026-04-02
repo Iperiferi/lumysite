@@ -82,6 +82,31 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Pricing */}
+      <section className="py-16 bg-muted/30 px-4">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-4">Enkel prissättning</h2>
+          <p className="text-muted-foreground mb-8">Inga dolda avgifter, inga bindningstider</p>
+          <div className="bg-background rounded-2xl border-2 border-primary p-8 max-w-md mx-auto">
+            <p className="text-sm font-medium text-primary mb-2">Allt inkluderat</p>
+            <div className="flex items-baseline justify-center gap-1 mb-2">
+              <span className="text-5xl font-bold">99</span>
+              <span className="text-xl text-muted-foreground">kr/mån</span>
+            </div>
+            <p className="text-sm text-muted-foreground mb-6">exkl. moms</p>
+            <ul className="text-sm text-left space-y-2 mb-8">
+              {['Egen subdomän (dittföretag.lumysite.se)', 'Mobilanpassad design', 'Flerspråkig (SV/EN/DE)', 'SEO-optimerad', 'Alla sektioner inkluderade', 'Obegränsade ändringar'].map(item => (
+                <li key={item} className="flex items-center gap-2">
+                  <span className="text-primary">✓</span> {item}
+                </li>
+              ))}
+            </ul>
+            <Button size="lg" asChild className="w-full">
+              <Link to="/registrera">Kom igång <ArrowRight className="ml-2 w-4 h-4" /></Link>
+            </Button>
+          </div>
+        </div>
+
       {/* CTA */}
       <section className="py-20 text-center px-4 bg-primary text-primary-foreground">
         <h2 className="text-3xl font-bold mb-4">Redo att skapa din hemsida?</h2>
