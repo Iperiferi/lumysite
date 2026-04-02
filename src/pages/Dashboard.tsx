@@ -169,6 +169,8 @@ export default function Dashboard() {
   };
 
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
+  const [showPublishedUrl, setShowPublishedUrl] = useState(false);
+  const [urlCopied, setUrlCopied] = useState(false);
 
   const handlePublishToggle = async () => {
     if (!data) return;
