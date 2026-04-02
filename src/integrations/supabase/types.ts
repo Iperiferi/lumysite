@@ -648,7 +648,7 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      owns_business_folder: { Args: { folder_name: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
