@@ -108,7 +108,7 @@ export default function PublicSite() {
       <section className="relative min-h-[60vh] flex items-center justify-center text-center"
         style={{
           backgroundImage: business.hero_image_url ? `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${business.hero_image_url})` : undefined,
-          backgroundSize: 'cover', backgroundPosition: 'center',
+          backgroundSize: 'cover', backgroundPosition: business.hero_focal_point || 'center',
           backgroundColor: business.hero_image_url ? undefined : accent,
         }}
       >
