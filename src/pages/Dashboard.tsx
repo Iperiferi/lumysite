@@ -131,6 +131,12 @@ export default function Dashboard() {
         accent_color: accentColor,
         font_style: fontStyle,
         cta_text: ctaText,
+        hero_focal_point: heroFocalPoint,
+        facebook_url: facebookUrl || null,
+        instagram_url: instagramUrl || null,
+        tiktok_url: tiktokUrl || null,
+        youtube_url: youtubeUrl || null,
+        linkedin_url: linkedinUrl || null,
       }).eq('id', data.business.id);
 
       // Update sections
