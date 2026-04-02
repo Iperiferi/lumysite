@@ -9,7 +9,7 @@ export function useBusinessBySubdomain(subdomain: string | undefined) {
       if (!subdomain) return null;
 
       const { data: business, error } = await supabase
-        .from('businesses')
+        .from('businesses_public' as any)
         .select('*')
         .eq('subdomain', subdomain)
         .maybeSingle();
