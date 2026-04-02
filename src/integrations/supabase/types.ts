@@ -53,6 +53,13 @@ export type Database = {
             referencedRelation: "businesses"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "accommodations_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       businesses: {
@@ -190,6 +197,13 @@ export type Database = {
             referencedRelation: "businesses"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "events_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       experiences: {
@@ -231,6 +245,13 @@ export type Database = {
             referencedRelation: "businesses"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "experiences_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       faq: {
@@ -264,6 +285,13 @@ export type Database = {
             columns: ["business_id"]
             isOneToOne: false
             referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "faq_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses_public"
             referencedColumns: ["id"]
           },
         ]
@@ -304,6 +332,13 @@ export type Database = {
             referencedRelation: "businesses"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "gallery_images_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       menu: {
@@ -340,6 +375,13 @@ export type Database = {
             columns: ["business_id"]
             isOneToOne: true
             referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "menu_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: true
+            referencedRelation: "businesses_public"
             referencedColumns: ["id"]
           },
         ]
@@ -386,6 +428,13 @@ export type Database = {
             referencedRelation: "businesses"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "news_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       sections: {
@@ -419,6 +468,13 @@ export type Database = {
             columns: ["business_id"]
             isOneToOne: false
             referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sections_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses_public"
             referencedColumns: ["id"]
           },
         ]
@@ -456,6 +512,13 @@ export type Database = {
             referencedRelation: "businesses"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "services_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       testimonials: {
@@ -491,11 +554,98 @@ export type Database = {
             referencedRelation: "businesses"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "testimonials_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
     Views: {
-      [_ in never]: never
+      businesses_public: {
+        Row: {
+          about_text: string | null
+          accent_color: string | null
+          address: string | null
+          business_name: string | null
+          created_at: string | null
+          cta_text: string | null
+          email: string | null
+          facebook_url: string | null
+          font_style: string | null
+          google_maps_embed: string | null
+          hero_focal_point: string | null
+          hero_image_url: string | null
+          id: string | null
+          instagram_url: string | null
+          is_published: boolean | null
+          linkedin_url: string | null
+          logo_url: string | null
+          opening_hours: Json | null
+          phone: string | null
+          short_description: string | null
+          subdomain: string | null
+          tiktok_url: string | null
+          updated_at: string | null
+          youtube_url: string | null
+        }
+        Insert: {
+          about_text?: string | null
+          accent_color?: string | null
+          address?: string | null
+          business_name?: string | null
+          created_at?: string | null
+          cta_text?: string | null
+          email?: string | null
+          facebook_url?: string | null
+          font_style?: string | null
+          google_maps_embed?: string | null
+          hero_focal_point?: string | null
+          hero_image_url?: string | null
+          id?: string | null
+          instagram_url?: string | null
+          is_published?: boolean | null
+          linkedin_url?: string | null
+          logo_url?: string | null
+          opening_hours?: Json | null
+          phone?: string | null
+          short_description?: string | null
+          subdomain?: string | null
+          tiktok_url?: string | null
+          updated_at?: string | null
+          youtube_url?: string | null
+        }
+        Update: {
+          about_text?: string | null
+          accent_color?: string | null
+          address?: string | null
+          business_name?: string | null
+          created_at?: string | null
+          cta_text?: string | null
+          email?: string | null
+          facebook_url?: string | null
+          font_style?: string | null
+          google_maps_embed?: string | null
+          hero_focal_point?: string | null
+          hero_image_url?: string | null
+          id?: string | null
+          instagram_url?: string | null
+          is_published?: boolean | null
+          linkedin_url?: string | null
+          logo_url?: string | null
+          opening_hours?: Json | null
+          phone?: string | null
+          short_description?: string | null
+          subdomain?: string | null
+          tiktok_url?: string | null
+          updated_at?: string | null
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
