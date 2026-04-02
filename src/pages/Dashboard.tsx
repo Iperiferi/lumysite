@@ -48,6 +48,13 @@ export default function Dashboard() {
   const [faqItems, setFaqItems] = useState<{ id?: string; question: string; answer: string }[]>([]);
   const [showOpeningHours, setShowOpeningHours] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [heroFocalPoint, setHeroFocalPoint] = useState('50% 50%');
+  const [facebookUrl, setFacebookUrl] = useState('');
+  const [instagramUrl, setInstagramUrl] = useState('');
+  const [tiktokUrl, setTiktokUrl] = useState('');
+  const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [linkedinUrl, setLinkedinUrl] = useState('');
+
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/logga-in');
