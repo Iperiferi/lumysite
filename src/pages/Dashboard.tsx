@@ -15,6 +15,12 @@ import { defaultOpeningHours, sectionTypes, fontStyles, type OpeningHour, type S
 import { t } from '@/lib/i18n';
 import { LogOut, Eye } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
+import ServicesEditor from '@/components/dashboard/ServicesEditor';
+import GalleryEditor from '@/components/dashboard/GalleryEditor';
+import MenuEditor from '@/components/dashboard/MenuEditor';
+import EventsEditor from '@/components/dashboard/EventsEditor';
+import TestimonialsEditor from '@/components/dashboard/TestimonialsEditor';
+import ImageItemEditor from '@/components/dashboard/ImageItemEditor';
 
 export default function Dashboard() {
   const { user, loading: authLoading, signOut, subscribed, checkSubscription } = useAuth();
