@@ -14,7 +14,443 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      accommodations: {
+        Row: {
+          business_id: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          sort_order: number | null
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          sort_order?: number | null
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accommodations_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      businesses: {
+        Row: {
+          about_text: string | null
+          accent_color: string | null
+          address: string | null
+          business_name: string
+          created_at: string
+          cta_text: string | null
+          email: string | null
+          font_style: string | null
+          google_maps_embed: string | null
+          hero_image_url: string | null
+          id: string
+          is_published: boolean | null
+          logo_url: string | null
+          opening_hours: Json | null
+          owner_id: string
+          phone: string | null
+          short_description: string | null
+          subdomain: string
+          updated_at: string
+        }
+        Insert: {
+          about_text?: string | null
+          accent_color?: string | null
+          address?: string | null
+          business_name: string
+          created_at?: string
+          cta_text?: string | null
+          email?: string | null
+          font_style?: string | null
+          google_maps_embed?: string | null
+          hero_image_url?: string | null
+          id?: string
+          is_published?: boolean | null
+          logo_url?: string | null
+          opening_hours?: Json | null
+          owner_id: string
+          phone?: string | null
+          short_description?: string | null
+          subdomain: string
+          updated_at?: string
+        }
+        Update: {
+          about_text?: string | null
+          accent_color?: string | null
+          address?: string | null
+          business_name?: string
+          created_at?: string
+          cta_text?: string | null
+          email?: string | null
+          font_style?: string | null
+          google_maps_embed?: string | null
+          hero_image_url?: string | null
+          id?: string
+          is_published?: boolean | null
+          logo_url?: string | null
+          opening_hours?: Json | null
+          owner_id?: string
+          phone?: string | null
+          short_description?: string | null
+          subdomain?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          business_id: string
+          created_at: string
+          description: string | null
+          event_date: string | null
+          id: string
+          image_url: string | null
+          sort_order: number | null
+          title: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          image_url?: string | null
+          sort_order?: number | null
+          title: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          image_url?: string | null
+          sort_order?: number | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      experiences: {
+        Row: {
+          business_id: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          sort_order: number | null
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          sort_order?: number | null
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "experiences_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      faq: {
+        Row: {
+          answer: string
+          business_id: string
+          created_at: string
+          id: string
+          question: string
+          sort_order: number | null
+        }
+        Insert: {
+          answer: string
+          business_id: string
+          created_at?: string
+          id?: string
+          question: string
+          sort_order?: number | null
+        }
+        Update: {
+          answer?: string
+          business_id?: string
+          created_at?: string
+          id?: string
+          question?: string
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "faq_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gallery_images: {
+        Row: {
+          alt_text: string | null
+          business_id: string
+          created_at: string
+          id: string
+          image_url: string
+          sort_order: number | null
+        }
+        Insert: {
+          alt_text?: string | null
+          business_id: string
+          created_at?: string
+          id?: string
+          image_url: string
+          sort_order?: number | null
+        }
+        Update: {
+          alt_text?: string | null
+          business_id?: string
+          created_at?: string
+          id?: string
+          image_url?: string
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gallery_images_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      menu: {
+        Row: {
+          business_id: string
+          content: string | null
+          created_at: string
+          id: string
+          pdf_url: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          business_id: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          pdf_url?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          business_id?: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          pdf_url?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "menu_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: true
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      news: {
+        Row: {
+          business_id: string
+          content: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          published_date: string | null
+          sort_order: number | null
+          title: string
+        }
+        Insert: {
+          business_id: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          published_date?: string | null
+          sort_order?: number | null
+          title: string
+        }
+        Update: {
+          business_id?: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          published_date?: string | null
+          sort_order?: number | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "news_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sections: {
+        Row: {
+          business_id: string
+          created_at: string
+          id: string
+          is_enabled: boolean | null
+          section_type: string
+          sort_order: number | null
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          id?: string
+          is_enabled?: boolean | null
+          section_type: string
+          sort_order?: number | null
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          id?: string
+          is_enabled?: boolean | null
+          section_type?: string
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sections_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services: {
+        Row: {
+          business_id: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          sort_order: number | null
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          sort_order?: number | null
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      testimonials: {
+        Row: {
+          author_name: string
+          business_id: string
+          content: string
+          created_at: string
+          id: string
+          sort_order: number | null
+        }
+        Insert: {
+          author_name: string
+          business_id: string
+          content: string
+          created_at?: string
+          id?: string
+          sort_order?: number | null
+        }
+        Update: {
+          author_name?: string
+          business_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "testimonials_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
