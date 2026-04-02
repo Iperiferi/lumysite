@@ -512,6 +512,27 @@ export default function Dashboard() {
           </Button>
         </div>
       </div>
+      <AlertDialog open={showPublishConfirm} onOpenChange={setShowPublishConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Publicera din sida</AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2">
+              <p>Genom att publicera bekräftar du att:</p>
+              <ul className="list-disc pl-5 space-y-1 text-sm">
+                <li>Du ansvarar själv för allt innehåll som publiceras på din sida.</li>
+                <li>Sidan blir offentlig och tillgänglig för alla på internet.</li>
+                <li>Innehållet inte bryter mot gällande lagar eller andras rättigheter.</li>
+              </ul>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Avbryt</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { setShowPublishConfirm(false); doPublish(true); }}>
+              Jag godkänner — publicera
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
