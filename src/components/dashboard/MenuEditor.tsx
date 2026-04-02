@@ -19,14 +19,12 @@ export default function MenuEditor({ businessId }: { businessId: string }) {
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [pdfUrl, setPdfUrl] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (menu) {
       setTitle(menu.title || '');
       setContent(menu.content || '');
-      setPdfUrl(menu.pdf_url || '');
     }
   }, [menu]);
 
