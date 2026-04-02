@@ -62,19 +62,6 @@ export default function MenuEditor({ businessId }: { businessId: string }) {
         <Label>Menyinnehåll (text)</Label>
         <Textarea value={content} onChange={e => setContent(e.target.value)} rows={4} placeholder="Skriv menyn som text..." />
       </div>
-      <div className="space-y-2">
-        <Label>Meny-PDF</Label>
-        {pdfUrl && (
-          <div className="flex items-center gap-2 p-2 bg-muted/50 rounded">
-            <span className="text-xs text-green-600 font-medium">✓ PDF sparad</span>
-            <a href={pdfUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-primary underline">Öppna PDF</a>
-            <Button type="button" variant="ghost" size="sm" className="text-destructive h-6 px-2 text-xs" onClick={handleRemovePdf}>
-              Ta bort
-            </Button>
-          </div>
-        )}
-        <Input type="file" accept=".pdf" onChange={e => e.target.files?.[0] && handlePdfUpload(e.target.files[0])} />
-      </div>
       <Button size="sm" onClick={handleSave} disabled={saving}>{saving ? 'Sparar...' : 'Spara meny'}</Button>
     </div>
   );
