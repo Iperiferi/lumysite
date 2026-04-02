@@ -396,6 +396,32 @@ export default function Dashboard() {
                     ))}
                   </div>
                 </div>
+                <div className="space-y-2 pt-4 border-t">
+                  <Label className="text-base font-semibold">Sociala medier</Label>
+                  <p className="text-sm text-muted-foreground">Lägg till länkar till dina sociala medier (visas på din publika sida).</p>
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="flex items-center gap-2">
+                      <Facebook className="w-5 h-5 text-muted-foreground shrink-0" />
+                      <Input placeholder="https://facebook.com/dittforetag" value={facebookUrl} onChange={e => setFacebookUrl(e.target.value)} />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Instagram className="w-5 h-5 text-muted-foreground shrink-0" />
+                      <Input placeholder="https://instagram.com/dittforetag" value={instagramUrl} onChange={e => setInstagramUrl(e.target.value)} />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.88-2.88 2.89 2.89 0 0 1 2.88-2.88c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.76 1.52v-3.4a4.85 4.85 0 0 1-1-.3z"/></svg>
+                      <Input placeholder="https://tiktok.com/@dittforetag" value={tiktokUrl} onChange={e => setTiktokUrl(e.target.value)} />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Youtube className="w-5 h-5 text-muted-foreground shrink-0" />
+                      <Input placeholder="https://youtube.com/@dittforetag" value={youtubeUrl} onChange={e => setYoutubeUrl(e.target.value)} />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Linkedin className="w-5 h-5 text-muted-foreground shrink-0" />
+                      <Input placeholder="https://linkedin.com/company/dittforetag" value={linkedinUrl} onChange={e => setLinkedinUrl(e.target.value)} />
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
