@@ -226,7 +226,7 @@ export default function PublicSite() {
         }}
       >
         <div className="relative z-10 max-w-2xl px-4 text-white">
-          {business.logo_url && <img src={business.logo_url} alt="" className="h-16 w-auto mx-auto mb-4" />}
+          {business.logo_url && <img src={business.logo_url} alt={`${business.business_name} logotyp`} className="h-16 w-auto mx-auto mb-4" />}
           <h1 className="text-4xl md:text-5xl font-bold mb-3">{business.business_name}</h1>
           {business.short_description && <p className="text-lg md:text-xl mb-6 opacity-90">{business.short_description}</p>}
           <a href="#kontakt" className="inline-block px-6 py-3 rounded-lg font-medium text-lg transition hover:opacity-90"
