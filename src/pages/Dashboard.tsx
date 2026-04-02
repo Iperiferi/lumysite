@@ -75,6 +75,12 @@ export default function Dashboard() {
     setAccentColor(b.accent_color || '#2563EB');
     setFontStyle(b.font_style);
     setCtaText(b.cta_text);
+    setHeroFocalPoint(b.hero_focal_point || '50% 50%');
+    setFacebookUrl(b.facebook_url || '');
+    setInstagramUrl(b.instagram_url || '');
+    setTiktokUrl(b.tiktok_url || '');
+    setYoutubeUrl(b.youtube_url || '');
+    setLinkedinUrl(b.linkedin_url || '');
     setFaqItems(data.faq.map(f => ({ id: f.id, question: f.question, answer: f.answer })));
 
     const secs: Record<SectionType, boolean> = {} as any;
