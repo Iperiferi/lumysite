@@ -401,9 +401,16 @@ export default function PublicSite() {
 
         {/* Map */}
         {(business.google_maps_embed || business.address) && (() => {
-          const isEmbedUrl = business.google_maps_embed?.includes('/maps/embed');
-          const mapSrc = isEmbedUrl
-            ? business.google_maps_embed!
+          const rawMapValue = business.google_maps_embed?.trim();
+          const iframeSrcMatch = rawMapValue?.match(/src=["']([^"']+)["']/i);
+          const extractedEmbedUrl = iframeSrcMatch?.[1]?.replace(/&amp;/g, '&');
+          const normalizedMapUrl = rawMapValue?.startsWith('<iframe')
+            ? extractedEmbedUrl
+            : rawMapValue?.startsWith('http')
+              ? rawMapValue
+              : null;
+          const mapSrc = normalizedMapUrl?.includes('/maps/embed')
+            ? normalizedMapUrl
             : business.address
               ? `https://maps.google.com/maps?q=${encodeURIComponent(business.address)}&output=embed`
               : null;
