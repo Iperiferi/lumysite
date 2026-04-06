@@ -115,6 +115,7 @@ export default function PublicSite() {
     ...(isSectionEnabled('events') && events.length > 0 ? [{ id: 'evenemang', label: t('nav.events', lang) }] : []),
     ...(isSectionEnabled('testimonials') && testimonials.length > 0 ? [{ id: 'omdomen', label: t('nav.testimonials', lang) }] : []),
     ...(isSectionEnabled('news') && news.length > 0 ? [{ id: 'nyheter', label: t('nav.news', lang) }] : []),
+    ...(faq.length > 0 ? [{ id: 'faq', label: t('nav.faq', lang) }] : []),
     { id: 'kontakt', label: t('nav.contact', lang) },
   ];
 
