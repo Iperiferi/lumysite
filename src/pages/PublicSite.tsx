@@ -26,6 +26,7 @@ function SeoHead({ business, subdomain }: { business: any; subdomain: string }) 
 
     // Standard meta
     setMeta('name', 'description', description);
+    setMeta('name', 'robots', 'index, follow');
 
     // Open Graph
     setMeta('property', 'og:title', title);
