@@ -1,42 +1,24 @@
 
 
-# Fix: Säkerställ att botar faktiskt får SEO-innehållet
+# Fix: Content-Type header i serve-site
 
 ## Problemet
-Sitemap pekar botar till SPA-URL:er (`lumysite.lovable.app/subdomain`) där de får en tom sida. Den fullständiga HTML:en i `render-site` används aldrig av botar.
+`serve-site` edge function returnerar `Content-Type: text/plain` trots att koden explicit sätter `text/html`. Detta beror sannolikt på att Supabase edge runtime's `Content-Security-Policy: default-src 'none'; sandbox` header påverkar content-type.
 
 ## Lösning
+Skapa ett explicit `Headers`-objekt med rätt Content-Type och returnera det. Testa med `new Headers()` API istället för ett vanligt objekt, vilket kan ge bättre kontroll över headern.
 
-### 1. Ändra sitemap — peka botar till serve-site
-Sitemap ska använda `serve-site` URL:er som primära. Dessa serverar full HTML till botar och redirectar människor till SPA:n.
+### Fil: `supabase/functions/serve-site/index.ts`
+- Byt från plain object headers till `new Headers()` för bot-svaret
+- Säkerställ att `Content-Type: text/html; charset=utf-8` faktiskt sätts korrekt
 
-**`supabase/functions/sitemap/index.ts`:**
-- Primära URL:er: `{baseUrl}/functions/v1/serve-site?subdomain=X` (priority 0.8)
-- Sekundära URL:er: `lumysite.lovable.app/X` (priority 0.6, för Google som kan köra JS)
+### Fil: `supabase/functions/render-site/index.ts`  
+- Samma fix — byt till `new Headers()` API för att garantera korrekt Content-Type
 
-### 2. Fixa Content-Type header i render-site
-Testet visade att `render-site` returnerar `Content-Type: text/plain` istället för `text/html`. Detta måste fixas.
+### Verifiering
+- Testa med `curl_edge_functions` och Googlebot UA efter deploy
+- Verifiera att `Content-Type: text/html` returneras
 
-**`supabase/functions/render-site/index.ts`:** Säkerställ att Content-Type headers sätts korrekt.
+## Resultat
+Alla botar (Google, Bing, AI-chattar) får korrekt `text/html` med fullständigt SEO-innehåll.
 
-### 3. Lägg till alternate-link i render-site HTML
-I den renderade HTML:en, lägg till en `<link rel="alternate">` som pekar till SPA-versionen, så sökmotorer förstår sambandet.
-
-### 4. Verifiera serve-site bot-detection
-Testa att `serve-site` korrekt identifierar botar och serverar HTML vs redirectar människor.
-
-## Filer som ändras
-- `supabase/functions/sitemap/index.ts` — Byt primära URL:er till serve-site
-- `supabase/functions/render-site/index.ts` — Fixa Content-Type header
-
-## Resultat efter fix
-```text
-Bot-flöde:
-  Sitemap → serve-site?subdomain=X → Bot detected → Full HTML (med canonical till SPA-URL)
-  
-Människo-flöde:  
-  Sitemap → serve-site?subdomain=X → Human detected → 302 redirect → SPA
-  Direkt besök → lumysite.lovable.app/X → SPA (fungerar som vanligt)
-```
-
-Botar (Bing, ChatGPT, Perplexity, Google) får alltid komplett HTML med alla meta-taggar, JSON-LD, och innehåll.
