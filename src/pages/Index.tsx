@@ -44,28 +44,49 @@ export default function Index() {
       </nav>
 
       {/* Hero */}
-      <section className="py-20 md:py-32 text-center px-4">
+      <section className="relative py-24 md:py-40 text-center px-4 overflow-hidden">
+        {/* Decorative background */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-3xl" />
+          <div className="absolute top-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-accent/40 blur-3xl" />
+        </div>
+
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-1.5 text-sm font-medium mb-8 animate-fade-in">
+            <Zap className="w-4 h-4" />
+            Klart på under 10 minuter
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
             Syns ditt företag<br />
             <span className="text-primary">på nätet?</span>
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mb-4 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground mb-3 max-w-2xl mx-auto leading-relaxed">
             LumySite ger dig en professionell sida på nätet som fungerar som en hemsida — fast enklare.
           </p>
-          <p className="text-base text-muted-foreground mb-6 max-w-xl mx-auto">
+          <p className="text-base text-muted-foreground mb-8 max-w-xl mx-auto">
             Fyll i din information, välj design och publicera — klart. Inga tekniska kunskaper behövs.
           </p>
-          <div className="flex flex-wrap justify-center gap-4 mb-8 text-sm font-medium text-muted-foreground">
-            <span className="flex items-center gap-1.5"><Globe className="w-4 h-4 text-primary" /> 3 språk automatiskt</span>
-            <span className="flex items-center gap-1.5"><Smartphone className="w-4 h-4 text-primary" /> Mobilanpassad</span>
-            <span className="flex items-center gap-1.5"><Zap className="w-4 h-4 text-primary" /> Webbadress direkt</span>
+          <div className="flex flex-wrap justify-center gap-6 mb-10 text-sm font-medium text-muted-foreground">
+            <span className="flex items-center gap-2 bg-background/80 backdrop-blur border rounded-full px-4 py-2 shadow-sm">
+              <Globe className="w-4 h-4 text-primary" /> 3 språk automatiskt
+            </span>
+            <span className="flex items-center gap-2 bg-background/80 backdrop-blur border rounded-full px-4 py-2 shadow-sm">
+              <Smartphone className="w-4 h-4 text-primary" /> Mobilanpassad
+            </span>
+            <span className="flex items-center gap-2 bg-background/80 backdrop-blur border rounded-full px-4 py-2 shadow-sm">
+              <Shield className="w-4 h-4 text-primary" /> Egen webbadress
+            </span>
           </div>
-          <Button size="lg" asChild className="text-lg px-8 py-6">
-            <Link to="/registrera">
-              Kom igång <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button size="lg" asChild className="text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-shadow">
+              <Link to="/registrera">
+                Kom igång <ArrowRight className="ml-2 w-5 h-5" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild className="text-lg px-8 py-6">
+              <a href="#demo">Se exempel</a>
+            </Button>
+          </div>
         </div>
       </section>
 
