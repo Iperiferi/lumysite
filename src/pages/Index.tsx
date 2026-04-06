@@ -108,7 +108,7 @@ export default function Index() {
       </section>
 
       {/* Demo Preview */}
-      <section className="py-16 px-4 bg-muted/40">
+      <section id="demo" className="py-16 px-4 bg-muted/40">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-3">Se hur en sida kan se ut</h2>
           <p className="text-muted-foreground mb-10 max-w-2xl mx-auto">
