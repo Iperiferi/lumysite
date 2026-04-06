@@ -1,57 +1,42 @@
 
 
-# SEO & Crawlbarhet – Analys och Plan
+# Fix: Säkerställ att botar faktiskt får SEO-innehållet
 
-## Nuläge
+## Problemet
+Sitemap pekar botar till SPA-URL:er (`lumysite.lovable.app/subdomain`) där de får en tom sida. Den fullständiga HTML:en i `render-site` används aldrig av botar.
 
-Din arkitektur har **ett kritiskt problem** för SEO: de publika sidorna (`/:subdomain`) är en React SPA. När en sökmotor eller AI-crawler besöker t.ex. `lumysite.lovable.app/mitt-hotell` får den bara en tom `<div id="root"></div>` och måste köra JavaScript för att se innehållet.
+## Lösning
 
-- **Google**: Kan köra JS, men det tar längre tid att indexera och är inte 100% pålitligt.
-- **Bing**: Mycket sämre på JS-rendering. Indexerar ofta inte SPA-innehåll.
-- **AI-crawlers** (ChatGPT, Perplexity, etc.): Kör vanligtvis **inte** JavaScript alls. De ser en tom sida.
+### 1. Ändra sitemap — peka botar till serve-site
+Sitemap ska använda `serve-site` URL:er som primära. Dessa serverar full HTML till botar och redirectar människor till SPA:n.
 
-Du har redan en `render-site` edge function som genererar fullständig, SEO-optimerad HTML. Det är utmärkt — men den används inte som primär ingångspunkt.
+**`supabase/functions/sitemap/index.ts`:**
+- Primära URL:er: `{baseUrl}/functions/v1/serve-site?subdomain=X` (priority 0.8)
+- Sekundära URL:er: `lumysite.lovable.app/X` (priority 0.6, för Google som kan köra JS)
 
-**Ytterligare problem**: Rutten i appen är `/:subdomain` men canonical-URL:en pekar på `/site/:subdomain` — en sökväg som inte existerar.
+### 2. Fixa Content-Type header i render-site
+Testet visade att `render-site` returnerar `Content-Type: text/plain` istället för `text/html`. Detta måste fixas.
 
-## Plan
+**`supabase/functions/render-site/index.ts`:** Säkerställ att Content-Type headers sätts korrekt.
 
-### 1. Skapa en prerender-proxy edge function
-En ny edge function (`serve-site`) som:
-- Tar emot anrop med `?subdomain=X`
-- Kontrollerar `User-Agent` — om det är en bot (Googlebot, Bingbot, ChatGPT-User, Twitterbot, facebookexternalhit, etc.) returneras den fullständiga HTML:en direkt (som `render-site` redan gör)
-- Om det är en vanlig användare, gör en redirect till SPA-versionen (`https://lumysite.lovable.app/{subdomain}`)
+### 3. Lägg till alternate-link i render-site HTML
+I den renderade HTML:en, lägg till en `<link rel="alternate">` som pekar till SPA-versionen, så sökmotorer förstår sambandet.
 
-### 2. Fixa canonical-URL:er
-- Ändra canonical i `SeoHead`-komponenten från `/site/${subdomain}` till `/${subdomain}` (matchar den faktiska rutten)
-- Uppdatera canonical i `render-site` edge function likadant
+### 4. Verifiera serve-site bot-detection
+Testa att `serve-site` korrekt identifierar botar och serverar HTML vs redirectar människor.
 
-### 3. Uppdatera sitemap edge function
-- Peka SPA-URL:erna till `https://lumysite.lovable.app/{subdomain}` (utan `/site/`)
-- Behåll `render-site`-URL:erna som alternativ för crawlers
+## Filer som ändras
+- `supabase/functions/sitemap/index.ts` — Byt primära URL:er till serve-site
+- `supabase/functions/render-site/index.ts` — Fixa Content-Type header
 
-### 4. Förbättra index.html med noscript-fallback
-- Lägg till en `<noscript>`-sektion i `<body>` i `index.html` som visar ett meddelande och en länk till render-site-versionen, så crawlers som inte kör JS ändå hittar innehåll
+## Resultat efter fix
+```text
+Bot-flöde:
+  Sitemap → serve-site?subdomain=X → Bot detected → Full HTML (med canonical till SPA-URL)
+  
+Människo-flöde:  
+  Sitemap → serve-site?subdomain=X → Human detected → 302 redirect → SPA
+  Direkt besök → lumysite.lovable.app/X → SPA (fungerar som vanligt)
+```
 
-### 5. Uppdatera robots.txt
-- Lägg till sitemap-länk: `Sitemap: https://bqakitontnhjruiphpbq.supabase.co/functions/v1/sitemap`
-- Tillåt AI-crawlers explicit (GPTBot, ChatGPT-User, anthropic-ai, etc.)
-
-### 6. Lägg till meta-taggar för AI-crawlers
-- Lägg till `<meta name="robots" content="index, follow">` i SeoHead-komponenten
-
-## Tekniska detaljer
-
-**Ny edge function `serve-site/index.ts`:**
-- Detekterar bot user-agents via regex
-- Anropar `render-site` logik direkt (eller gör intern fetch) för botar
-- 302-redirect till SPA för vanliga besökare
-
-**Filer som ändras:**
-- `supabase/functions/serve-site/index.ts` (ny)
-- `supabase/functions/sitemap/index.ts` (fixa URL:er)
-- `supabase/functions/render-site/index.ts` (fixa canonical)
-- `src/pages/PublicSite.tsx` (fixa canonical i SeoHead)
-- `public/robots.txt` (lägg till sitemap + AI-bots)
-- `index.html` (noscript-fallback)
-
+Botar (Bing, ChatGPT, Perplexity, Google) får alltid komplett HTML med alla meta-taggar, JSON-LD, och innehåll.
