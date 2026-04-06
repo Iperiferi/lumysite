@@ -47,12 +47,11 @@ export default function Index() {
       <section className="py-20 md:py-32 text-center px-4">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-            Äntligen en hemsida<br />
-            <span className="text-primary">— utan krångel</span>
+            Syns ditt företag<br />
+            <span className="text-primary">på nätet?</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground mb-4 max-w-2xl mx-auto">
-            Har du aldrig haft en hemsida? Eller tyckt att andra verktyg är för krångliga?
-            LumySite är gjort för dig.
+            LumySite ger dig en professionell sida på nätet som fungerar som en hemsida — fast enklare.
           </p>
           <p className="text-base text-muted-foreground mb-6 max-w-xl mx-auto">
             Fyll i din information, välj design och publicera — klart. Inga tekniska kunskaper behövs.
@@ -92,7 +91,7 @@ export default function Index() {
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-3">Se hur en sida kan se ut</h2>
           <p className="text-muted-foreground mb-10 max-w-2xl mx-auto">
-            Här är ett exempel på en hemsida skapad med LumySite — helt utan kodning.
+            Här är ett exempel på en sida skapad med LumySite — helt utan kodning.
           </p>
           <div className="relative mx-auto max-w-4xl">
             {/* Laptop frame */}
@@ -134,7 +133,7 @@ export default function Index() {
             <h2 className="text-3xl font-bold mb-4">Öka chansen att synas — även i AI-chattar</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
               Fler och fler frågar AI-chattar som ChatGPT, Gemini och Perplexity om var de ska äta, bo och vad de ska göra.
-              Utan en hemsida har de ingen information att utgå ifrån — med en har du betydligt bättre chanser att bli hittad.
+               Utan en sida på nätet har de ingen information att utgå ifrån — med en har du betydligt bättre chanser att bli hittad.
             </p>
           </div>
 
