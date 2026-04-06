@@ -1,64 +1,35 @@
 
 
-## Omstrukturering av navigation och sektionsordning
+## Snyggare visuell separation mellan sektioner
 
-### Nuläge
-Navigationen visar upp till ~11 individuella menyval (Om oss, Praktisk info, Vi erbjuder, Boende, Upplevelser, Galleri, Meny, Evenemang, Omdömen, Nyheter, FAQ, Kontakt). Varje val pekar på en egen sektion. Inga grupperingar.
+### Problem
+Alla sektioner har samma vita bakgrund med bara en tunn `border-t` som avdelare. Det ser ihoptryckt och monotont ut.
 
-### Ny struktur
-
-```text
-Nav:  Om oss | Vi erbjuder | Meny | Praktisk info | Kontakt | Bildgalleri
-```
-
-**1. Om oss** — scrollar till `#om-oss`
-- Om oss-text
-- Nyheter (under samma rubrik)
-- Omdömen (under samma rubrik)
-
-**2. Vi erbjuder** — scrollar till `#tjanster`
-- Tjänster (services)
-- Boende + Upplevelser visas tillsammans i ett gemensamt grid
-- Evenemang
-
-**3. Meny** — scrollar till `#meny`
-- Bara meny
-
-**4. Praktisk info** — scrollar till `#info`
-- Öppettider och kontaktinfo (befintlig layout)
-- FAQ
-
-**5. Kontakt** — scrollar till `#kontakt`
-- Kontaktuppgifter
-- Karta (flyttas in under kontakt-sektionen)
-
-**6. Bildgalleri** — scrollar till `#galleri`
-- Bildgalleri
+### Lösning
+Varannan sektion får en subtil bakgrundsfärg (ljusgrå) för att skapa visuell rytm. Mer generös padding och borttagna `border-t`-linjer.
 
 ### Ändringar
 
 **Fil: `src/pages/PublicSite.tsx`**
 
-1. **navItems-arrayen** (rad 107-120): Ersätt med 6 fasta menyval (visas villkorligt baserat på om det finns data):
-   - `{ id: 'om-oss', label: 'Om oss' / t() }`
-   - `{ id: 'tjanster', label: 'Vi erbjuder' / t() }` — visas om services, accommodations, experiences eller events finns
-   - `{ id: 'meny', label: 'Meny' / t() }` — visas om meny finns
-   - `{ id: 'info', label: 'Praktisk info' / t() }` — visas alltid (öppettider + FAQ)
-   - `{ id: 'kontakt', label: 'Kontakt' / t() }`
-   - `{ id: 'galleri', label: 'Bildgalleri' / t() }` — visas om galleri finns
+1. **Alternating section backgrounds**: Varannan sektion (Vi erbjuder, Kontakt) får en ljusgrå bakgrund (`bg-gray-50/70`) med full bredd, medan innehållet behåller `max-w-5xl`. Detta kräver att vi bryter ut sektionerna ur `<main className="max-w-5xl">` och istället ger varje sektion full bredd med en inre container.
 
-2. **Desktop nav** (rad 186): Visa alla 6 menyval (inte bara `.slice(0, 6)`).
+2. **Struktur-ändring**:
+   - `<main>` blir `max-w-none` (full bredd)
+   - Varje `<section>` får en wrapper med full bredd och valfri bakgrundsfärg
+   - Inre innehåll wrappas i `max-w-5xl mx-auto px-4`
+   - Ta bort alla `border-t` och ersätt med bakgrundsskifte
 
-3. **Omordna sektionerna i `<main>`** till denna ordning:
-   - **Om oss** (`#om-oss`): Behåll som nu, men lägg Nyheter och Omdömen direkt under (utan border-t, som undersektioner)
-   - **Vi erbjuder** (`#tjanster`): Services-grid, sedan Boende+Upplevelser i ett gemensamt grid med gemensam rubrik ("Boende & Upplevelser"), sedan Evenemang
-   - **Meny** (`#meny`): Oförändrad
-   - **Praktisk info** (`#info`): Behåll öppettider + kontaktinfo, lägg FAQ under
-   - **Kontakt** (`#kontakt`): Kontaktuppgifter + flytta kartan hit (ta bort separat `#hitta-hit`-sektion)
-   - **Bildgalleri** (`#galleri`): Oförändrad
+3. **Sektionslayout**:
+   - `#om-oss` — vit bakgrund, `py-20`
+   - `#tjanster` — `bg-gray-50/70`, `py-20`
+   - `#meny` — vit bakgrund, `py-20`
+   - `#info` — `bg-gray-50/70`, `py-20`
+   - `#kontakt` — vit bakgrund, `py-20`
+   - `#galleri` — `bg-gray-50/70`, `py-20`
 
-4. **Boende + Upplevelser ihop**: Kombinera accommodations och experiences i ett gemensamt grid under "Vi erbjuder" med en delad rubrik. Samma kortlayout för båda.
+4. **Ökat mellanrum**: `py-16` blir `py-20` för mer luft.
 
 **Fil: `supabase/functions/render-site/index.ts`**
-- Omordna sektionerna i bot-HTML:en i samma ordning som ovan, så att SEO-renderingen matchar.
+- Lägg till matchande `background-color` och padding på varannan `<section>` i bot-HTML:en.
 
