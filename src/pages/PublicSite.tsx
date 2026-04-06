@@ -13,7 +13,7 @@ function SeoHead({ business, subdomain }: { business: any; subdomain: string }) 
   useEffect(() => {
     const title = `${business.business_name} – ${business.short_description || ''}`;
     const description = business.about_text?.slice(0, 160) || business.short_description || '';
-    const canonicalUrl = `https://lumysite.lovable.app/site/${subdomain}`;
+    const canonicalUrl = `https://lumysite.lovable.app/${subdomain}`;
 
     document.title = title;
 
