@@ -104,19 +104,18 @@ export default function PublicSite() {
 
   const isSectionEnabled = (type: SectionType) => sections.find(s => s.section_type === type)?.is_enabled;
 
+  const hasOfferings = (isSectionEnabled('services') && services.length > 0) ||
+    (isSectionEnabled('accommodations') && accommodations.length > 0) ||
+    (isSectionEnabled('experiences') && experiences.length > 0) ||
+    (isSectionEnabled('events') && events.length > 0);
+
   const navItems = [
     { id: 'om-oss', label: t('nav.about', lang) },
-    { id: 'info', label: t('nav.info', lang) },
-    ...(isSectionEnabled('services') && services.length > 0 ? [{ id: 'tjanster', label: t('nav.services', lang) }] : []),
-    ...(isSectionEnabled('accommodations') && accommodations.length > 0 ? [{ id: 'boende', label: t('nav.accommodations', lang) }] : []),
-    ...(isSectionEnabled('experiences') && experiences.length > 0 ? [{ id: 'upplevelser', label: t('nav.experiences', lang) }] : []),
-    ...(isSectionEnabled('gallery') && gallery.length > 0 ? [{ id: 'galleri', label: t('nav.gallery', lang) }] : []),
+    ...(hasOfferings ? [{ id: 'tjanster', label: t('nav.services', lang) }] : []),
     ...(isSectionEnabled('menu') && menu ? [{ id: 'meny', label: t('nav.menu', lang) }] : []),
-    ...(isSectionEnabled('events') && events.length > 0 ? [{ id: 'evenemang', label: t('nav.events', lang) }] : []),
-    ...(isSectionEnabled('testimonials') && testimonials.length > 0 ? [{ id: 'omdomen', label: t('nav.testimonials', lang) }] : []),
-    ...(isSectionEnabled('news') && news.length > 0 ? [{ id: 'nyheter', label: t('nav.news', lang) }] : []),
-    ...(faq.length > 0 ? [{ id: 'faq', label: t('nav.faq', lang) }] : []),
+    { id: 'info', label: t('nav.info', lang) },
     { id: 'kontakt', label: t('nav.contact', lang) },
+    ...(isSectionEnabled('gallery') && gallery.length > 0 ? [{ id: 'galleri', label: t('nav.gallery', lang) }] : []),
   ];
 
   const dayLabels = dayKeys.map(k => t(k, lang));
@@ -183,7 +182,7 @@ export default function PublicSite() {
             {business.logo_url ? <img src={business.logo_url} alt={business.business_name} className="h-8 w-auto" /> : <span className="font-bold text-lg">{business.business_name}</span>}
           </div>
           <div className="hidden md:flex items-center gap-4 text-sm">
-            {navItems.slice(0, 6).map(n => (
+            {navItems.map(n => (
               <a key={n.id} href={`#${n.id}`} className="hover:opacity-70 transition">{n.label}</a>
             ))}
           </div>
