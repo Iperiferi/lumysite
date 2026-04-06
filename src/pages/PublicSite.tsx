@@ -104,19 +104,18 @@ export default function PublicSite() {
 
   const isSectionEnabled = (type: SectionType) => sections.find(s => s.section_type === type)?.is_enabled;
 
+  const hasOfferings = (isSectionEnabled('services') && services.length > 0) ||
+    (isSectionEnabled('accommodations') && accommodations.length > 0) ||
+    (isSectionEnabled('experiences') && experiences.length > 0) ||
+    (isSectionEnabled('events') && events.length > 0);
+
   const navItems = [
     { id: 'om-oss', label: t('nav.about', lang) },
-    { id: 'info', label: t('nav.info', lang) },
-    ...(isSectionEnabled('services') && services.length > 0 ? [{ id: 'tjanster', label: t('nav.services', lang) }] : []),
-    ...(isSectionEnabled('accommodations') && accommodations.length > 0 ? [{ id: 'boende', label: t('nav.accommodations', lang) }] : []),
-    ...(isSectionEnabled('experiences') && experiences.length > 0 ? [{ id: 'upplevelser', label: t('nav.experiences', lang) }] : []),
-    ...(isSectionEnabled('gallery') && gallery.length > 0 ? [{ id: 'galleri', label: t('nav.gallery', lang) }] : []),
+    ...(hasOfferings ? [{ id: 'tjanster', label: t('nav.services', lang) }] : []),
     ...(isSectionEnabled('menu') && menu ? [{ id: 'meny', label: t('nav.menu', lang) }] : []),
-    ...(isSectionEnabled('events') && events.length > 0 ? [{ id: 'evenemang', label: t('nav.events', lang) }] : []),
-    ...(isSectionEnabled('testimonials') && testimonials.length > 0 ? [{ id: 'omdomen', label: t('nav.testimonials', lang) }] : []),
-    ...(isSectionEnabled('news') && news.length > 0 ? [{ id: 'nyheter', label: t('nav.news', lang) }] : []),
-    ...(faq.length > 0 ? [{ id: 'faq', label: t('nav.faq', lang) }] : []),
+    { id: 'info', label: t('nav.info', lang) },
     { id: 'kontakt', label: t('nav.contact', lang) },
+    ...(isSectionEnabled('gallery') && gallery.length > 0 ? [{ id: 'galleri', label: t('nav.gallery', lang) }] : []),
   ];
 
   const dayLabels = dayKeys.map(k => t(k, lang));
@@ -183,7 +182,7 @@ export default function PublicSite() {
             {business.logo_url ? <img src={business.logo_url} alt={business.business_name} className="h-8 w-auto" /> : <span className="font-bold text-lg">{business.business_name}</span>}
           </div>
           <div className="hidden md:flex items-center gap-4 text-sm">
-            {navItems.slice(0, 6).map(n => (
+            {navItems.map(n => (
               <a key={n.id} href={`#${n.id}`} className="hover:opacity-70 transition">{n.label}</a>
             ))}
           </div>
@@ -245,107 +244,127 @@ export default function PublicSite() {
       </section>
 
       <main className="max-w-5xl mx-auto px-4">
-        {/* Om oss */}
+        {/* === 1. Om oss === */}
         <section id="om-oss" className="py-16">
           <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.about', lang)}</h2>
-          <p className="text-lg leading-relaxed whitespace-pre-line text-muted-foreground">{business.about_text}</p>
+          {business.about_text && <p className="text-lg leading-relaxed whitespace-pre-line text-muted-foreground">{business.about_text}</p>}
+
+          {/* Nyheter (under Om oss) */}
+          {isSectionEnabled('news') && news.length > 0 && (
+            <div className="mt-12">
+              <h3 className="text-2xl font-bold mb-6" style={{ color: accent }}>{t('nav.news', lang)}</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                {news.map(n => (
+                  <article key={n.id} className="border rounded-xl overflow-hidden">
+                    {n.image_url && <img src={n.image_url} alt={n.title} className="w-full h-48 object-cover" style={{ objectPosition: (n as any).focal_point || '50% 50%' }} loading="lazy" />}
+                    <div className="p-4">
+                      {n.published_date && <p className="text-sm" style={{ color: accent }}>{new Date(n.published_date).toLocaleDateString('sv-SE')}</p>}
+                      <h4 className="font-semibold text-lg">{n.title}</h4>
+                      {n.content && <p className="text-muted-foreground text-sm mt-1 line-clamp-3">{n.content}</p>}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Omdömen (under Om oss) */}
+          {isSectionEnabled('testimonials') && testimonials.length > 0 && (
+            <div className="mt-12">
+              <h3 className="text-2xl font-bold mb-6" style={{ color: accent }}>{t('nav.testimonials', lang)}</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                {testimonials.map(te => (
+                  <blockquote key={te.id} className="p-6 border rounded-xl bg-muted/30">
+                    <p className="italic text-muted-foreground mb-3">"{te.content}"</p>
+                    <footer className="font-semibold">— {te.author_name}</footer>
+                  </blockquote>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
 
-        {/* Praktisk info */}
-        <section id="info" className="py-16 border-t">
-          <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.info', lang)}</h2>
-          <div className="grid md:grid-cols-2 gap-16">
-            {(business.opening_hours || []).length > 0 && (
-              <div>
-                <h3 className="font-semibold mb-3 flex items-center gap-2"><Clock className="w-5 h-5" /> {t('site.openingHours', lang)}</h3>
-                <div className="space-y-1">
-                  {(business.opening_hours || []).map((h: any, i: number) => (
-                    <div key={i} className="flex justify-between text-sm">
-                      <span>{dayLabels[i]}</span>
-                      <span>{h.closed ? t('site.closed', lang) : `${h.open} – ${h.close}`}</span>
+        {/* === 2. Vi erbjuder === */}
+        {hasOfferings && (
+          <section id="tjanster" className="py-16 border-t">
+            <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.services', lang)}</h2>
+
+            {/* Tjänster */}
+            {isSectionEnabled('services') && services.length > 0 && (
+              <div className="mb-12">
+                <div className="grid md:grid-cols-3 gap-6">
+                  {services.map(s => (
+                    <div key={s.id} className="p-6 border rounded-xl">
+                      <h3 className="font-semibold text-lg mb-2">{s.name}</h3>
+                      {s.description && <p className="text-muted-foreground text-sm">{s.description}</p>}
                     </div>
                   ))}
                 </div>
               </div>
             )}
-            <div className="space-y-3 md:pl-12">
-              {business.address && (
-                <div className="flex items-start gap-2"><MapPin className="w-5 h-5 mt-0.5 shrink-0" /><span>{business.address}</span></div>
-              )}
-              {business.phone && (
-                <div className="flex items-center gap-2"><Phone className="w-5 h-5 shrink-0" /><a href={`tel:${business.phone}`} className="hover:underline">{business.phone}</a></div>
-              )}
-              {business.email && (
-                <div className="flex items-center gap-2"><Mail className="w-5 h-5 shrink-0" /><a href={`mailto:${business.email}`} className="hover:underline">{business.email}</a></div>
-              )}
-            </div>
-          </div>
-        </section>
 
-        {/* Services */}
-        {isSectionEnabled('services') && services.length > 0 && (
-          <section id="tjanster" className="py-16 border-t">
-            <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.services', lang)}</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {services.map(s => (
-                <div key={s.id} className="p-6 border rounded-xl">
-                  <h3 className="font-semibold text-lg mb-2">{s.name}</h3>
-                  {s.description && <p className="text-muted-foreground text-sm">{s.description}</p>}
+            {/* Boende & Upplevelser (kombinerat grid) */}
+            {((isSectionEnabled('accommodations') && accommodations.length > 0) || (isSectionEnabled('experiences') && experiences.length > 0)) && (
+              <div className="mb-12">
+                <h3 className="text-2xl font-bold mb-6" style={{ color: accent }}>
+                  {isSectionEnabled('accommodations') && accommodations.length > 0 && isSectionEnabled('experiences') && experiences.length > 0
+                    ? `${t('nav.accommodations', lang)} & ${t('nav.experiences', lang)}`
+                    : isSectionEnabled('accommodations') && accommodations.length > 0
+                      ? t('nav.accommodations', lang)
+                      : t('nav.experiences', lang)}
+                </h3>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {isSectionEnabled('accommodations') && accommodations.map(a => (
+                    <div key={a.id} className="border rounded-xl overflow-hidden">
+                      {a.image_url && <img src={a.image_url} alt={a.name} className="w-full h-48 object-cover" style={{ objectPosition: (a as any).focal_point || '50% 50%' }} loading="lazy" />}
+                      <div className="p-4">
+                        <h4 className="font-semibold text-lg">{a.name}</h4>
+                        {a.description && <p className="text-muted-foreground text-sm mt-1">{a.description}</p>}
+                      </div>
+                    </div>
+                  ))}
+                  {isSectionEnabled('experiences') && experiences.map(ex => (
+                    <div key={ex.id} className="border rounded-xl overflow-hidden">
+                      {ex.image_url && <img src={ex.image_url} alt={ex.name} className="w-full h-48 object-cover" style={{ objectPosition: (ex as any).focal_point || '50% 50%' }} loading="lazy" />}
+                      <div className="p-4">
+                        <h4 className="font-semibold text-lg">{ex.name}</h4>
+                        {ex.description && <p className="text-muted-foreground text-sm mt-1">{ex.description}</p>}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </section>
-        )}
+              </div>
+            )}
 
-        {/* Accommodations */}
-        {isSectionEnabled('accommodations') && accommodations.length > 0 && (
-          <section id="boende" className="py-16 border-t">
-            <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.accommodations', lang)}</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {accommodations.map(a => (
-                <div key={a.id} className="border rounded-xl overflow-hidden">
-                  {a.image_url && <img src={a.image_url} alt={a.name} className="w-full h-48 object-cover" style={{ objectPosition: (a as any).focal_point || '50% 50%' }} loading="lazy" />}
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg">{a.name}</h3>
-                    {a.description && <p className="text-muted-foreground text-sm mt-1">{a.description}</p>}
-                  </div>
+            {/* Evenemang */}
+            {isSectionEnabled('events') && events.length > 0 && (
+              <div>
+                <h3 className="text-2xl font-bold mb-6" style={{ color: accent }}>{t('nav.events', lang)}</h3>
+                <div className="space-y-6">
+                  {events.map(e => (
+                    <div key={e.id} className="flex gap-4 border rounded-xl p-4">
+                      {e.image_url && <img src={e.image_url} alt={e.title} className="w-32 h-24 object-cover rounded" style={{ objectPosition: (e as any).focal_point || '50% 50%' }} loading="lazy" />}
+                      <div>
+                        {e.event_date && (
+                          <p className="text-sm font-medium" style={{ color: accent }}>
+                            {new Date(e.event_date).toLocaleDateString('sv-SE')}
+                            {(e as any).event_end_date && (e as any).event_end_date !== e.event_date && ` – ${new Date((e as any).event_end_date).toLocaleDateString('sv-SE')}`}
+                            {(e as any).event_time && `, ${(e as any).event_time.substring(0, 5)}`}
+                            {(e as any).event_end_time && ` – ${(e as any).event_end_time.substring(0, 5)}`}
+                          </p>
+                        )}
+                        <h4 className="font-semibold text-lg">{e.title}</h4>
+                        {e.description && <p className="text-muted-foreground text-sm mt-1">{e.description}</p>}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
           </section>
         )}
 
-        {/* Experiences */}
-        {isSectionEnabled('experiences') && experiences.length > 0 && (
-          <section id="upplevelser" className="py-16 border-t">
-            <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.experiences', lang)}</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {experiences.map(ex => (
-                <div key={ex.id} className="border rounded-xl overflow-hidden">
-                  {ex.image_url && <img src={ex.image_url} alt={ex.name} className="w-full h-48 object-cover" style={{ objectPosition: (ex as any).focal_point || '50% 50%' }} loading="lazy" />}
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg">{ex.name}</h3>
-                    {ex.description && <p className="text-muted-foreground text-sm mt-1">{ex.description}</p>}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Gallery */}
-        {isSectionEnabled('gallery') && gallery.length > 0 && (
-          <section id="galleri" className="py-16 border-t">
-            <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.gallery', lang)}</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {gallery.map(img => (
-                <img key={img.id} src={img.image_url} alt={img.alt_text || ''} className="w-full aspect-square object-cover rounded-lg" style={{ objectPosition: (img as any).focal_point || '50% 50%' }} loading="lazy" />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Menu */}
+        {/* === 3. Meny === */}
         {isSectionEnabled('menu') && menu && (
           <section id="meny" className="py-16 border-t">
             <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{menu.title || t('nav.menu', lang)}</h2>
@@ -374,118 +393,53 @@ export default function PublicSite() {
           </section>
         )}
 
-        {/* Events */}
-        {isSectionEnabled('events') && events.length > 0 && (
-          <section id="evenemang" className="py-16 border-t">
-            <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.events', lang)}</h2>
-            <div className="space-y-6">
-              {events.map(e => (
-                <div key={e.id} className="flex gap-4 border rounded-xl p-4">
-                  {e.image_url && <img src={e.image_url} alt={e.title} className="w-32 h-24 object-cover rounded" style={{ objectPosition: (e as any).focal_point || '50% 50%' }} loading="lazy" />}
-                  <div>
-                    {e.event_date && (
-                      <p className="text-sm font-medium" style={{ color: accent }}>
-                        {new Date(e.event_date).toLocaleDateString('sv-SE')}
-                        {(e as any).event_end_date && (e as any).event_end_date !== e.event_date && ` – ${new Date((e as any).event_end_date).toLocaleDateString('sv-SE')}`}
-                        {(e as any).event_time && `, ${(e as any).event_time.substring(0, 5)}`}
-                        {(e as any).event_end_time && ` – ${(e as any).event_end_time.substring(0, 5)}`}
-                      </p>
-                    )}
-                    <h3 className="font-semibold text-lg">{e.title}</h3>
-                    {e.description && <p className="text-muted-foreground text-sm mt-1">{e.description}</p>}
-                  </div>
+        {/* === 4. Praktisk info === */}
+        <section id="info" className="py-16 border-t">
+          <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.info', lang)}</h2>
+          <div className="grid md:grid-cols-2 gap-16">
+            {(business.opening_hours || []).length > 0 && (
+              <div>
+                <h3 className="font-semibold mb-3 flex items-center gap-2"><Clock className="w-5 h-5" /> {t('site.openingHours', lang)}</h3>
+                <div className="space-y-1">
+                  {(business.opening_hours || []).map((h: any, i: number) => (
+                    <div key={i} className="flex justify-between text-sm">
+                      <span>{dayLabels[i]}</span>
+                      <span>{h.closed ? t('site.closed', lang) : `${h.open} – ${h.close}`}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Testimonials */}
-        {isSectionEnabled('testimonials') && testimonials.length > 0 && (
-          <section id="omdomen" className="py-16 border-t">
-            <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.testimonials', lang)}</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {testimonials.map(te => (
-                <blockquote key={te.id} className="p-6 border rounded-xl bg-muted/30">
-                  <p className="italic text-muted-foreground mb-3">"{te.content}"</p>
-                  <footer className="font-semibold">— {te.author_name}</footer>
-                </blockquote>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* News */}
-        {isSectionEnabled('news') && news.length > 0 && (
-          <section id="nyheter" className="py-16 border-t">
-            <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.news', lang)}</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {news.map(n => (
-                <article key={n.id} className="border rounded-xl overflow-hidden">
-                  {n.image_url && <img src={n.image_url} alt={n.title} className="w-full h-48 object-cover" style={{ objectPosition: (n as any).focal_point || '50% 50%' }} loading="lazy" />}
-                  <div className="p-4">
-                    {n.published_date && <p className="text-sm" style={{ color: accent }}>{new Date(n.published_date).toLocaleDateString('sv-SE')}</p>}
-                    <h3 className="font-semibold text-lg">{n.title}</h3>
-                    {n.content && <p className="text-muted-foreground text-sm mt-1 line-clamp-3">{n.content}</p>}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Map */}
-        {(business.google_maps_embed || business.address) && (() => {
-          const rawMapValue = business.google_maps_embed?.trim();
-          const iframeSrcMatch = rawMapValue?.match(/src=["']([^"']+)["']/i);
-          const extractedEmbedUrl = iframeSrcMatch?.[1]?.replace(/&amp;/g, '&');
-          const normalizedMapUrl = rawMapValue?.startsWith('<iframe')
-            ? extractedEmbedUrl
-            : rawMapValue?.startsWith('http')
-              ? rawMapValue
-              : null;
-          const mapSrc = normalizedMapUrl?.includes('/maps/embed')
-            ? normalizedMapUrl
-            : business.address
-              ? `https://maps.google.com/maps?q=${encodeURIComponent(business.address)}&output=embed`
-              : null;
-
-          return mapSrc ? (
-            <section id="hitta-hit" className="py-16 border-t">
-              <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.map', lang)}</h2>
-              {business.address && <p className="mb-4 flex items-center gap-2"><MapPin className="w-5 h-5" /> {business.address}</p>}
-              <div className="rounded-xl overflow-hidden border">
-                <iframe
-                  src={mapSrc}
-                  width="100%"
-                  height="400"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Google Maps"
-                />
               </div>
-            </section>
-          ) : null;
-        })()}
+            )}
+            <div className="space-y-3 md:pl-12">
+              {business.address && (
+                <div className="flex items-start gap-2"><MapPin className="w-5 h-5 mt-0.5 shrink-0" /><span>{business.address}</span></div>
+              )}
+              {business.phone && (
+                <div className="flex items-center gap-2"><Phone className="w-5 h-5 shrink-0" /><a href={`tel:${business.phone}`} className="hover:underline">{business.phone}</a></div>
+              )}
+              {business.email && (
+                <div className="flex items-center gap-2"><Mail className="w-5 h-5 shrink-0" /><a href={`mailto:${business.email}`} className="hover:underline">{business.email}</a></div>
+              )}
+            </div>
+          </div>
 
-        {/* FAQ */}
-        {faq.length > 0 && (
-          <section id="faq" className="py-16 border-t">
-            <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.faq', lang)}</h2>
-            <Accordion type="single" collapsible className="max-w-2xl">
-              {faq.map(f => (
-                <AccordionItem key={f.id} value={f.id}>
-                  <AccordionTrigger>{f.question}</AccordionTrigger>
-                  <AccordionContent>{f.answer}</AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </section>
-        )}
+          {/* FAQ (under Praktisk info) */}
+          {faq.length > 0 && (
+            <div className="mt-12">
+              <h3 className="text-2xl font-bold mb-6" style={{ color: accent }}>{t('nav.faq', lang)}</h3>
+              <Accordion type="single" collapsible className="max-w-2xl">
+                {faq.map(f => (
+                  <AccordionItem key={f.id} value={f.id}>
+                    <AccordionTrigger>{f.question}</AccordionTrigger>
+                    <AccordionContent>{f.answer}</AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          )}
+        </section>
 
-        {/* Contact */}
+        {/* === 5. Kontakt === */}
         <section id="kontakt" className="py-16 border-t">
           <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.contact', lang)}</h2>
           <div className="space-y-3 text-lg">
@@ -508,7 +462,54 @@ export default function PublicSite() {
               ))}
             </div>
           )}
+
+          {/* Karta (under Kontakt) */}
+          {(business.google_maps_embed || business.address) && (() => {
+            const rawMapValue = business.google_maps_embed?.trim();
+            const iframeSrcMatch = rawMapValue?.match(/src=["']([^"']+)["']/i);
+            const extractedEmbedUrl = iframeSrcMatch?.[1]?.replace(/&amp;/g, '&');
+            const normalizedMapUrl = rawMapValue?.startsWith('<iframe')
+              ? extractedEmbedUrl
+              : rawMapValue?.startsWith('http')
+                ? rawMapValue
+                : null;
+            const mapSrc = normalizedMapUrl?.includes('/maps/embed')
+              ? normalizedMapUrl
+              : business.address
+                ? `https://maps.google.com/maps?q=${encodeURIComponent(business.address)}&output=embed`
+                : null;
+
+            return mapSrc ? (
+              <div className="mt-8">
+                <h3 className="text-2xl font-bold mb-4" style={{ color: accent }}>{t('nav.map', lang)}</h3>
+                <div className="rounded-xl overflow-hidden border">
+                  <iframe
+                    src={mapSrc}
+                    width="100%"
+                    height="400"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Google Maps"
+                  />
+                </div>
+              </div>
+            ) : null;
+          })()}
         </section>
+
+        {/* === 6. Bildgalleri === */}
+        {isSectionEnabled('gallery') && gallery.length > 0 && (
+          <section id="galleri" className="py-16 border-t">
+            <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.gallery', lang)}</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {gallery.map(img => (
+                <img key={img.id} src={img.image_url} alt={img.alt_text || ''} className="w-full aspect-square object-cover rounded-lg" style={{ objectPosition: (img as any).focal_point || '50% 50%' }} loading="lazy" />
+              ))}
+            </div>
+          </section>
+        )}
       </main>
 
       {/* Footer */}

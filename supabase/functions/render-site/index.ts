@@ -106,92 +106,116 @@ Deno.serve(async (req) => {
     ...(sameAs.length > 0 ? { sameAs } : {}),
   });
 
-  // Build sections HTML
+  // Build sections HTML — grouped to match client-side nav structure
   let sectionsHtml = "";
 
-  // About
+  // === 1. Om oss ===
   if (business.about_text) {
-    sectionsHtml += `<section><h2>Om oss</h2><p>${escapeHtml(business.about_text)}</p></section>`;
+    sectionsHtml += `<section><h2>Om oss</h2><p>${escapeHtml(business.about_text)}</p>`;
+
+    // News (under Om oss)
+    if (isEnabled("news") && (news.data || []).length > 0) {
+      sectionsHtml += `<h3>Nyheter</h3>${(news.data || []).map((n: any) =>
+        `<article><h4>${escapeHtml(n.title)}</h4>${n.published_date ? `<time datetime="${n.published_date}">${n.published_date}</time>` : ""}${n.image_url ? `<img src="${escapeHtml(n.image_url)}" alt="${escapeHtml(n.title)}" loading="lazy" style="max-width:400px">` : ""}${n.content ? `<p>${escapeHtml(n.content)}</p>` : ""}</article>`
+      ).join("")}`;
+    }
+
+    // Testimonials (under Om oss)
+    if (isEnabled("testimonials") && (testimonials.data || []).length > 0) {
+      sectionsHtml += `<h3>Omdömen</h3>${(testimonials.data || []).map((t: any) =>
+        `<blockquote><p>${escapeHtml(t.content)}</p><footer>– ${escapeHtml(t.author_name)}</footer></blockquote>`
+      ).join("")}`;
+    }
+
+    sectionsHtml += `</section>`;
   }
 
-  // Contact info
-  const contactParts = [];
-  if (business.address) contactParts.push(`<p><strong>Adress:</strong> ${escapeHtml(business.address)}</p>`);
-  if (business.phone) contactParts.push(`<p><strong>Telefon:</strong> <a href="tel:${escapeHtml(business.phone)}">${escapeHtml(business.phone)}</a></p>`);
-  if (business.email) contactParts.push(`<p><strong>E-post:</strong> <a href="mailto:${escapeHtml(business.email)}">${escapeHtml(business.email)}</a></p>`);
-  if (contactParts.length > 0) {
-    sectionsHtml += `<section><h2>Kontakt</h2><address>${contactParts.join("")}</address></section>`;
+  // === 2. Vi erbjuder ===
+  const hasServices = isEnabled("services") && (services.data || []).length > 0;
+  const hasAccom = isEnabled("accommodations") && (accommodations.data || []).length > 0;
+  const hasExp = isEnabled("experiences") && (experiences.data || []).length > 0;
+  const hasEvents = isEnabled("events") && (events.data || []).length > 0;
+
+  if (hasServices || hasAccom || hasExp || hasEvents) {
+    sectionsHtml += `<section><h2>Vi erbjuder</h2>`;
+
+    if (hasServices) {
+      sectionsHtml += `<ul>${(services.data || []).map((s: any) =>
+        `<li><strong>${escapeHtml(s.name)}</strong>${s.description ? ` – ${escapeHtml(s.description)}` : ""}</li>`
+      ).join("")}</ul>`;
+    }
+
+    if (hasAccom || hasExp) {
+      const label = hasAccom && hasExp ? "Boende &amp; Upplevelser" : hasAccom ? "Boende" : "Upplevelser";
+      sectionsHtml += `<h3>${label}</h3>`;
+      if (hasAccom) {
+        sectionsHtml += (accommodations.data || []).map((a: any) =>
+          `<article><h4>${escapeHtml(a.name)}</h4>${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="${escapeHtml(a.name)}" loading="lazy" style="max-width:400px">` : ""}${a.description ? `<p>${escapeHtml(a.description)}</p>` : ""}</article>`
+        ).join("");
+      }
+      if (hasExp) {
+        sectionsHtml += (experiences.data || []).map((ex: any) =>
+          `<article><h4>${escapeHtml(ex.name)}</h4>${ex.image_url ? `<img src="${escapeHtml(ex.image_url)}" alt="${escapeHtml(ex.name)}" loading="lazy" style="max-width:400px">` : ""}${ex.description ? `<p>${escapeHtml(ex.description)}</p>` : ""}</article>`
+        ).join("");
+      }
+    }
+
+    if (hasEvents) {
+      sectionsHtml += `<h3>Evenemang</h3>${(events.data || []).map((ev: any) =>
+        `<article><h4>${escapeHtml(ev.title)}</h4>${ev.event_date ? `<p><time datetime="${ev.event_date}">${ev.event_date}</time></p>` : ""}${ev.image_url ? `<img src="${escapeHtml(ev.image_url)}" alt="${escapeHtml(ev.title)}" loading="lazy" style="max-width:400px">` : ""}${ev.description ? `<p>${escapeHtml(ev.description)}</p>` : ""}</article>`
+      ).join("")}`;
+    }
+
+    sectionsHtml += `</section>`;
   }
 
-  sectionsHtml += hoursHtml;
-
-  // Services
-  if (isEnabled("services") && (services.data || []).length > 0) {
-    sectionsHtml += `<section><h2>Vi erbjuder</h2><ul>${(services.data || []).map((s: any) =>
-      `<li><strong>${escapeHtml(s.name)}</strong>${s.description ? ` – ${escapeHtml(s.description)}` : ""}</li>`
-    ).join("")}</ul></section>`;
-  }
-
-  // Accommodations
-  if (isEnabled("accommodations") && (accommodations.data || []).length > 0) {
-    sectionsHtml += `<section><h2>Boende</h2>${(accommodations.data || []).map((a: any) =>
-      `<article><h3>${escapeHtml(a.name)}</h3>${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="${escapeHtml(a.name)}" loading="lazy" style="max-width:400px">` : ""}${a.description ? `<p>${escapeHtml(a.description)}</p>` : ""}</article>`
-    ).join("")}</section>`;
-  }
-
-  // Experiences
-  if (isEnabled("experiences") && (experiences.data || []).length > 0) {
-    sectionsHtml += `<section><h2>Upplevelser</h2>${(experiences.data || []).map((ex: any) =>
-      `<article><h3>${escapeHtml(ex.name)}</h3>${ex.image_url ? `<img src="${escapeHtml(ex.image_url)}" alt="${escapeHtml(ex.name)}" loading="lazy" style="max-width:400px">` : ""}${ex.description ? `<p>${escapeHtml(ex.description)}</p>` : ""}</article>`
-    ).join("")}</section>`;
-  }
-
-  // Gallery
-  if (isEnabled("gallery") && (gallery.data || []).length > 0) {
-    sectionsHtml += `<section><h2>Bildgalleri</h2>${(gallery.data || []).map((img: any) =>
-      `<img src="${escapeHtml(img.image_url)}" alt="${escapeHtml(img.alt_text || business.business_name)}" loading="lazy" style="max-width:400px;margin:8px">`
-    ).join("")}</section>`;
-  }
-
-  // Menu
+  // === 3. Meny ===
   if (isEnabled("menu") && menu.data) {
     const m = menu.data as any;
     sectionsHtml += `<section><h2>Meny</h2>${m.title ? `<h3>${escapeHtml(m.title)}</h3>` : ""}${m.content ? `<div>${escapeHtml(m.content)}</div>` : ""}${m.pdf_url ? `<p><a href="${escapeHtml(m.pdf_url)}">Ladda ner meny (PDF)</a></p>` : ""}</section>`;
   }
 
-  // Events
-  if (isEnabled("events") && (events.data || []).length > 0) {
-    sectionsHtml += `<section><h2>Evenemang</h2>${(events.data || []).map((ev: any) =>
-      `<article><h3>${escapeHtml(ev.title)}</h3>${ev.event_date ? `<p><time datetime="${ev.event_date}">${ev.event_date}</time></p>` : ""}${ev.image_url ? `<img src="${escapeHtml(ev.image_url)}" alt="${escapeHtml(ev.title)}" loading="lazy" style="max-width:400px">` : ""}${ev.description ? `<p>${escapeHtml(ev.description)}</p>` : ""}</article>`
+  // === 4. Praktisk info ===
+  {
+    const infoParts = [];
+    infoParts.push(hoursHtml);
+
+    const contactParts = [];
+    if (business.address) contactParts.push(`<p><strong>Adress:</strong> ${escapeHtml(business.address)}</p>`);
+    if (business.phone) contactParts.push(`<p><strong>Telefon:</strong> <a href="tel:${escapeHtml(business.phone)}">${escapeHtml(business.phone)}</a></p>`);
+    if (business.email) contactParts.push(`<p><strong>E-post:</strong> <a href="mailto:${escapeHtml(business.email)}">${escapeHtml(business.email)}</a></p>`);
+    if (contactParts.length > 0) infoParts.push(`<address>${contactParts.join("")}</address>`);
+
+    if ((faq.data || []).length > 0) {
+      infoParts.push(`<h3>Vanliga frågor</h3><dl>${(faq.data || []).map((f: any) =>
+        `<dt><strong>${escapeHtml(f.question)}</strong></dt><dd>${escapeHtml(f.answer)}</dd>`
+      ).join("")}</dl>`);
+    }
+
+    sectionsHtml += `<section><h2>Praktisk info</h2>${infoParts.join("")}</section>`;
+  }
+
+  // === 5. Kontakt ===
+  {
+    const kontaktParts = [];
+    if (business.phone) kontaktParts.push(`<p><a href="tel:${escapeHtml(business.phone)}">${escapeHtml(business.phone)}</a></p>`);
+    if (business.email) kontaktParts.push(`<p><a href="mailto:${escapeHtml(business.email)}">${escapeHtml(business.email)}</a></p>`);
+    if (business.address) kontaktParts.push(`<p>${escapeHtml(business.address)}</p>`);
+
+    if (sameAs.length > 0) {
+      kontaktParts.push(`<ul>${sameAs.map((url: string) =>
+        `<li><a href="${escapeHtml(url)}" rel="noopener">${escapeHtml(url)}</a></li>`
+      ).join("")}</ul>`);
+    }
+
+    sectionsHtml += `<section><h2>Kontakt</h2>${kontaktParts.join("")}</section>`;
+  }
+
+  // === 6. Bildgalleri ===
+  if (isEnabled("gallery") && (gallery.data || []).length > 0) {
+    sectionsHtml += `<section><h2>Bildgalleri</h2>${(gallery.data || []).map((img: any) =>
+      `<img src="${escapeHtml(img.image_url)}" alt="${escapeHtml(img.alt_text || business.business_name)}" loading="lazy" style="max-width:400px;margin:8px">`
     ).join("")}</section>`;
-  }
-
-  // Testimonials
-  if (isEnabled("testimonials") && (testimonials.data || []).length > 0) {
-    sectionsHtml += `<section><h2>Omdömen</h2>${(testimonials.data || []).map((t: any) =>
-      `<blockquote><p>${escapeHtml(t.content)}</p><footer>– ${escapeHtml(t.author_name)}</footer></blockquote>`
-    ).join("")}</section>`;
-  }
-
-  // News
-  if (isEnabled("news") && (news.data || []).length > 0) {
-    sectionsHtml += `<section><h2>Nyheter</h2>${(news.data || []).map((n: any) =>
-      `<article><h3>${escapeHtml(n.title)}</h3>${n.published_date ? `<time datetime="${n.published_date}">${n.published_date}</time>` : ""}${n.image_url ? `<img src="${escapeHtml(n.image_url)}" alt="${escapeHtml(n.title)}" loading="lazy" style="max-width:400px">` : ""}${n.content ? `<p>${escapeHtml(n.content)}</p>` : ""}</article>`
-    ).join("")}</section>`;
-  }
-
-  // FAQ
-  if ((faq.data || []).length > 0) {
-    sectionsHtml += `<section><h2>Vanliga frågor</h2><dl>${(faq.data || []).map((f: any) =>
-      `<dt><strong>${escapeHtml(f.question)}</strong></dt><dd>${escapeHtml(f.answer)}</dd>`
-    ).join("")}</dl></section>`;
-  }
-
-  // Social links
-  if (sameAs.length > 0) {
-    sectionsHtml += `<section><h2>Följ oss</h2><ul>${sameAs.map((url: string) =>
-      `<li><a href="${escapeHtml(url)}" rel="noopener">${escapeHtml(url)}</a></li>`
-    ).join("")}</ul></section>`;
   }
 
   const html = `<!DOCTYPE html>
