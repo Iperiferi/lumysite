@@ -243,9 +243,10 @@ export default function PublicSite() {
         </div>
       </section>
 
-      <main className="max-w-5xl mx-auto px-4">
+      <main>
         {/* === 1. Om oss === */}
-        <section id="om-oss" className="py-16">
+        <section id="om-oss" className="py-20">
+          <div className="max-w-5xl mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.about', lang)}</h2>
           {business.about_text && <p className="text-lg leading-relaxed whitespace-pre-line text-muted-foreground">{business.about_text}</p>}
 
@@ -282,11 +283,13 @@ export default function PublicSite() {
               </div>
             </div>
           )}
+          </div>
         </section>
 
         {/* === 2. Vi erbjuder === */}
         {hasOfferings && (
-          <section id="tjanster" className="py-16 border-t">
+          <section id="tjanster" className="py-20 bg-muted/40">
+            <div className="max-w-5xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.services', lang)}</h2>
 
             {/* Tjänster */}
@@ -294,7 +297,7 @@ export default function PublicSite() {
               <div className="mb-12">
                 <div className="grid md:grid-cols-3 gap-6">
                   {services.map(s => (
-                    <div key={s.id} className="p-6 border rounded-xl">
+                    <div key={s.id} className="p-6 border rounded-xl bg-background">
                       <h3 className="font-semibold text-lg mb-2">{s.name}</h3>
                       {s.description && <p className="text-muted-foreground text-sm">{s.description}</p>}
                     </div>
@@ -315,7 +318,7 @@ export default function PublicSite() {
                 </h3>
                 <div className="grid md:grid-cols-3 gap-6">
                   {isSectionEnabled('accommodations') && accommodations.map(a => (
-                    <div key={a.id} className="border rounded-xl overflow-hidden">
+                    <div key={a.id} className="border rounded-xl overflow-hidden bg-background">
                       {a.image_url && <img src={a.image_url} alt={a.name} className="w-full h-48 object-cover" style={{ objectPosition: (a as any).focal_point || '50% 50%' }} loading="lazy" />}
                       <div className="p-4">
                         <h4 className="font-semibold text-lg">{a.name}</h4>
@@ -324,7 +327,7 @@ export default function PublicSite() {
                     </div>
                   ))}
                   {isSectionEnabled('experiences') && experiences.map(ex => (
-                    <div key={ex.id} className="border rounded-xl overflow-hidden">
+                    <div key={ex.id} className="border rounded-xl overflow-hidden bg-background">
                       {ex.image_url && <img src={ex.image_url} alt={ex.name} className="w-full h-48 object-cover" style={{ objectPosition: (ex as any).focal_point || '50% 50%' }} loading="lazy" />}
                       <div className="p-4">
                         <h4 className="font-semibold text-lg">{ex.name}</h4>
@@ -342,7 +345,7 @@ export default function PublicSite() {
                 <h3 className="text-2xl font-bold mb-6" style={{ color: accent }}>{t('nav.events', lang)}</h3>
                 <div className="space-y-6">
                   {events.map(e => (
-                    <div key={e.id} className="flex gap-4 border rounded-xl p-4">
+                    <div key={e.id} className="flex gap-4 border rounded-xl p-4 bg-background">
                       {e.image_url && <img src={e.image_url} alt={e.title} className="w-32 h-24 object-cover rounded" style={{ objectPosition: (e as any).focal_point || '50% 50%' }} loading="lazy" />}
                       <div>
                         {e.event_date && (
@@ -361,12 +364,14 @@ export default function PublicSite() {
                 </div>
               </div>
             )}
+            </div>
           </section>
         )}
 
         {/* === 3. Meny === */}
         {isSectionEnabled('menu') && menu && (
-          <section id="meny" className="py-16 border-t">
+          <section id="meny" className="py-20">
+            <div className="max-w-5xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{menu.title || t('nav.menu', lang)}</h2>
             {menu.content && <div className="whitespace-pre-line text-muted-foreground">{menu.content}</div>}
             {menu.pdf_url && (
@@ -390,11 +395,13 @@ export default function PublicSite() {
                 </button>
               </div>
             )}
+            </div>
           </section>
         )}
 
         {/* === 4. Praktisk info === */}
-        <section id="info" className="py-16 border-t">
+        <section id="info" className="py-20 bg-muted/40">
+          <div className="max-w-5xl mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.info', lang)}</h2>
           <div className="grid md:grid-cols-2 gap-16">
             {(business.opening_hours || []).length > 0 && (
@@ -437,10 +444,12 @@ export default function PublicSite() {
               </Accordion>
             </div>
           )}
+          </div>
         </section>
 
         {/* === 5. Kontakt === */}
-        <section id="kontakt" className="py-16 border-t">
+        <section id="kontakt" className="py-20">
+          <div className="max-w-5xl mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.contact', lang)}</h2>
           <div className="space-y-3 text-lg">
             {business.phone && (
@@ -497,16 +506,19 @@ export default function PublicSite() {
               </div>
             ) : null;
           })()}
+          </div>
         </section>
 
         {/* === 6. Bildgalleri === */}
         {isSectionEnabled('gallery') && gallery.length > 0 && (
-          <section id="galleri" className="py-16 border-t">
+          <section id="galleri" className="py-20 bg-muted/40">
+            <div className="max-w-5xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-8" style={{ color: accent }}>{t('nav.gallery', lang)}</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {gallery.map(img => (
                 <img key={img.id} src={img.image_url} alt={img.alt_text || ''} className="w-full aspect-square object-cover rounded-lg" style={{ objectPosition: (img as any).focal_point || '50% 50%' }} loading="lazy" />
               ))}
+            </div>
             </div>
           </section>
         )}
