@@ -22,21 +22,22 @@ Deno.serve(async (req) => {
 
   const baseUrl = Deno.env.get("SUPABASE_URL")!;
 
-  const urls = (businesses || []).map((b: any) => {
+  // Primary URLs: serve-site (serves full HTML to bots, redirects humans)
+  const serveUrls = (businesses || []).map((b: any) => {
     const lastmod = b.updated_at ? new Date(b.updated_at).toISOString().split("T")[0] : new Date().toISOString().split("T")[0];
     return `  <url>
-    <loc>https://lumysite.lovable.app/${encodeURIComponent(b.subdomain)}</loc>
+    <loc>${baseUrl}/functions/v1/serve-site?subdomain=${encodeURIComponent(b.subdomain)}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`;
   });
 
-  // Also add render-site URLs for direct bot access
-  const renderUrls = (businesses || []).map((b: any) => {
+  // Secondary URLs: SPA (for Google which can run JS)
+  const spaUrls = (businesses || []).map((b: any) => {
     const lastmod = b.updated_at ? new Date(b.updated_at).toISOString().split("T")[0] : new Date().toISOString().split("T")[0];
     return `  <url>
-    <loc>${baseUrl}/functions/v1/render-site?subdomain=${encodeURIComponent(b.subdomain)}</loc>
+    <loc>https://lumysite.lovable.app/${encodeURIComponent(b.subdomain)}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -45,7 +46,7 @@ Deno.serve(async (req) => {
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${[...urls, ...renderUrls].join("\n")}
+${[...serveUrls, ...spaUrls].join("\n")}
 </urlset>`;
 
   return new Response(xml, {

@@ -211,6 +211,7 @@ ${business.hero_image_url ? `<meta property="og:image" content="${escapeHtml(bus
 <meta name="twitter:description" content="${description}">
 ${business.hero_image_url ? `<meta name="twitter:image" content="${escapeHtml(business.hero_image_url)}">` : ""}
 <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
+<link rel="alternate" href="${escapeHtml(canonicalUrl)}" hreflang="sv">
 <script type="application/ld+json">${jsonLd}</script>
 <style>
 body{font-family:system-ui,sans-serif;max-width:800px;margin:0 auto;padding:20px;color:#333;line-height:1.6}
