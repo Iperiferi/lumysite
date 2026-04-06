@@ -52,10 +52,6 @@ export default function Index() {
         </div>
 
         <div className="max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-1.5 text-sm font-medium mb-8 animate-fade-in">
-            <Zap className="w-4 h-4" />
-            Klart på under 10 minuter
-          </div>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
             Syns ditt företag<br />
             <span className="text-primary">på nätet?</span>
