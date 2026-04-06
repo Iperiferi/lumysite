@@ -648,6 +648,10 @@ export type Database = {
       }
     }
     Functions: {
+      is_published_business: {
+        Args: { _business_id: string }
+        Returns: boolean
+      }
       owns_business_folder: { Args: { folder_name: string }; Returns: boolean }
     }
     Enums: {
