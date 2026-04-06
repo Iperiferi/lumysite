@@ -57,10 +57,10 @@ export default function Index() {
             <span className="text-primary">på nätet?</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground mb-3 max-w-2xl mx-auto leading-relaxed">
-            LumySite ger dig en professionell sida på nätet som fungerar som en hemsida — fast enklare.
+            LumySite ger dig en professionell sida på nätet som fungerar som en hemsida, fast enklare.
           </p>
           <p className="text-base text-muted-foreground mb-8 max-w-xl mx-auto">
-            Fyll i din information, välj design och publicera — klart. Inga tekniska kunskaper behövs.
+            Fyll i din information, välj design och publicera. Inga tekniska kunskaper behövs.
           </p>
           <div className="flex flex-wrap justify-center gap-6 mb-10 text-sm font-medium text-muted-foreground">
             <span className="flex items-center gap-2 bg-background/80 backdrop-blur border rounded-full px-4 py-2 shadow-sm">
@@ -108,7 +108,7 @@ export default function Index() {
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-3">Se hur en sida kan se ut</h2>
           <p className="text-muted-foreground mb-10 max-w-2xl mx-auto">
-            Här är ett exempel på en sida skapad med LumySite — helt utan kodning.
+            Här är ett exempel på en sida byggd med LumySite. Du väljer själv färger, typsnitt och vilka sektioner som ska visas – som boende, upplevelser osv.
           </p>
           <div className="relative mx-auto max-w-4xl">
             {/* Laptop frame */}
@@ -150,7 +150,7 @@ export default function Index() {
             <h2 className="text-3xl font-bold mb-4">Öka chansen att synas — även i AI-chattar</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
               Fler och fler frågar AI-chattar som ChatGPT, Gemini och Perplexity om var de ska äta, bo och vad de ska göra.
-               Utan en sida på nätet har de ingen information att utgå ifrån — med en har du betydligt bättre chanser att bli hittad.
+               Utan en sida på nätet har de ingen information att utgå ifrån, med en har du betydligt bättre chanser att bli hittad.
             </p>
           </div>
 
