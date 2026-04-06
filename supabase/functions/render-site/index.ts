@@ -238,10 +238,12 @@ ${business.hero_image_url ? `<meta name="twitter:image" content="${escapeHtml(bu
 <link rel="alternate" href="${escapeHtml(canonicalUrl)}" hreflang="sv">
 <script type="application/ld+json">${jsonLd}</script>
 <style>
-body{font-family:system-ui,sans-serif;max-width:800px;margin:0 auto;padding:20px;color:#333;line-height:1.6}
-h1{color:${accent}}h2{color:${accent};border-bottom:2px solid ${accent};padding-bottom:4px;margin-top:2em}
+body{font-family:system-ui,sans-serif;margin:0;color:#333;line-height:1.6}
+h1{color:${accent}}h2{color:${accent};border-bottom:2px solid ${accent};padding-bottom:4px;margin-top:0}
 img{border-radius:8px}table{border-collapse:collapse}td{padding:4px 16px 4px 0}
 blockquote{border-left:3px solid ${accent};margin-left:0;padding-left:16px;font-style:italic}
+.section{padding:5rem 1.25rem}.section-alt{padding:5rem 1.25rem;background:#f8f9fa}
+.section-inner{max-width:800px;margin:0 auto}
 a{color:${accent}}address{font-style:normal}
 </style>
 </head>
