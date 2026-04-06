@@ -111,23 +111,21 @@ Deno.serve(async (req) => {
 
   // === 1. Om oss ===
   if (business.about_text) {
-    sectionsHtml += `<section><h2>Om oss</h2><p>${escapeHtml(business.about_text)}</p>`;
+    sectionsHtml += `<section class="section"><div class="section-inner"><h2>Om oss</h2><p>${escapeHtml(business.about_text)}</p>`;
 
-    // News (under Om oss)
     if (isEnabled("news") && (news.data || []).length > 0) {
       sectionsHtml += `<h3>Nyheter</h3>${(news.data || []).map((n: any) =>
         `<article><h4>${escapeHtml(n.title)}</h4>${n.published_date ? `<time datetime="${n.published_date}">${n.published_date}</time>` : ""}${n.image_url ? `<img src="${escapeHtml(n.image_url)}" alt="${escapeHtml(n.title)}" loading="lazy" style="max-width:400px">` : ""}${n.content ? `<p>${escapeHtml(n.content)}</p>` : ""}</article>`
       ).join("")}`;
     }
 
-    // Testimonials (under Om oss)
     if (isEnabled("testimonials") && (testimonials.data || []).length > 0) {
       sectionsHtml += `<h3>Omdömen</h3>${(testimonials.data || []).map((t: any) =>
         `<blockquote><p>${escapeHtml(t.content)}</p><footer>– ${escapeHtml(t.author_name)}</footer></blockquote>`
       ).join("")}`;
     }
 
-    sectionsHtml += `</section>`;
+    sectionsHtml += `</div></section>`;
   }
 
   // === 2. Vi erbjuder ===
@@ -137,7 +135,7 @@ Deno.serve(async (req) => {
   const hasEvents = isEnabled("events") && (events.data || []).length > 0;
 
   if (hasServices || hasAccom || hasExp || hasEvents) {
-    sectionsHtml += `<section><h2>Vi erbjuder</h2>`;
+    sectionsHtml += `<section class="section-alt"><div class="section-inner"><h2>Vi erbjuder</h2>`;
 
     if (hasServices) {
       sectionsHtml += `<ul>${(services.data || []).map((s: any) =>
@@ -166,13 +164,13 @@ Deno.serve(async (req) => {
       ).join("")}`;
     }
 
-    sectionsHtml += `</section>`;
+    sectionsHtml += `</div></section>`;
   }
 
   // === 3. Meny ===
   if (isEnabled("menu") && menu.data) {
     const m = menu.data as any;
-    sectionsHtml += `<section><h2>Meny</h2>${m.title ? `<h3>${escapeHtml(m.title)}</h3>` : ""}${m.content ? `<div>${escapeHtml(m.content)}</div>` : ""}${m.pdf_url ? `<p><a href="${escapeHtml(m.pdf_url)}">Ladda ner meny (PDF)</a></p>` : ""}</section>`;
+    sectionsHtml += `<section class="section"><div class="section-inner"><h2>Meny</h2>${m.title ? `<h3>${escapeHtml(m.title)}</h3>` : ""}${m.content ? `<div>${escapeHtml(m.content)}</div>` : ""}${m.pdf_url ? `<p><a href="${escapeHtml(m.pdf_url)}">Ladda ner meny (PDF)</a></p>` : ""}</div></section>`;
   }
 
   // === 4. Praktisk info ===
@@ -192,7 +190,7 @@ Deno.serve(async (req) => {
       ).join("")}</dl>`);
     }
 
-    sectionsHtml += `<section><h2>Praktisk info</h2>${infoParts.join("")}</section>`;
+    sectionsHtml += `<section class="section-alt"><div class="section-inner"><h2>Praktisk info</h2>${infoParts.join("")}</div></section>`;
   }
 
   // === 5. Kontakt ===
@@ -208,14 +206,14 @@ Deno.serve(async (req) => {
       ).join("")}</ul>`);
     }
 
-    sectionsHtml += `<section><h2>Kontakt</h2>${kontaktParts.join("")}</section>`;
+    sectionsHtml += `<section class="section"><div class="section-inner"><h2>Kontakt</h2>${kontaktParts.join("")}</div></section>`;
   }
 
   // === 6. Bildgalleri ===
   if (isEnabled("gallery") && (gallery.data || []).length > 0) {
-    sectionsHtml += `<section><h2>Bildgalleri</h2>${(gallery.data || []).map((img: any) =>
+    sectionsHtml += `<section class="section-alt"><div class="section-inner"><h2>Bildgalleri</h2>${(gallery.data || []).map((img: any) =>
       `<img src="${escapeHtml(img.image_url)}" alt="${escapeHtml(img.alt_text || business.business_name)}" loading="lazy" style="max-width:400px;margin:8px">`
-    ).join("")}</section>`;
+    ).join("")}</div></section>`;
   }
 
   const html = `<!DOCTYPE html>
@@ -249,9 +247,11 @@ a{color:${accent}}address{font-style:normal}
 </head>
 <body>
 <header>
+<header style="max-width:800px;margin:0 auto;padding:20px">
 ${business.logo_url ? `<img src="${escapeHtml(business.logo_url)}" alt="${escapeHtml(business.business_name)} logotyp" style="height:64px;width:auto">` : ""}
 <h1>${escapeHtml(business.business_name)}</h1>
 ${business.short_description ? `<p><em>${escapeHtml(business.short_description)}</em></p>` : ""}
+</header>
 </header>
 <main>
 ${sectionsHtml}
