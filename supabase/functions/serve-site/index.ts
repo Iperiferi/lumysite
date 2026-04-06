@@ -32,15 +32,11 @@ Deno.serve(async (req) => {
         },
       });
       const html = await response.text();
-      return new Response(html, {
-        status: response.status,
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "text/html; charset=utf-8",
-          "Cache-Control": "public, max-age=3600, s-maxage=3600",
-          "X-Robots-Tag": "index, follow",
-        },
-      });
+      const headers = new Headers(corsHeaders);
+      headers.set("Content-Type", "text/html; charset=utf-8");
+      headers.set("Cache-Control", "public, max-age=3600, s-maxage=3600");
+      headers.set("X-Robots-Tag", "index, follow");
+      return new Response(html, { status: response.status, headers });
     } catch {
       return new Response("Error rendering site", { status: 500, headers: corsHeaders });
     }

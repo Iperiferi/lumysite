@@ -236,11 +236,8 @@ ${sectionsHtml}
 </body>
 </html>`;
 
-  return new Response(html, {
-    headers: {
-      ...corsHeaders,
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "public, max-age=3600, s-maxage=3600",
-    },
-  });
+  const responseHeaders = new Headers(corsHeaders);
+  responseHeaders.set("Content-Type", "text/html; charset=utf-8");
+  responseHeaders.set("Cache-Control", "public, max-age=3600, s-maxage=3600");
+  return new Response(html, { headers: responseHeaders });
 });
