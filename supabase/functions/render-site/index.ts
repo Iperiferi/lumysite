@@ -246,17 +246,15 @@ a{color:${accent}}address{font-style:normal}
 </style>
 </head>
 <body>
-<header>
 <header style="max-width:800px;margin:0 auto;padding:20px">
 ${business.logo_url ? `<img src="${escapeHtml(business.logo_url)}" alt="${escapeHtml(business.business_name)} logotyp" style="height:64px;width:auto">` : ""}
 <h1>${escapeHtml(business.business_name)}</h1>
 ${business.short_description ? `<p><em>${escapeHtml(business.short_description)}</em></p>` : ""}
 </header>
-</header>
 <main>
 ${sectionsHtml}
 </main>
-<footer>
+<footer style="text-align:center;padding:2rem 1rem;border-top:1px solid #eee">
 <p>&copy; ${new Date().getFullYear()} ${escapeHtml(business.business_name)}</p>
 </footer>
 </body>
