@@ -15,6 +15,8 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Contact from "./pages/Contact";
 import AccountSettings from "./pages/AccountSettings";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +31,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/logga-in" element={<Login />} />
             <Route path="/registrera" element={<Register />} />
+            <Route path="/glomt-losenord" element={<ForgotPassword />} />
+            <Route path="/aterstall-losenord" element={<ResetPassword />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/cookies" element={<CookiePolicy />} />
             <Route path="/integritetspolicy" element={<PrivacyPolicy />} />
