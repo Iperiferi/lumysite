@@ -46,6 +46,11 @@ export default function Login() {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Loggar in...' : 'Logga in'}
             </Button>
+            <div className="text-right">
+              <Link to="/glomt-losenord" className="text-sm text-muted-foreground hover:text-primary underline">
+                Glömt lösenord?
+              </Link>
+            </div>
           </form>
           <p className="text-sm text-center mt-4 text-muted-foreground">
             Har du inget konto?{' '}
