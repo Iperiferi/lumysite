@@ -31,6 +31,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/logga-in" element={<Login />} />
             <Route path="/registrera" element={<Register />} />
+            <Route path="/glomt-losenord" element={<ForgotPassword />} />
+            <Route path="/aterstall-losenord" element={<ResetPassword />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/cookies" element={<CookiePolicy />} />
             <Route path="/integritetspolicy" element={<PrivacyPolicy />} />
