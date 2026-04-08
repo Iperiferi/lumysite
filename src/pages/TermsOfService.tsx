@@ -53,7 +53,7 @@ export default function TermsOfService() {
               <li>
                 Du ger LumySite en begränsad rätt att visa och distribuera ditt innehåll enbart i syfte att tillhandahålla tjänsten
                 <br />
-                Denna rätt upphör när ditt konto avslutas och ditt innehåll raderas i enlighet med integritetspolicyn
+                * Denna rätt upphör när ditt konto avslutas och ditt innehåll raderas i enlighet med integritetspolicyn
               </li>
               <li>Du garanterar att du har rätt att använda allt innehåll du laddar upp</li>
               <li>Du ansvarar för att ditt innehåll inte bryter mot svensk lag</li>
