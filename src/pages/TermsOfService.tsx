@@ -61,7 +61,46 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">5. Olämpligt innehåll och rätt att avpublicera</h2>
+            <h2 className="text-xl font-semibold mb-3">5. Personuppgiftsbiträdesavtal (DPA)</h2>
+            <p className="text-muted-foreground mb-3">
+              När du använder LumySite för att skapa och publicera en hemsida agerar du som <strong>personuppgiftsansvarig</strong> för
+              de personuppgifter som samlas in via din publika sida (t.ex. besökardata, kontaktformulär). LumySite (Iperiferi AB) agerar
+              som <strong>personuppgiftsbiträde</strong> och behandlar dessa uppgifter enbart på dina instruktioner och i syfte att
+              tillhandahålla tjänsten.
+            </p>
+            <p className="text-muted-foreground mb-2 font-medium">Genom att skapa ett konto godkänner du följande villkor för personuppgiftsbehandling:</p>
+            <ul className="list-disc pl-5 text-muted-foreground space-y-2">
+              <li>
+                <strong>Behandlingens syfte:</strong> Lagring, visning och distribution av det innehåll och den besökardata som genereras
+                via din publicerade hemsida
+              </li>
+              <li>
+                <strong>Kategorier av personuppgifter:</strong> Kontaktuppgifter (namn, e-post, telefon), IP-adresser, formulärdata
+                och eventuella övriga uppgifter som besökare lämnar via din sida
+              </li>
+              <li>
+                <strong>Underbiträden:</strong> Vi anlitar underbiträden för att tillhandahålla tjänsten. En aktuell lista finns i vår{' '}
+                <Link to="/integritetspolicy" className="text-primary hover:underline">integritetspolicy, punkt 5</Link>.
+                Vi informerar dig om väsentliga förändringar av underbiträden
+              </li>
+              <li>
+                <strong>Säkerhetsåtgärder:</strong> Vi vidtar lämpliga tekniska och organisatoriska åtgärder, inklusive kryptering
+                av data i transit och vila, åtkomstkontroll på radnivå (RLS) samt regelbundna säkerhetsgenomgångar
+              </li>
+              <li>
+                <strong>Radering:</strong> Vid uppsägning av ditt konto raderas all data, inklusive besökardata, inom 30 dagar
+                i enlighet med vår integritetspolicy
+              </li>
+              <li>
+                <strong>Dina rättigheter som personuppgiftsansvarig:</strong> Du har rätt att instruera oss om behandlingen,
+                begära information om vilka säkerhetsåtgärder som vidtas, samt begära radering av data. Kontakta oss på{' '}
+                <strong>info@iperiferi.se</strong> för sådana förfrågningar
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold mb-3">6. Olämpligt innehåll och rätt att avpublicera</h2>
             <p className="text-muted-foreground mb-3">
               LumySite förbehåller sig rätten att utan förvarning <strong>avpublicera, begränsa eller ta bort</strong> innehåll
               och/eller konton som:
@@ -80,7 +119,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">6. Tjänstens tillgänglighet</h2>
+            <h2 className="text-xl font-semibold mb-3">7. Tjänstens tillgänglighet</h2>
             <p className="text-muted-foreground">
               Vi strävar efter att tjänsten ska vara tillgänglig dygnet runt, men kan inte garantera
               avbrottsfri drift. Planerade underhåll meddelas i förväg när det är möjligt.
@@ -88,7 +127,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">7. Ansvarsbegränsning</h2>
+            <h2 className="text-xl font-semibold mb-3">8. Ansvarsbegränsning</h2>
             <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>LumySite tillhandahålls "i befintligt skick"</li>
               <li>Vi ansvarar inte för indirekta skador, utebliven vinst eller förlust av data utöver vad som krävs enligt tvingande lag</li>
@@ -97,7 +136,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">8. Uppsägning</h2>
+            <h2 className="text-xl font-semibold mb-3">9. Uppsägning</h2>
             <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>Du kan säga upp ditt konto när som helst via kundportalen</li>
               <li>Vid uppsägning avpubliceras din sida omedelbart</li>
@@ -107,7 +146,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">9. Ändringar av villkoren</h2>
+            <h2 className="text-xl font-semibold mb-3">10. Ändringar av villkoren</h2>
             <p className="text-muted-foreground">
               Vi kan uppdatera dessa villkor. Vid väsentliga ändringar meddelar vi dig via e-post minst
               30 dagar i förväg. Fortsatt användning av tjänsten efter att ändringar trätt i kraft innebär
@@ -116,14 +155,14 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">10. Tillämplig lag och tvister</h2>
+            <h2 className="text-xl font-semibold mb-3">11. Tillämplig lag och tvister</h2>
             <p className="text-muted-foreground">
               Dessa villkor regleras av svensk lag. Tvister avgörs av svensk allmän domstol.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">11. Kontakt</h2>
+            <h2 className="text-xl font-semibold mb-3">12. Kontakt</h2>
             <p className="text-muted-foreground">
               <strong>Iperiferi AB</strong><br />
               Org.nr: 559336-5090<br />
