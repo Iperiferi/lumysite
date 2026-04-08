@@ -50,7 +50,11 @@ export default function TermsOfService() {
             <h2 className="text-xl font-semibold mb-3">4. Ditt innehåll</h2>
             <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>Du behåller alla rättigheter till det innehåll du publicerar (texter, bilder, logotyper)</li>
-              <li>Du ger LumySite en begränsad rätt att visa och distribuera ditt innehåll enbart i syfte att tillhandahålla tjänsten</li>
+              <li>
+                Du ger LumySite en begränsad rätt att visa och distribuera ditt innehåll enbart i syfte att tillhandahålla tjänsten
+                <br />
+                Denna rätt upphör när ditt konto avslutas och ditt innehåll raderas i enlighet med integritetspolicyn
+              </li>
               <li>Du garanterar att du har rätt att använda allt innehåll du laddar upp</li>
               <li>Du ansvarar för att ditt innehåll inte bryter mot svensk lag</li>
             </ul>
