@@ -81,6 +81,21 @@ export default function PrivacyPolicy() {
                     <td className="p-3">Betalningshantering</td>
                     <td className="p-3">EU/USA (SCC)</td>
                   </tr>
+                  <tr className="border-t">
+                    <td className="p-3">Google Fonts</td>
+                    <td className="p-3">Typsnittsladdning (Inter, Caveat)</td>
+                    <td className="p-3">USA (SCC)</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="p-3">Google Maps</td>
+                    <td className="p-3">Kartvisning på publika sidor (valfritt)</td>
+                    <td className="p-3">USA (SCC)</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="p-3">Cloudflare</td>
+                    <td className="p-3">CDN för bilder</td>
+                    <td className="p-3">Global (EU-adekvat)</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
