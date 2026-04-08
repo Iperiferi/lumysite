@@ -51,9 +51,9 @@ export default function TermsOfService() {
             <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>Du behåller alla rättigheter till det innehåll du publicerar (texter, bilder, logotyper)</li>
               <li>
-                Du ger LumySite en begränsad rätt att visa och distribuera ditt innehåll enbart i syfte att tillhandahålla tjänsten
+                Du ger LumySite en begränsad, icke-exklusiv rätt att visa, lagra och distribuera ditt innehåll enbart i syfte att tillhandahålla tjänsten.
                 <br />
-                * Denna rätt upphör när ditt konto avslutas och ditt innehåll raderas i enlighet med integritetspolicyn
+                Denna rätt upphör när ditt konto avslutas och ditt innehåll raderas i enlighet med integritetspolicyn
               </li>
               <li>Du garanterar att du har rätt att använda allt innehåll du laddar upp</li>
               <li>Du ansvarar för att ditt innehåll inte bryter mot svensk lag</li>
@@ -95,6 +95,10 @@ export default function TermsOfService() {
                 <strong>Dina rättigheter som personuppgiftsansvarig:</strong> Du har rätt att instruera oss om behandlingen,
                 begära information om vilka säkerhetsåtgärder som vidtas, samt begära radering av data. Kontakta oss på{' '}
                 <strong>info@iperiferi.se</strong> för sådana förfrågningar
+                <br /><br />
+                <strong>Incidenthantering:</strong> Vid en personuppgiftsincident som berör dina uppgifter underrättar vi dig utan onödigt dröjsmål, och senast inom 48 timmar.
+                <br /><br />
+                <strong>Underbiträden — rätt att invända:</strong> Du har rätt att invända mot nya underbiträden genom att kontakta oss inom 30 dagar efter att vi meddelat förändringen. Om vi inte kan tillmötesgå din invändning har du rätt att säga upp tjänsten.
               </li>
             </ul>
           </section>
