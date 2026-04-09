@@ -26,7 +26,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkSubscription = useCallback(async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('check-subscription');
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      const { data, error } = await supabase.functions.invoke('check-subscription', {
+        headers: currentSession?.access_token
+          ? { Authorization: `Bearer ${currentSession.access_token}` }
+          : undefined,
+      });
       if (!error && data) {
         setSubscribed(data.subscribed ?? false);
         setSubscriptionEnd(data.subscription_end ?? null);

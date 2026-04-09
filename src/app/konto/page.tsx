@@ -55,7 +55,12 @@ export default function AccountSettings() {
   const handleDeleteAccount = async () => {
     setDeleting(true);
     try {
-      const { data, error } = await supabase.functions.invoke('delete-account');
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      const { data, error } = await supabase.functions.invoke('delete-account', {
+        headers: currentSession?.access_token
+          ? { Authorization: `Bearer ${currentSession.access_token}` }
+          : undefined,
+      });
       if (error || !data?.success) throw new Error('Kunde inte radera kontot. Försök igen.');
       await signOut();
       router.push('/');

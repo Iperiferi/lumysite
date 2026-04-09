@@ -181,7 +181,12 @@ function RegisterContent() {
         );
       }
 
-      const { data: checkoutData, error: checkoutError } = await supabase.functions.invoke('create-checkout');
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      const { data: checkoutData, error: checkoutError } = await supabase.functions.invoke('create-checkout', {
+        headers: currentSession?.access_token
+          ? { Authorization: `Bearer ${currentSession.access_token}` }
+          : undefined,
+      });
       if (checkoutError || !checkoutData?.url) {
         throw new Error('Kunde inte starta betalning. Försök igen.');
       }
@@ -200,7 +205,12 @@ function RegisterContent() {
   const handleRetryCheckout = async () => {
     setLoading(true);
     try {
-      const { data: checkoutData, error } = await supabase.functions.invoke('create-checkout');
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      const { data: checkoutData, error } = await supabase.functions.invoke('create-checkout', {
+        headers: currentSession?.access_token
+          ? { Authorization: `Bearer ${currentSession.access_token}` }
+          : undefined,
+      });
       if (error || !checkoutData?.url) throw new Error('Kunde inte starta betalning.');
       window.location.href = checkoutData.url;
     } catch (err: any) {
