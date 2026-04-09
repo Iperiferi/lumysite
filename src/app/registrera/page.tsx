@@ -90,14 +90,30 @@ function RegisterContent() {
 
   const handleCreateAccount = async () => {
     setLoading(true);
-    const { error } = await signUp(email, password);
+    const { error, session: newSession } = await signUp(email, password);
     if (error) {
       toast({ title: 'Fel', description: error.message, variant: 'destructive' });
       setLoading(false);
       return;
     }
-    await signIn(email, password);
+
+    // If no session was returned, Supabase requires email confirmation.
+    if (!newSession) {
+      setLoading(false);
+      toast({
+        title: 'Bekräfta din e-post',
+        description: 'Vi har skickat ett bekräftelsemail till ' + email + '. Klicka på länken i mailet och logga sedan in.',
+      });
+      return;
+    }
+
+    // Email confirmation disabled — sign in directly.
+    const { error: signInError } = await signIn(email, password);
     setLoading(false);
+    if (signInError) {
+      toast({ title: 'Fel vid inloggning', description: signInError.message, variant: 'destructive' });
+      return;
+    }
     setStep(1);
   };
 
