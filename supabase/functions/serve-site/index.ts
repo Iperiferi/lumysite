@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
   }
 
   // Redirect humans to the SPA
-  const spaUrl = `https://lumysite.lovable.app/${encodeURIComponent(subdomain)}`;
+  const spaUrl = `https://lumysite.com/${encodeURIComponent(subdomain)}`;
   return new Response(null, {
     status: 302,
     headers: {

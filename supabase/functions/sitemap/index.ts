@@ -37,7 +37,7 @@ Deno.serve(async (req) => {
   const spaUrls = (businesses || []).map((b: any) => {
     const lastmod = b.updated_at ? new Date(b.updated_at).toISOString().split("T")[0] : new Date().toISOString().split("T")[0];
     return `  <url>
-    <loc>https://lumysite.lovable.app/${encodeURIComponent(b.subdomain)}</loc>
+    <loc>https://lumysite.com/${encodeURIComponent(b.subdomain)}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>

@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
 
   const title = escapeHtml(`${business.business_name} – ${business.short_description || ""}`);
   const description = escapeHtml((business.about_text || business.short_description || "").slice(0, 160));
-  const canonicalUrl = `https://lumysite.lovable.app/${subdomain}`;
+  const canonicalUrl = `https://lumysite.com/${subdomain}`;
   const accent = business.accent_color || "#2563EB";
 
   // Opening hours

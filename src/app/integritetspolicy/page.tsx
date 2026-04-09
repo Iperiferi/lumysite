@@ -72,9 +72,19 @@ export default function PrivacyPolicy() {
                 </thead>
                 <tbody className="text-muted-foreground">
                   <tr className="border-t">
-                    <td className="p-3">Lovable Cloud (hosting)</td>
+                    <td className="p-3">Vercel</td>
+                    <td className="p-3">Hosting och server-side rendering</td>
+                    <td className="p-3">USA/EU (SCC)</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="p-3">Supabase (AWS)</td>
                     <td className="p-3">Databas, autentisering, fillagring</td>
-                    <td className="p-3">EU</td>
+                    <td className="p-3">EU (Frankfurt)</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="p-3">Google Translate API</td>
+                    <td className="p-3">Automatisk översättning av innehåll</td>
+                    <td className="p-3">USA (SCC)</td>
                   </tr>
                   <tr className="border-t">
                     <td className="p-3">Stripe</td>
