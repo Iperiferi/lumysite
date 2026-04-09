@@ -35,7 +35,7 @@ export default function PrivacyPolicy() {
               <li><strong>Företagsinformation:</strong> företagsnamn, adress, telefon, e-post, öppettider, beskrivningar</li>
               <li><strong>Bilder:</strong> logotyp, hero-bild, galleri- och eventbilder som du laddar upp</li>
               <li><strong>Betalningsuppgifter:</strong> hanteras av Stripe — vi lagrar aldrig kortnummer</li>
-              <li><strong>Tekniska uppgifter:</strong> IP-adress och webbläsartyp vid inloggning (för säkerhet)</li>
+              <li><strong>Tekniska uppgifter:</strong> IP-adress, webbläsartyp och referrer-URL vid sidbesök — hanteras av Vercel och Supabase för driftsäkerhet</li>
             </ul>
           </section>
 
@@ -60,7 +60,7 @@ export default function PrivacyPolicy() {
 
           <section>
             <h2 className="text-xl font-semibold mb-3">5. Tredjeparter och underbiträden</h2>
-            <p className="text-muted-foreground mb-3">Vi delar dina uppgifter med följande parter, alla inom EU/EES eller med adekvat skyddsnivå:</p>
+            <p className="text-muted-foreground mb-3">Vi delar dina uppgifter med följande underbiträden. Överföringar utanför EU/EES sker med stöd av EU-kommissionens standardavtalsklausuler (SCC):</p>
             <div className="border rounded-lg overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-muted">
@@ -77,34 +77,19 @@ export default function PrivacyPolicy() {
                     <td className="p-3">USA/EU (SCC)</td>
                   </tr>
                   <tr className="border-t">
-                    <td className="p-3">Supabase (AWS)</td>
-                    <td className="p-3">Databas, autentisering, fillagring</td>
+                    <td className="p-3">Supabase (AWS eu-central-1)</td>
+                    <td className="p-3">Databas, autentisering, fillagring och CDN</td>
                     <td className="p-3">EU (Frankfurt)</td>
                   </tr>
                   <tr className="border-t">
-                    <td className="p-3">Google Translate API</td>
-                    <td className="p-3">Automatisk översättning av innehåll</td>
-                    <td className="p-3">USA (SCC)</td>
-                  </tr>
-                  <tr className="border-t">
                     <td className="p-3">Stripe</td>
-                    <td className="p-3">Betalningshantering</td>
+                    <td className="p-3">Betalningshantering och abonnemangshantering</td>
                     <td className="p-3">EU/USA (SCC)</td>
                   </tr>
                   <tr className="border-t">
-                    <td className="p-3">Google Fonts</td>
-                    <td className="p-3">Typsnittsladdning (Inter, Caveat)</td>
-                    <td className="p-3">USA (SCC)</td>
-                  </tr>
-                  <tr className="border-t">
                     <td className="p-3">Google Maps</td>
-                    <td className="p-3">Kartvisning på publika sidor (valfritt)</td>
+                    <td className="p-3">Kartvisning på publika sidor (valfritt, aktiveras av dig)</td>
                     <td className="p-3">USA (SCC)</td>
-                  </tr>
-                  <tr className="border-t">
-                    <td className="p-3">Cloudflare</td>
-                    <td className="p-3">CDN för bilder</td>
-                    <td className="p-3">Global (EU-adekvat)</td>
                   </tr>
                 </tbody>
               </table>
