@@ -7,6 +7,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const PRODUCT_ID = "prod_UGFyAbm3pwC9FT";
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -28,6 +30,11 @@ serve(async (req) => {
       apiVersion: "2025-08-27.basil",
     });
 
+    // Look up the active price for the product
+    const prices = await stripe.prices.list({ product: PRODUCT_ID, active: true, limit: 1 });
+    if (prices.data.length === 0) throw new Error(`No active price found for product ${PRODUCT_ID}`);
+    const priceId = prices.data[0].id;
+
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     let customerId;
     if (customers.data.length > 0) {
@@ -37,12 +44,7 @@ serve(async (req) => {
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
-      line_items: [
-        {
-          price: "price_1THjS6EeOKhC3DZkWaWQAipL",
-          quantity: 1,
-        },
-      ],
+      line_items: [{ price: priceId, quantity: 1 }],
       mode: "subscription",
       success_url: `${req.headers.get("origin")}/dashboard?checkout=success`,
       cancel_url: `${req.headers.get("origin")}/registrera?checkout=cancelled`,
