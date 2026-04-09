@@ -1,5 +1,8 @@
+'use client';
+
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +15,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +25,7 @@ export default function Login() {
     if (error) {
       toast({ title: 'Fel vid inloggning', description: error.message, variant: 'destructive' });
     } else {
-      navigate('/dashboard');
+      router.push('/dashboard');
     }
   };
 
@@ -47,14 +50,14 @@ export default function Login() {
               {loading ? 'Loggar in...' : 'Logga in'}
             </Button>
             <div className="text-right">
-              <Link to="/glomt-losenord" className="text-sm text-muted-foreground hover:text-primary underline">
+              <Link href="/glomt-losenord" className="text-sm text-muted-foreground hover:text-primary underline">
                 Glömt lösenord?
               </Link>
             </div>
           </form>
           <p className="text-sm text-center mt-4 text-muted-foreground">
             Har du inget konto?{' '}
-            <Link to="/registrera" className="text-primary underline">Registrera dig</Link>
+            <Link href="/registrera" className="text-primary underline">Registrera dig</Link>
           </p>
         </CardContent>
       </Card>

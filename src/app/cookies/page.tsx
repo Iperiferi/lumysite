@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
 export default function CookiePolicy() {
@@ -6,7 +6,7 @@ export default function CookiePolicy() {
     <div className="min-h-screen bg-background">
       <nav className="border-b bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Link to="/" className="text-muted-foreground hover:text-foreground"><ArrowLeft className="w-5 h-5" /></Link>
+          <Link href="/" className="text-muted-foreground hover:text-foreground"><ArrowLeft className="w-5 h-5" /></Link>
           <span className="font-bold text-xl text-primary">LumySite</span>
         </div>
       </nav>
@@ -87,8 +87,8 @@ export default function CookiePolicy() {
 
       <footer className="border-t py-8 text-center text-sm text-muted-foreground">
         <div className="flex justify-center gap-4 mb-2">
-          <Link to="/integritetspolicy" className="hover:underline">Integritetspolicy</Link>
-          <Link to="/anvandarvillkor" className="hover:underline">Användarvillkor</Link>
+          <Link href="/integritetspolicy" className="hover:underline">Integritetspolicy</Link>
+          <Link href="/anvandarvillkor" className="hover:underline">Användarvillkor</Link>
         </div>
         <p>© {new Date().getFullYear()} LumySite — Iperiferi AB</p>
       </footer>

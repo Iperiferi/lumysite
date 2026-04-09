@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { ArrowRight, Globe, Palette, Smartphone, Search, Zap, Shield, Bot, Star, Clock, MapPin, MessageSquare, Utensils } from 'lucide-react';
@@ -32,11 +34,11 @@ export default function Index() {
           <span className="font-bold text-xl text-primary">LumySite</span>
           <div className="flex items-center gap-3">
             {user ? (
-              <Button asChild size="sm"><Link to="/dashboard">Min sida</Link></Button>
+              <Button asChild size="sm"><Link href="/dashboard">Min sida</Link></Button>
             ) : (
               <>
-                <Button variant="ghost" size="sm" asChild><Link to="/logga-in">Logga in</Link></Button>
-                <Button size="sm" asChild><Link to="/registrera">Kom igång</Link></Button>
+                <Button variant="ghost" size="sm" asChild><Link href="/logga-in">Logga in</Link></Button>
+                <Button size="sm" asChild><Link href="/registrera">Kom igång</Link></Button>
               </>
             )}
           </div>
@@ -45,7 +47,6 @@ export default function Index() {
 
       {/* Hero */}
       <section className="relative py-24 md:py-40 text-center px-4 overflow-hidden">
-        {/* Decorative background */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-3xl" />
           <div className="absolute top-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-accent/40 blur-3xl" />
@@ -75,7 +76,7 @@ export default function Index() {
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" asChild className="text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-shadow">
-              <Link to="/registrera">
+              <Link href="/registrera">
                 Kom igång <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
@@ -108,10 +109,9 @@ export default function Index() {
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-3">Se hur en sida kan se ut</h2>
           <p className="text-muted-foreground mb-10 max-w-2xl mx-auto">
-            Här är ett exempel på en sida byggd med LumySite. Du väljer själv färger, typsnitt och vilka sektioner som ska visas – som boende, upplevelser osv.
+            Här är ett exempel på en sida byggd med LumySite. Du väljer själv färger, typsnitt och vilka sektioner som ska visas.
           </p>
           <div className="relative mx-auto max-w-4xl">
-            {/* Laptop frame */}
             <div className="bg-muted rounded-t-xl pt-3 pb-0 px-3">
               <div className="flex items-center gap-1.5 mb-3 px-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
@@ -168,7 +168,6 @@ export default function Index() {
               ))}
             </div>
           </div>
-
         </div>
       </section>
 
@@ -213,7 +212,7 @@ export default function Index() {
               ))}
             </ul>
             <Button size="lg" asChild className="w-full">
-              <Link to="/registrera">Kom igång <ArrowRight className="ml-2 w-4 h-4" /></Link>
+              <Link href="/registrera">Kom igång <ArrowRight className="ml-2 w-4 h-4" /></Link>
             </Button>
             <p className="text-xs text-muted-foreground mt-4">Du behöver ingen teknisk kunskap — vi har gjort det enkelt.</p>
           </div>
@@ -225,17 +224,17 @@ export default function Index() {
         <h2 className="text-3xl font-bold mb-4">Redo att komma igång?</h2>
         <p className="text-lg opacity-90 mb-8">Det tar bara några minuter. Ingen teknik, bara din information.</p>
         <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6">
-          <Link to="/registrera">Skapa din sida nu <ArrowRight className="ml-2 w-5 h-5" /></Link>
+          <Link href="/registrera">Skapa din sida nu <ArrowRight className="ml-2 w-5 h-5" /></Link>
         </Button>
       </section>
 
       {/* Footer */}
       <footer className="border-t py-8 text-center text-sm text-muted-foreground">
         <div className="flex justify-center gap-4 mb-2">
-          <Link to="/kontakt" className="hover:underline">Kontakt</Link>
-          <Link to="/cookies" className="hover:underline">Cookiepolicy</Link>
-          <Link to="/integritetspolicy" className="hover:underline">Integritetspolicy</Link>
-          <Link to="/anvandarvillkor" className="hover:underline">Användarvillkor</Link>
+          <Link href="/kontakt" className="hover:underline">Kontakt</Link>
+          <Link href="/cookies" className="hover:underline">Cookiepolicy</Link>
+          <Link href="/integritetspolicy" className="hover:underline">Integritetspolicy</Link>
+          <Link href="/anvandarvillkor" className="hover:underline">Användarvillkor</Link>
         </div>
         <p>© {new Date().getFullYear()} LumySite — Iperiferi AB</p>
       </footer>

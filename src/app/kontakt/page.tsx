@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowLeft, Mail, Phone, Globe, Building2 } from 'lucide-react';
 
 export default function Contact() {
@@ -6,7 +6,7 @@ export default function Contact() {
     <div className="min-h-screen bg-background">
       <nav className="border-b bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Link to="/" className="text-muted-foreground hover:text-foreground"><ArrowLeft className="w-5 h-5" /></Link>
+          <Link href="/" className="text-muted-foreground hover:text-foreground"><ArrowLeft className="w-5 h-5" /></Link>
           <span className="font-bold text-xl text-primary">LumySite</span>
         </div>
       </nav>
@@ -89,13 +89,13 @@ export default function Contact() {
             <div>
               <h3 className="font-medium mb-1">Vem äger mitt innehåll?</h3>
               <p className="text-muted-foreground text-sm">
-                Du behåller alla rättigheter till ditt innehåll (texter, bilder, logotyper). Se våra <Link to="/anvandarvillkor" className="text-primary hover:underline">användarvillkor</Link> för detaljer.
+                Du behåller alla rättigheter till ditt innehåll (texter, bilder, logotyper). Se våra <Link href="/anvandarvillkor" className="text-primary hover:underline">användarvillkor</Link> för detaljer.
               </p>
             </div>
             <div>
               <h3 className="font-medium mb-1">Hur hanteras mina personuppgifter?</h3>
               <p className="text-muted-foreground text-sm">
-                Vi följer GDPR och sparar bara det som behövs för att leverera tjänsten. Läs mer i vår <Link to="/integritetspolicy" className="text-primary hover:underline">integritetspolicy</Link>.
+                Vi följer GDPR och sparar bara det som behövs för att leverera tjänsten. Läs mer i vår <Link href="/integritetspolicy" className="text-primary hover:underline">integritetspolicy</Link>.
               </p>
             </div>
           </div>
@@ -104,9 +104,9 @@ export default function Contact() {
 
       <footer className="border-t py-8 text-center text-sm text-muted-foreground">
         <div className="flex justify-center gap-4 mb-2">
-          <Link to="/cookies" className="hover:underline">Cookiepolicy</Link>
-          <Link to="/integritetspolicy" className="hover:underline">Integritetspolicy</Link>
-          <Link to="/anvandarvillkor" className="hover:underline">Användarvillkor</Link>
+          <Link href="/cookies" className="hover:underline">Cookiepolicy</Link>
+          <Link href="/integritetspolicy" className="hover:underline">Integritetspolicy</Link>
+          <Link href="/anvandarvillkor" className="hover:underline">Användarvillkor</Link>
         </div>
         <p>© {new Date().getFullYear()} LumySite — Iperiferi AB</p>
       </footer>

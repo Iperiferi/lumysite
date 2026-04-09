@@ -1,5 +1,7 @@
+'use client';
+
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -43,7 +45,7 @@ export default function ForgotPassword() {
               <p className="text-muted-foreground">
                 Om det finns ett konto med den e-postadressen har vi skickat en återställningslänk. Kolla din inkorg.
               </p>
-              <Link to="/logga-in" className="text-primary underline text-sm">
+              <Link href="/logga-in" className="text-primary underline text-sm">
                 Tillbaka till inloggning
               </Link>
             </div>
@@ -59,7 +61,7 @@ export default function ForgotPassword() {
                 </Button>
               </form>
               <p className="text-sm text-center mt-4 text-muted-foreground">
-                <Link to="/logga-in" className="text-primary underline">Tillbaka till inloggning</Link>
+                <Link href="/logga-in" className="text-primary underline">Tillbaka till inloggning</Link>
               </p>
             </>
           )}

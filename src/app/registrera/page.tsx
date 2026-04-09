@@ -1,5 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+'use client';
+
+import { Suspense, useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useOwnerBusiness } from '@/hooks/useBusiness';
 import { supabase } from '@/integrations/supabase/client';
@@ -14,31 +17,27 @@ import { toast } from '@/hooks/use-toast';
 import { defaultOpeningHours, sectionTypes, fontStyles, type OpeningHour, type SectionType } from '@/lib/types';
 import { t } from '@/lib/i18n';
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const STEPS = ['Konto', 'Webbadress', 'Information', 'Varumärke', 'Sektioner', 'Publicera'];
 
-export default function Register() {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+function RegisterContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { signUp, signIn, user } = useAuth();
   const { data: existingBusiness } = useOwnerBusiness(user?.id);
   const [step, setStep] = useState(user ? 1 : 0);
   const [loading, setLoading] = useState(false);
   const isCancelled = searchParams.get('checkout') === 'cancelled';
 
-  // If user has a business and checkout was cancelled, show retry UI
   const showCancelledView = isCancelled && existingBusiness;
 
-  // Skip account step if already logged in
   useEffect(() => {
     if (user && step === 0) setStep(1);
   }, [user]);
 
-  // If logged-in user already has a business (not from cancelled checkout), redirect to dashboard
   useEffect(() => {
     if (user && existingBusiness && !isCancelled) {
-      navigate('/dashboard');
+      router.push('/dashboard');
     }
   }, [user, existingBusiness, isCancelled]);
 
@@ -97,7 +96,6 @@ export default function Register() {
       setLoading(false);
       return;
     }
-    // Auto sign in
     await signIn(email, password);
     setLoading(false);
     setStep(1);
@@ -143,12 +141,11 @@ export default function Register() {
         logo_url: logoUrl,
         hero_image_url: heroUrl,
         opening_hours: showOpeningHours ? (openingHours as any) : [],
-        is_published: false, // Not published until payment
+        is_published: false,
       }).select().single();
 
       if (bizError) throw bizError;
 
-      // Create sections
       const sectionInserts = sectionTypes.map((s, i) => ({
         business_id: business.id,
         section_type: s.type,
@@ -157,7 +154,6 @@ export default function Register() {
       }));
       await supabase.from('sections').insert(sectionInserts);
 
-      // Create FAQ items
       if (faqItems.length > 0) {
         await supabase.from('faq').insert(
           faqItems.map((f, i) => ({
@@ -169,7 +165,6 @@ export default function Register() {
         );
       }
 
-      // Redirect to Stripe Checkout
       const { data: checkoutData, error: checkoutError } = await supabase.functions.invoke('create-checkout');
       if (checkoutError || !checkoutData?.url) {
         throw new Error('Kunde inte starta betalning. Försök igen.');
@@ -213,7 +208,7 @@ export default function Register() {
             <Button onClick={handleRetryCheckout} disabled={loading} size="lg" className="w-full">
               {loading ? 'Förbereder betalning...' : '💳 Försök igen'}
             </Button>
-            <Button variant="outline" size="sm" onClick={() => navigate('/dashboard')} className="w-full">
+            <Button variant="outline" size="sm" onClick={() => router.push('/dashboard')} className="w-full">
               Gå till dashboard
             </Button>
           </CardContent>
@@ -225,7 +220,7 @@ export default function Register() {
   return (
     <div className="min-h-screen bg-muted/30 py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        <Link to="/" className="text-primary font-bold text-xl mb-6 block">LumySite</Link>
+        <Link href="/" className="text-primary font-bold text-xl mb-6 block">LumySite</Link>
 
         {/* Progress */}
         <div className="flex items-center gap-2 mb-8">
@@ -267,15 +262,15 @@ export default function Register() {
                   />
                   <label htmlFor="terms" className="text-sm text-muted-foreground leading-snug cursor-pointer">
                     Jag godkänner{' '}
-                    <Link to="/anvandarvillkor" target="_blank" className="text-primary underline">användarvillkoren</Link> och{' '}
-                    <Link to="/integritetspolicy" target="_blank" className="text-primary underline">integritetspolicyn</Link>
+                    <Link href="/anvandarvillkor" target="_blank" className="text-primary underline">användarvillkoren</Link> och{' '}
+                    <Link href="/integritetspolicy" target="_blank" className="text-primary underline">integritetspolicyn</Link>
                   </label>
                 </div>
                 <Button onClick={handleCreateAccount} disabled={loading || !email || !password || !acceptedTerms} className="w-full">
                   {loading ? 'Skapar konto...' : 'Skapa konto & fortsätt'}
                 </Button>
                 <p className="text-sm text-center text-muted-foreground">
-                  Har du redan ett konto? <Link to="/logga-in" className="text-primary underline">Logga in</Link>
+                  Har du redan ett konto? <Link href="/logga-in" className="text-primary underline">Logga in</Link>
                 </p>
               </>
             )}
@@ -329,7 +324,6 @@ export default function Register() {
                   <Input value={googleMaps} onChange={e => setGoogleMaps(e.target.value)} placeholder="https://www.google.com/maps/embed?..." />
                 </div>
 
-                {/* Opening hours */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label>Visa öppettider på sidan</Label>
@@ -351,11 +345,10 @@ export default function Register() {
                   ))}
                 </div>
 
-                {/* FAQ */}
                 <div className="space-y-3">
                   <Label>Vanliga frågor (FAQ)</Label>
                   <p className="text-sm text-muted-foreground">
-                    Tips på vanliga frågor: "Behöver man boka bord?", "Finns det parkering?", "Har ni glutenfria alternativ?", "Är det barnanpassat?", "Kan man hyra för privata event?", "Vad kostar det?"
+                    Tips: "Behöver man boka bord?", "Finns det parkering?", "Har ni glutenfria alternativ?"
                   </p>
                   {faqItems.map((f, i) => (
                     <div key={i} className="space-y-1 border rounded p-3">
@@ -420,7 +413,7 @@ export default function Register() {
             {/* Step 4: Sections */}
             {step === 4 && (
               <div className="space-y-3">
-                <p className="text-sm text-muted-foreground">Välj vilka sektioner du vill aktivera på din sida. Du kan ändra detta senare.</p>
+                <p className="text-sm text-muted-foreground">Välj vilka sektioner du vill aktivera. Du kan ändra detta senare.</p>
                 {sectionTypes.map(s => (
                   <div key={s.type} className="flex items-center justify-between p-3 border rounded-lg">
                     <span className="font-medium">{t(s.labelKey)}</span>
@@ -441,16 +434,14 @@ export default function Register() {
                 <p className="text-muted-foreground">
                   Din sida sparas och blir tillgänglig på <strong>{subdomain}.lumysite.se</strong> efter betalning.
                 </p>
-                <p className="text-sm text-muted-foreground">
-                  99 kr/mån exkl. moms. Du kan hantera ditt abonnemang via din dashboard.
-                </p>
+                <p className="text-sm text-muted-foreground">99 kr/mån exkl. moms.</p>
                 <Button onClick={handlePublish} disabled={loading} size="lg" className="w-full">
                   {loading ? 'Förbereder betalning...' : '💳 Gå till betalning'}
                 </Button>
               </div>
             )}
 
-            {/* Navigation buttons */}
+            {/* Navigation */}
             {step > 0 && step < 5 && (
               <div className="flex justify-between pt-4">
                 <Button variant="outline" onClick={() => setStep(step - 1)}>
@@ -476,5 +467,13 @@ export default function Register() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={null}>
+      <RegisterContent />
+    </Suspense>
   );
 }

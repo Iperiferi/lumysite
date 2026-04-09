@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
 export default function TermsOfService() {
@@ -6,7 +6,7 @@ export default function TermsOfService() {
     <div className="min-h-screen bg-background">
       <nav className="border-b bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Link to="/" className="text-muted-foreground hover:text-foreground"><ArrowLeft className="w-5 h-5" /></Link>
+          <Link href="/" className="text-muted-foreground hover:text-foreground"><ArrowLeft className="w-5 h-5" /></Link>
           <span className="font-bold text-xl text-primary">LumySite</span>
         </div>
       </nav>
@@ -80,7 +80,7 @@ export default function TermsOfService() {
               </li>
               <li>
                 <strong>Underbiträden:</strong> Vi anlitar underbiträden för att tillhandahålla tjänsten. En aktuell lista finns i vår{' '}
-                <Link to="/integritetspolicy" className="text-primary hover:underline">integritetspolicy, punkt 5</Link>.
+                <Link href="/integritetspolicy" className="text-primary hover:underline">integritetspolicy, punkt 5</Link>.
                 Vi informerar dig om väsentliga förändringar av underbiträden
               </li>
               <li>
@@ -144,7 +144,7 @@ export default function TermsOfService() {
             <ul className="list-disc pl-5 text-muted-foreground space-y-1">
               <li>Du kan säga upp ditt konto när som helst via kundportalen</li>
               <li>Vid uppsägning avpubliceras din sida omedelbart</li>
-              <li>Dina uppgifter raderas inom 30 dagar efter uppsägning (se <Link to="/integritetspolicy" className="text-primary hover:underline">integritetspolicyn</Link>)</li>
+              <li>Dina uppgifter raderas inom 30 dagar efter uppsägning (se <Link href="/integritetspolicy" className="text-primary hover:underline">integritetspolicyn</Link>)</li>
               <li>LumySite kan säga upp ditt konto vid brott mot dessa villkor</li>
             </ul>
           </section>
@@ -179,8 +179,8 @@ export default function TermsOfService() {
 
       <footer className="border-t py-8 text-center text-sm text-muted-foreground">
         <div className="flex justify-center gap-4 mb-2">
-          <Link to="/cookies" className="hover:underline">Cookiepolicy</Link>
-          <Link to="/integritetspolicy" className="hover:underline">Integritetspolicy</Link>
+          <Link href="/cookies" className="hover:underline">Cookiepolicy</Link>
+          <Link href="/integritetspolicy" className="hover:underline">Integritetspolicy</Link>
         </div>
         <p>© {new Date().getFullYear()} LumySite — Iperiferi AB</p>
       </footer>

@@ -1,5 +1,8 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -8,31 +11,25 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { ArrowLeft, Trash2, KeyRound } from 'lucide-react';
 
 export default function AccountSettings() {
   const { user, signOut } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
 
-  // Password change
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [changingPassword, setChangingPassword] = useState(false);
-
-  // Delete account
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [showFinalConfirm, setShowFinalConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    if (!user) router.push('/logga-in');
+  }, [user]);
 
   const handleChangePassword = async () => {
     if (newPassword.length < 6) {
@@ -59,11 +56,9 @@ export default function AccountSettings() {
     setDeleting(true);
     try {
       const { data, error } = await supabase.functions.invoke('delete-account');
-      if (error || !data?.success) {
-        throw new Error('Kunde inte radera kontot. Försök igen.');
-      }
+      if (error || !data?.success) throw new Error('Kunde inte radera kontot. Försök igen.');
       await signOut();
-      navigate('/');
+      router.push('/');
       toast({ title: 'Ditt konto och all data har raderats.' });
     } catch (err: any) {
       toast({ title: 'Fel', description: err.message, variant: 'destructive' });
@@ -71,21 +66,17 @@ export default function AccountSettings() {
     }
   };
 
-  if (!user) {
-    navigate('/logga-in');
-    return null;
-  }
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-muted/30 py-8 px-4">
       <div className="max-w-xl mx-auto">
-        <Link to="/dashboard" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
+        <Link href="/dashboard" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
           <ArrowLeft className="w-4 h-4" /> Tillbaka till dashboard
         </Link>
 
         <h1 className="text-2xl font-bold mb-6">Kontoinställningar</h1>
 
-        {/* Konto-info */}
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-lg">Ditt konto</CardTitle>
@@ -95,7 +86,6 @@ export default function AccountSettings() {
           </CardContent>
         </Card>
 
-        {/* Byt lösenord */}
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
@@ -105,39 +95,25 @@ export default function AccountSettings() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Nytt lösenord</Label>
-              <Input
-                type="password"
-                value={newPassword}
-                onChange={e => setNewPassword(e.target.value)}
-                placeholder="Minst 6 tecken"
-              />
+              <Input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="Minst 6 tecken" />
             </div>
             <div className="space-y-2">
               <Label>Bekräfta nytt lösenord</Label>
-              <Input
-                type="password"
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-              />
+              <Input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
             </div>
-            <Button
-              onClick={handleChangePassword}
-              disabled={changingPassword || !newPassword || !confirmPassword}
-            >
+            <Button onClick={handleChangePassword} disabled={changingPassword || !newPassword || !confirmPassword}>
               {changingPassword ? 'Sparar...' : 'Byt lösenord'}
             </Button>
           </CardContent>
         </Card>
 
-        {/* Radera konto */}
         <Card className="border-destructive/50">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2 text-destructive">
               <Trash2 className="w-5 h-5" /> Radera konto
             </CardTitle>
             <CardDescription>
-              Detta raderar permanent ditt konto, din publicerade sida och all data (bilder, texter, inställningar).
-              Åtgärden kan <strong>inte</strong> ångras.
+              Detta raderar permanent ditt konto, din publicerade sida och all data. Åtgärden kan <strong>inte</strong> ångras.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -154,19 +130,12 @@ export default function AccountSettings() {
                     Skriv <strong>RADERA</strong> nedan för att bekräfta.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                <Input
-                  value={deleteConfirmText}
-                  onChange={e => setDeleteConfirmText(e.target.value)}
-                  placeholder='Skriv "RADERA"'
-                />
+                <Input value={deleteConfirmText} onChange={e => setDeleteConfirmText(e.target.value)} placeholder='Skriv "RADERA"' />
                 <AlertDialogFooter>
                   <AlertDialogCancel onClick={() => setDeleteConfirmText('')}>Avbryt</AlertDialogCancel>
                   <AlertDialogAction
                     disabled={deleteConfirmText !== 'RADERA'}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowFinalConfirm(true);
-                    }}
+                    onClick={(e) => { e.preventDefault(); setShowFinalConfirm(true); }}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
                     Fortsätt
@@ -175,7 +144,6 @@ export default function AccountSettings() {
               </AlertDialogContent>
             </AlertDialog>
 
-            {/* Second confirmation dialog */}
             <AlertDialog open={showFinalConfirm} onOpenChange={setShowFinalConfirm}>
               <AlertDialogContent>
                 <AlertDialogHeader>

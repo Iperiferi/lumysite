@@ -1,6 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+'use client';
+
+import { Suspense, useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useOwnerBusiness } from '@/hooks/useBusiness';
 import { supabase } from '@/integrations/supabase/client';
@@ -24,10 +27,10 @@ import EventsEditor from '@/components/dashboard/EventsEditor';
 import TestimonialsEditor from '@/components/dashboard/TestimonialsEditor';
 import ImageItemEditor from '@/components/dashboard/ImageItemEditor';
 
-export default function Dashboard() {
+function DashboardContent() {
   const { user, loading: authLoading, signOut, subscribed, checkSubscription } = useAuth();
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const { data, isLoading } = useOwnerBusiness(user?.id);
 
@@ -56,9 +59,8 @@ export default function Dashboard() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [linkedinUrl, setLinkedinUrl] = useState('');
 
-
   useEffect(() => {
-    if (!authLoading && !user) navigate('/logga-in');
+    if (!authLoading && !user) router.push('/logga-in');
   }, [authLoading, user]);
 
   useEffect(() => {
@@ -90,7 +92,6 @@ export default function Dashboard() {
     setEnabledSections(secs);
   }, [data]);
 
-  // Handle checkout success: publish business and refresh subscription
   useEffect(() => {
     if (searchParams.get('checkout') === 'success' && data?.business) {
       const publish = async () => {
@@ -98,7 +99,7 @@ export default function Dashboard() {
         await checkSubscription();
         queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
         toast({ title: '🎉 Din sida är publicerad!', description: 'Ditt abonnemang är aktivt.' });
-        setSearchParams({});
+        router.replace('/dashboard');
       };
       publish();
     }
@@ -140,14 +141,12 @@ export default function Dashboard() {
         linkedin_url: linkedinUrl || null,
       }).eq('id', data.business.id);
 
-      // Update sections
       for (const s of sectionTypes) {
         await supabase.from('sections').update({ is_enabled: enabledSections[s.type] })
           .eq('business_id', data.business.id)
           .eq('section_type', s.type);
       }
 
-      // Update FAQ
       await supabase.from('faq').delete().eq('business_id', data.business.id);
       if (faqItems.length > 0) {
         await supabase.from('faq').insert(
@@ -175,10 +174,7 @@ export default function Dashboard() {
   const handlePublishToggle = async () => {
     if (!data) return;
     const newState = !data.business.is_published;
-    if (newState) {
-      setShowPublishConfirm(true);
-      return;
-    }
+    if (newState) { setShowPublishConfirm(true); return; }
     await doPublish(false);
   };
 
@@ -186,12 +182,8 @@ export default function Dashboard() {
     if (!data) return;
     await supabase.from('businesses').update({ is_published: publish }).eq('id', data.business.id);
     queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
-    if (publish) {
-      setShowPublishedUrl(true);
-      setUrlCopied(false);
-    } else {
-      toast({ title: 'Sidan är avpublicerad' });
-    }
+    if (publish) { setShowPublishedUrl(true); setUrlCopied(false); }
+    else { toast({ title: 'Sidan är avpublicerad' }); }
   };
 
   const publicUrl = data ? `https://lumysite.com/${data.business.subdomain}` : '';
@@ -254,12 +246,11 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center flex-col gap-4">
         <p>Du har ingen sida ännu.</p>
-        <Button onClick={() => navigate('/registrera')}>Skapa din sida</Button>
+        <Button onClick={() => router.push('/registrera')}>Skapa din sida</Button>
       </div>
     );
   }
 
-  // Block dashboard if not subscribed (unless just returned from successful checkout)
   const isCheckoutSuccess = searchParams.get('checkout') === 'success';
   if (!subscribed && !isCheckoutSuccess) {
     return (
@@ -276,7 +267,7 @@ export default function Dashboard() {
             <Button onClick={handleStartCheckout} disabled={saving} size="lg" className="w-full">
               {saving ? 'Förbereder betalning...' : '💳 Gå till betalning'}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => { signOut(); navigate('/'); }} className="w-full">
+            <Button variant="ghost" size="sm" onClick={() => { signOut(); router.push('/'); }} className="w-full">
               Logga ut
             </Button>
           </CardContent>
@@ -287,9 +278,8 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      {/* Header */}
       <header className="bg-background border-b px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="text-primary font-bold text-xl">LumySite</Link>
+        <Link href="/" className="text-primary font-bold text-xl">LumySite</Link>
         <div className="flex items-center gap-3">
           <Button variant="outline" size="sm" asChild>
             <a href={`/${data.business.subdomain}`} target="_blank">
@@ -304,16 +294,15 @@ export default function Dashboard() {
             {data.business.is_published ? 'Avpublicera' : 'Publicera'}
           </Button>
           <Button variant="ghost" size="sm" asChild>
-            <Link to="/konto"><Settings className="w-4 h-4" /></Link>
+            <Link href="/konto"><Settings className="w-4 h-4" /></Link>
           </Button>
-          <Button variant="ghost" size="sm" onClick={() => { signOut(); navigate('/'); }}>
+          <Button variant="ghost" size="sm" onClick={() => { signOut(); router.push('/'); }}>
             <LogOut className="w-4 h-4" />
           </Button>
         </div>
       </header>
 
       <div className="max-w-4xl mx-auto py-6 px-4">
-        {/* Status banner */}
         <div className={`rounded-lg px-4 py-3 mb-6 text-sm ${data.business.is_published ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-amber-50 border border-amber-200 text-amber-800'}`}>
           {data.business.is_published
             ? '✅ Din sida är publicerad. Ändringar du sparar syns direkt på den publicerade sidan.'
@@ -436,7 +425,7 @@ export default function Dashboard() {
                 </div>
                 <div className="space-y-2 pt-4 border-t">
                   <Label className="text-base font-semibold">Sociala medier</Label>
-                  <p className="text-sm text-muted-foreground">Lägg till länkar till dina sociala medier (visas på din publika sida).</p>
+                  <p className="text-sm text-muted-foreground">Lägg till länkar till dina sociala medier.</p>
                   <div className="grid grid-cols-1 gap-3">
                     <div className="flex items-center gap-2">
                       <Facebook className="w-5 h-5 text-muted-foreground shrink-0" />
@@ -538,6 +527,7 @@ export default function Dashboard() {
           </Button>
         </div>
       </div>
+
       <AlertDialog open={showPublishConfirm} onOpenChange={setShowPublishConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -560,7 +550,6 @@ export default function Dashboard() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Published URL dialog */}
       <AlertDialog open={showPublishedUrl} onOpenChange={setShowPublishedUrl}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -588,5 +577,13 @@ export default function Dashboard() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Laddar...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }

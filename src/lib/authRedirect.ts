@@ -1,13 +1,8 @@
-const PREVIEW_ORIGIN = 'https://id-preview--3fa77241-3ad3-417d-93be-0637cf8d3666.lovable.app';
-
 export function getAuthRedirectOrigin() {
   if (typeof window === 'undefined') {
-    return PREVIEW_ORIGIN;
+    return process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
   }
-
-  return window.location.hostname.endsWith('.lovableproject.com')
-    ? PREVIEW_ORIGIN
-    : window.location.origin;
+  return window.location.origin;
 }
 
 export function getAuthRedirectUrl(path = '') {
