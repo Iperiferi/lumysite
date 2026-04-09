@@ -181,16 +181,8 @@ function RegisterContent() {
         );
       }
 
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      const { data: checkoutData, error: checkoutError } = await supabase.functions.invoke('create-checkout', {
-        headers: currentSession?.access_token
-          ? { Authorization: `Bearer ${currentSession.access_token}` }
-          : undefined,
-      });
-      if (checkoutError || !checkoutData?.url) {
-        throw new Error('Kunde inte starta betalning. Försök igen.');
-      }
-      window.location.href = checkoutData.url;
+      // TODO: re-enable Stripe checkout when payment is ready
+      router.push('/dashboard');
     } catch (err: any) {
       toast({ title: 'Fel', description: err.message, variant: 'destructive' });
     }
@@ -219,29 +211,7 @@ function RegisterContent() {
     }
   };
 
-  if (showCancelledView) {
-    return (
-      <div className="min-h-screen bg-muted/30 flex items-center justify-center px-4">
-        <Card className="max-w-md w-full">
-          <CardHeader>
-            <CardTitle>Betalningen avbröts</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-center">
-            <p className="text-muted-foreground">
-              Din sida har skapats men betalningen slutfördes inte. Du behöver ett aktivt abonnemang för att publicera din sida.
-            </p>
-            <p className="text-sm text-muted-foreground">99 kr/mån exkl. moms.</p>
-            <Button onClick={handleRetryCheckout} disabled={loading} size="lg" className="w-full">
-              {loading ? 'Förbereder betalning...' : '💳 Försök igen'}
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => router.push('/dashboard')} className="w-full">
-              Gå till dashboard
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  // TODO: re-enable cancelled checkout view when payment is ready
 
   return (
     <div className="min-h-screen bg-muted/30 py-8 px-4">
@@ -455,14 +425,13 @@ function RegisterContent() {
             {/* Step 5: Publish */}
             {step === 5 && (
               <div className="text-center space-y-4">
-                <div className="text-6xl">💳</div>
-                <h2 className="text-xl font-semibold">Aktivera ditt abonnemang</h2>
+                <div className="text-6xl">🚀</div>
+                <h2 className="text-xl font-semibold">Skapa din sida</h2>
                 <p className="text-muted-foreground">
-                  Din sida sparas och blir tillgänglig på <strong>lumysite.com/{subdomain}</strong> efter betalning.
+                  Din sida sparas och blir tillgänglig på <strong>lumysite.com/{subdomain}</strong>.
                 </p>
-                <p className="text-sm text-muted-foreground">99 kr/mån exkl. moms.</p>
                 <Button onClick={handlePublish} disabled={loading} size="lg" className="w-full">
-                  {loading ? 'Förbereder betalning...' : '💳 Gå till betalning'}
+                  {loading ? 'Skapar sida...' : 'Skapa sida'}
                 </Button>
               </div>
             )}

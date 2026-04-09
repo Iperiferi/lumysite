@@ -256,30 +256,9 @@ function DashboardContent() {
     );
   }
 
-  const isCheckoutSuccess = searchParams.get('checkout') === 'success';
-  if (!subscribed && !isCheckoutSuccess) {
-    return (
-      <div className="min-h-screen bg-muted/30 flex items-center justify-center">
-        <Card className="max-w-md w-full">
-          <CardHeader>
-            <CardTitle>Abonnemanget är inte aktivt</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-center">
-            <p className="text-muted-foreground">
-              Du behöver ett aktivt abonnemang för att använda din dashboard och publicera din sida.
-            </p>
-            <p className="text-sm text-muted-foreground">99 kr/mån exkl. moms.</p>
-            <Button onClick={handleStartCheckout} disabled={saving} size="lg" className="w-full">
-              {saving ? 'Förbereder betalning...' : '💳 Gå till betalning'}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => { signOut(); router.push('/'); }} className="w-full">
-              Logga ut
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  // TODO: re-enable subscription gate when payment is ready
+  // const isCheckoutSuccess = searchParams.get('checkout') === 'success';
+  // if (!subscribed && !isCheckoutSuccess) { ... }
 
   return (
     <div className="min-h-screen bg-muted/30">
