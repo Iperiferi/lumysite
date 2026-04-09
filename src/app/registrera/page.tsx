@@ -448,7 +448,7 @@ function RegisterContent() {
                 <div className="text-6xl">💳</div>
                 <h2 className="text-xl font-semibold">Aktivera ditt abonnemang</h2>
                 <p className="text-muted-foreground">
-                  Din sida sparas och blir tillgänglig på <strong>{subdomain}.lumysite.se</strong> efter betalning.
+                  Din sida sparas och blir tillgänglig på <strong>lumysite.com/{subdomain}</strong> efter betalning.
                 </p>
                 <p className="text-sm text-muted-foreground">99 kr/mån exkl. moms.</p>
                 <Button onClick={handlePublish} disabled={loading} size="lg" className="w-full">
