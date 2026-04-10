@@ -17,7 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { defaultOpeningHours, sectionTypes, fontStyles, type OpeningHour, type SectionType } from '@/lib/types';
 import { t } from '@/lib/i18n';
-import { LogOut, Eye, Settings, Facebook, Instagram, Youtube, Linkedin, Copy, Check, ExternalLink } from 'lucide-react';
+import { LogOut, Eye, Settings, Facebook, Instagram, Youtube, Linkedin, Copy, Check, ExternalLink, AlertTriangle, Clock, CreditCard } from 'lucide-react';
 import FocalPointPicker from '@/components/dashboard/FocalPointPicker';
 import { useQueryClient } from '@tanstack/react-query';
 import ServicesEditor from '@/components/dashboard/ServicesEditor';
@@ -28,7 +28,7 @@ import TestimonialsEditor from '@/components/dashboard/TestimonialsEditor';
 import ImageItemEditor from '@/components/dashboard/ImageItemEditor';
 
 function DashboardContent() {
-  const { user, loading: authLoading, signOut, subscribed, checkSubscription } = useAuth();
+  const { user, loading: authLoading, signOut, subscribed, checkSubscription, isTrialActive, daysLeftInTrial, hasStripeSubscription, trialEndsAt } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
@@ -160,7 +160,20 @@ function DashboardContent() {
       }
 
       queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
-      toast({ title: 'Sparad!' });
+      toast({ title: 'Sparad!', description: 'Översätter till engelska...' });
+
+      // Trigger translation in background — don't await
+      supabase.auth.getSession().then(({ data: { session: s } }) => {
+        if (!s?.access_token) return;
+        supabase.functions.invoke('translate-content', {
+          headers: { Authorization: `Bearer ${s.access_token}` },
+        }).then(() => {
+          queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
+          toast({ title: 'Engelska uppdaterad' });
+        }).catch(() => {
+          // Translation failure is non-critical — don't show error
+        });
+      });
     } catch (err: any) {
       toast({ title: 'Fel', description: err.message, variant: 'destructive' });
     }
@@ -247,6 +260,23 @@ function DashboardContent() {
     }
   };
 
+  const handleCustomerPortal = async () => {
+    setSaving(true);
+    try {
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      const { data: portalData, error } = await supabase.functions.invoke('customer-portal', {
+        headers: currentSession?.access_token
+          ? { Authorization: `Bearer ${currentSession.access_token}` }
+          : undefined,
+      });
+      if (error || !portalData?.url) throw new Error('Kunde inte öppna kundportalen.');
+      window.location.href = portalData.url;
+    } catch (err: any) {
+      toast({ title: 'Fel', description: err.message, variant: 'destructive' });
+      setSaving(false);
+    }
+  };
+
   if (!data) {
     return (
       <div className="min-h-screen flex items-center justify-center flex-col gap-4">
@@ -256,9 +286,34 @@ function DashboardContent() {
     );
   }
 
-  // TODO: re-enable subscription gate when payment is ready
-  // const isCheckoutSuccess = searchParams.get('checkout') === 'success';
-  // if (!subscribed && !isCheckoutSuccess) { ... }
+  // Subscription gate — show paywall if neither trial nor Stripe is active
+  const isCheckoutSuccess = searchParams.get('checkout') === 'success';
+  if (!subscribed && !isCheckoutSuccess) {
+    return (
+      <div className="min-h-screen bg-muted/30 flex items-center justify-center px-4">
+        <div className="max-w-md w-full bg-background rounded-2xl border-2 border-destructive/30 p-8 text-center space-y-6">
+          <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto">
+            <AlertTriangle className="w-8 h-8 text-destructive" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold mb-2">Din provperiod har gått ut</h2>
+            <p className="text-muted-foreground">Din gratis provperiod på 7 dagar är slut och din sida är avpublicerad. Starta ett abonnemang för att aktivera den igen.</p>
+          </div>
+          <div className="bg-muted rounded-xl p-4 text-left space-y-2">
+            <div className="flex justify-between text-sm"><span>Pris</span><span className="font-semibold">99 kr/mån</span></div>
+            <div className="flex justify-between text-sm text-muted-foreground"><span>exkl. moms</span><span>Ingen bindningstid</span></div>
+          </div>
+          <Button size="lg" className="w-full" onClick={handleStartCheckout} disabled={saving}>
+            <CreditCard className="w-4 h-4 mr-2" />
+            {saving ? 'Laddar...' : 'Starta abonnemang — 99 kr/mån'}
+          </Button>
+          <Button variant="ghost" size="sm" onClick={() => { signOut(); router.push('/'); }}>
+            Logga ut
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -287,6 +342,47 @@ function DashboardContent() {
       </header>
 
       <div className="max-w-4xl mx-auto py-6 px-4">
+
+        {/* Trial / subscription banner */}
+        {isTrialActive && daysLeftInTrial !== null && daysLeftInTrial <= 2 && (
+          <div className="rounded-lg px-4 py-3 mb-4 text-sm bg-amber-50 border border-amber-300 text-amber-900 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 shrink-0" />
+              <span>
+                <strong>{daysLeftInTrial === 0 ? 'Sista dagen' : `${daysLeftInTrial} dag${daysLeftInTrial === 1 ? '' : 'ar'} kvar`}</strong> av din gratis provperiod.
+                Starta ett abonnemang för att behålla din sida.
+              </span>
+            </div>
+            <Button size="sm" onClick={handleStartCheckout} disabled={saving} className="shrink-0">
+              <CreditCard className="w-3 h-3 mr-1" /> 99 kr/mån
+            </Button>
+          </div>
+        )}
+
+        {isTrialActive && daysLeftInTrial !== null && daysLeftInTrial > 2 && (
+          <div className="rounded-lg px-4 py-3 mb-4 text-sm bg-blue-50 border border-blue-200 text-blue-900 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 shrink-0" />
+              <span>Gratis provperiod — <strong>{daysLeftInTrial} dagar kvar</strong>. Därefter 99 kr/mån, ingen bindningstid.</span>
+            </div>
+            <Button size="sm" variant="outline" onClick={handleStartCheckout} disabled={saving} className="shrink-0 border-blue-300 text-blue-900 hover:bg-blue-100">
+              Starta abonnemang
+            </Button>
+          </div>
+        )}
+
+        {hasStripeSubscription && (
+          <div className="rounded-lg px-4 py-3 mb-4 text-sm bg-green-50 border border-green-200 text-green-900 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <Check className="w-4 h-4 shrink-0" />
+              <span><strong>Aktivt abonnemang</strong> — 99 kr/mån</span>
+            </div>
+            <Button size="sm" variant="outline" onClick={handleCustomerPortal} disabled={saving} className="shrink-0 border-green-300 text-green-900 hover:bg-green-100">
+              Hantera abonnemang
+            </Button>
+          </div>
+        )}
+
         <div className={`rounded-lg px-4 py-3 mb-6 text-sm ${data.business.is_published ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-amber-50 border border-amber-200 text-amber-800'}`}>
           {data.business.is_published
             ? '✅ Din sida är publicerad. Ändringar du sparar syns direkt på den publicerade sidan.'
@@ -331,8 +427,23 @@ function DashboardContent() {
                   <Input value={bizEmail} onChange={e => setBizEmail(e.target.value)} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Google Maps inbäddningslänk</Label>
-                  <Input value={googleMaps} onChange={e => setGoogleMaps(e.target.value)} />
+                  <Label>Google Maps</Label>
+                  <div className="rounded-lg border bg-muted/40 p-3 text-xs text-muted-foreground space-y-1">
+                    <p className="font-medium text-foreground">Så här gör du:</p>
+                    <ol className="list-decimal pl-4 space-y-0.5">
+                      <li>Gå till <strong>Google Maps</strong> och sök upp din plats</li>
+                      <li>Klicka på <strong>Dela</strong></li>
+                      <li>Välj fliken <strong>Bädda in en karta</strong></li>
+                      <li>Klicka <strong>Kopiera HTML</strong> och klistra in nedan</li>
+                    </ol>
+                  </div>
+                  <Textarea
+                    value={googleMaps}
+                    onChange={e => setGoogleMaps(e.target.value)}
+                    placeholder={'<iframe src="https://www.google.com/maps/embed?pb=..." ...></iframe>'}
+                    rows={3}
+                    className="font-mono text-xs"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>CTA-knapptext</Label>
@@ -349,9 +460,9 @@ function DashboardContent() {
                       <Switch checked={!h.closed} onCheckedChange={v => updateHour(i, 'closed', !v)} />
                       {!h.closed && (
                         <>
-                          <Input type="time" value={h.open} onChange={e => updateHour(i, 'open', e.target.value)} className="w-28 h-8" />
+                          <Input type="text" inputMode="numeric" placeholder="HH:MM" maxLength={5} value={h.open} onChange={e => { let v = e.target.value.replace(/[^0-9:]/g, ''); if (v.length === 2 && !v.includes(':') && h.open.length === 1) v = v + ':'; updateHour(i, 'open', v); }} className="w-28 h-8" />
                           <span>–</span>
-                          <Input type="time" value={h.close} onChange={e => updateHour(i, 'close', e.target.value)} className="w-28 h-8" />
+                          <Input type="text" inputMode="numeric" placeholder="HH:MM" maxLength={5} value={h.close} onChange={e => { let v = e.target.value.replace(/[^0-9:]/g, ''); if (v.length === 2 && !v.includes(':') && h.close.length === 1) v = v + ':'; updateHour(i, 'close', v); }} className="w-28 h-8" />
                         </>
                       )}
                       {h.closed && <span className="text-muted-foreground">Stängt</span>}

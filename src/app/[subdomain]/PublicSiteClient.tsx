@@ -20,6 +20,19 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
   const { business, sections, services, gallery, menu, events, accommodations, experiences, testimonials, news, faq } = data;
   const fontConfig = fontStyles.find(f => f.value === business.font_style) || fontStyles[1];
   const accent = business.accent_color || '#2563EB';
+
+  // Translation helpers
+  const en = (lang === 'en' && (business as any).translations_en) ? (business as any).translations_en : null;
+  // Returns English translation if available, otherwise Swedish original
+  const tr = (sv: string | null | undefined, enKey: string): string => {
+    if (lang === 'sv' || !en) return sv || '';
+    return en[enKey] || sv || '';
+  };
+  const trItem = (id: string, field: string, fallback: string | null | undefined, arrayKey: string): string => {
+    if (lang === 'sv' || !en) return fallback || '';
+    const arr = en[arrayKey] as any[] | undefined;
+    return arr?.find((x: any) => x.id === id)?.[field] || fallback || '';
+  };
   const menuFilenameBase = (menu?.title || 'meny').trim().toLowerCase().replace(/[^a-z0-9åäö]+/gi, '-').replace(/^-+|-+$/g, '');
   const menuFilename = `${menuFilenameBase || 'meny'}.pdf`;
 
@@ -112,7 +125,7 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
             <Globe className="w-4 h-4 text-muted-foreground" />
-            {(['sv', 'en', 'de'] as Language[]).map(l => (
+            {(['sv', 'en'] as Language[]).map(l => (
               <button key={l} onClick={() => setLang(l)}
                 className={`text-xs px-2 py-1 rounded ${lang === l ? 'font-bold' : 'text-muted-foreground hover:text-foreground'}`}
                 style={lang === l ? { backgroundColor: accent, color: '#fff' } : {}}
@@ -140,10 +153,10 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
         <div className="relative z-10 max-w-2xl px-4 text-white">
           {business.logo_url && <img src={business.logo_url} alt={`${business.business_name} logotyp`} className="h-16 w-auto mx-auto mb-4" />}
           <h1 className="text-4xl md:text-5xl font-bold mb-3">{business.business_name}</h1>
-          {business.short_description && <p className="text-lg md:text-xl mb-6 opacity-90">{business.short_description}</p>}
+          {business.short_description && <p className="text-lg md:text-xl mb-6 opacity-90">{tr(business.short_description, 'short_description')}</p>}
           <a href="#kontakt" className="inline-block px-6 py-3 rounded-lg font-medium text-lg transition hover:opacity-90"
             style={{ backgroundColor: accent, color: '#fff' }}>
-            {business.cta_text || t('site.contactUs', lang)}
+            {tr(business.cta_text, 'cta_text') || t('site.contactUs', lang)}
           </a>
         </div>
       </section>
@@ -153,7 +166,7 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
         <section id="om-oss" className="py-20">
           <div className="max-w-5xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{t('nav.about', lang)}</h2>
-            {business.about_text && <p className="text-lg leading-relaxed whitespace-pre-line text-muted-foreground">{business.about_text}</p>}
+            {business.about_text && <p className="text-lg leading-relaxed whitespace-pre-line text-muted-foreground">{tr(business.about_text, 'about_text')}</p>}
 
             {isSectionEnabled('news') && news.length > 0 && (
               <div className="mt-12">
@@ -164,8 +177,8 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
                       {n.image_url && <img src={n.image_url} alt={n.title} className="w-full h-48 object-cover" style={{ objectPosition: (n as any).focal_point || '50% 50%' }} loading="lazy" />}
                       <div className="p-4">
                         {n.published_date && <p className="text-sm" style={{ color: accent }}>{new Date(n.published_date).toLocaleDateString('sv-SE')}</p>}
-                        <h4 className="font-semibold text-lg">{n.title}</h4>
-                        {n.content && <p className="text-muted-foreground text-sm mt-1 line-clamp-3">{n.content}</p>}
+                        <h4 className="font-semibold text-lg">{trItem(n.id, 'title', n.title, 'news')}</h4>
+                        {n.content && <p className="text-muted-foreground text-sm mt-1 line-clamp-3">{trItem(n.id, 'content', n.content, 'news')}</p>}
                       </div>
                     </article>
                   ))}
@@ -179,7 +192,7 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
                 <div className="grid md:grid-cols-2 gap-6">
                   {testimonials.map(te => (
                     <blockquote key={te.id} className="p-6 border rounded-xl bg-muted/30">
-                      <p className="italic text-muted-foreground mb-3">"{te.content}"</p>
+                      <p className="italic text-muted-foreground mb-3">"{trItem(te.id, 'content', te.content, 'testimonials')}"</p>
                       <footer className="font-semibold">— {te.author_name}</footer>
                     </blockquote>
                   ))}
@@ -199,8 +212,8 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
                   <div className="grid md:grid-cols-3 gap-6">
                     {services.map(s => (
                       <div key={s.id} className="p-6 border rounded-xl bg-background">
-                        <h3 className="font-semibold text-lg mb-2">{s.name}</h3>
-                        {s.description && <p className="text-muted-foreground text-sm">{s.description}</p>}
+                        <h3 className="font-semibold text-lg mb-2">{trItem(s.id, 'name', s.name, 'services')}</h3>
+                        {s.description && <p className="text-muted-foreground text-sm">{trItem(s.id, 'description', s.description, 'services')}</p>}
                       </div>
                     ))}
                   </div>
@@ -217,13 +230,13 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
                     {isSectionEnabled('accommodations') && accommodations.map(a => (
                       <div key={a.id} className="border rounded-xl overflow-hidden bg-background">
                         {a.image_url && <img src={a.image_url} alt={a.name} className="w-full h-48 object-cover" style={{ objectPosition: (a as any).focal_point || '50% 50%' }} loading="lazy" />}
-                        <div className="p-4"><h4 className="font-semibold text-lg">{a.name}</h4>{a.description && <p className="text-muted-foreground text-sm mt-1">{a.description}</p>}</div>
+                        <div className="p-4"><h4 className="font-semibold text-lg">{trItem(a.id, 'name', a.name, 'accommodations')}</h4>{a.description && <p className="text-muted-foreground text-sm mt-1">{trItem(a.id, 'description', a.description, 'accommodations')}</p>}</div>
                       </div>
                     ))}
                     {isSectionEnabled('experiences') && experiences.map(ex => (
                       <div key={ex.id} className="border rounded-xl overflow-hidden bg-background">
                         {ex.image_url && <img src={ex.image_url} alt={ex.name} className="w-full h-48 object-cover" style={{ objectPosition: (ex as any).focal_point || '50% 50%' }} loading="lazy" />}
-                        <div className="p-4"><h4 className="font-semibold text-lg">{ex.name}</h4>{ex.description && <p className="text-muted-foreground text-sm mt-1">{ex.description}</p>}</div>
+                        <div className="p-4"><h4 className="font-semibold text-lg">{trItem(ex.id, 'name', ex.name, 'experiences')}</h4>{ex.description && <p className="text-muted-foreground text-sm mt-1">{trItem(ex.id, 'description', ex.description, 'experiences')}</p>}</div>
                       </div>
                     ))}
                   </div>
@@ -245,8 +258,8 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
                               {(e as any).event_end_time && ` – ${(e as any).event_end_time.substring(0, 5)}`}
                             </p>
                           )}
-                          <h4 className="font-semibold text-lg">{e.title}</h4>
-                          {e.description && <p className="text-muted-foreground text-sm mt-1">{e.description}</p>}
+                          <h4 className="font-semibold text-lg">{trItem(e.id, 'title', e.title, 'events')}</h4>
+                          {e.description && <p className="text-muted-foreground text-sm mt-1">{trItem(e.id, 'description', e.description, 'events')}</p>}
                         </div>
                       </div>
                     ))}
@@ -261,8 +274,8 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
         {isSectionEnabled('menu') && menu && (
           <section id="meny" className="py-20">
             <div className="max-w-5xl mx-auto px-4">
-              <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{menu.title || t('nav.menu', lang)}</h2>
-              {menu.content && <div className="whitespace-pre-line text-muted-foreground">{menu.content}</div>}
+              <h2 className="text-3xl font-bold mb-6" style={{ color: accent }}>{(lang === 'en' && en?.menu?.title) || menu.title || t('nav.menu', lang)}</h2>
+              {menu.content && <div className="whitespace-pre-line text-muted-foreground">{(lang === 'en' && en?.menu?.content) || menu.content}</div>}
               {menu.pdf_url && (
                 <div className="mt-4 flex flex-wrap gap-3">
                   <a href={menu.pdf_url} target="_blank" rel="noopener noreferrer"
@@ -310,8 +323,8 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
                 <Accordion type="single" collapsible className="max-w-2xl">
                   {faq.map(f => (
                     <AccordionItem key={f.id} value={f.id}>
-                      <AccordionTrigger>{f.question}</AccordionTrigger>
-                      <AccordionContent>{f.answer}</AccordionContent>
+                      <AccordionTrigger>{trItem(f.id, 'question', f.question, 'faq')}</AccordionTrigger>
+                      <AccordionContent>{trItem(f.id, 'answer', f.answer, 'faq')}</AccordionContent>
                     </AccordionItem>
                   ))}
                 </Accordion>

@@ -9,8 +9,12 @@ interface AuthContextType {
   loading: boolean;
   subscribed: boolean;
   subscriptionEnd: string | null;
+  trialEndsAt: string | null;
+  isTrialActive: boolean;
+  hasStripeSubscription: boolean;
+  daysLeftInTrial: number | null;
   checkSubscription: () => Promise<void>;
-  signUp: (email: string, password: string) => Promise<{ error: any; session: Session | null }>;
+  signUp: (email: string, password: string, redirectTo?: string) => Promise<{ error: any; session: Session | null }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
 }
@@ -23,6 +27,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [subscribed, setSubscribed] = useState(false);
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
+  const [trialEndsAt, setTrialEndsAt] = useState<string | null>(null);
+  const [isTrialActive, setIsTrialActive] = useState(false);
+  const [hasStripeSubscription, setHasStripeSubscription] = useState(false);
+
+  const daysLeftInTrial: number | null = (() => {
+    if (!trialEndsAt || !isTrialActive) return null;
+    const diff = new Date(trialEndsAt).getTime() - Date.now();
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  })();
 
   const checkSubscription = useCallback(async () => {
     try {
@@ -35,6 +48,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!error && data) {
         setSubscribed(data.subscribed ?? false);
         setSubscriptionEnd(data.subscription_end ?? null);
+        setTrialEndsAt(data.trial_ends_at ?? null);
+        setIsTrialActive(data.is_trial_active ?? false);
+        setHasStripeSubscription(data.has_stripe_subscription ?? false);
       }
     } catch {
       // silently fail
@@ -67,16 +83,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } else {
       setSubscribed(false);
       setSubscriptionEnd(null);
+      setTrialEndsAt(null);
+      setIsTrialActive(false);
+      setHasStripeSubscription(false);
     }
   }, [user, checkSubscription]);
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, redirectTo?: string) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: getAuthRedirectUrl() },
+      options: { emailRedirectTo: redirectTo ?? getAuthRedirectUrl() },
     });
-
     return { error, session: data.session };
   };
 
@@ -90,7 +108,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, subscribed, subscriptionEnd, checkSubscription, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{
+      user, session, loading,
+      subscribed, subscriptionEnd,
+      trialEndsAt, isTrialActive, hasStripeSubscription, daysLeftInTrial,
+      checkSubscription, signUp, signIn, signOut,
+    }}>
       {children}
     </AuthContext.Provider>
   );

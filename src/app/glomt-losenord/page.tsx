@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
+import { translateAuthError } from '@/lib/authErrors';
 import { getAuthRedirectUrl } from '@/lib/authRedirect';
 
 export default function ForgotPassword() {
@@ -26,7 +27,7 @@ export default function ForgotPassword() {
     setLoading(false);
 
     if (error) {
-      toast({ title: 'Något gick fel', description: error.message, variant: 'destructive' });
+      toast({ title: 'Något gick fel', description: translateAuthError(error), variant: 'destructive' });
     } else {
       setSent(true);
     }
@@ -43,7 +44,12 @@ export default function ForgotPassword() {
           {sent ? (
             <div className="text-center space-y-4">
               <p className="text-muted-foreground">
-                Om det finns ett konto med den e-postadressen har vi skickat en återställningslänk. Kolla din inkorg.
+                Om det finns ett konto med den e-postadressen har vi skickat en återställningslänk. Kolla din inkorg (och skräpposten).
+              </p>
+              <p className="text-sm text-muted-foreground bg-muted rounded-lg p-3">
+                Fick du inget mail? Hör av dig till{' '}
+                <a href="mailto:info@iperiferi.se" className="text-primary underline font-medium">info@iperiferi.se</a>{' '}
+                så hjälper vi dig.
               </p>
               <Link href="/logga-in" className="text-primary underline text-sm">
                 Tillbaka till inloggning

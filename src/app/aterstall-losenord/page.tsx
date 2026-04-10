@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
+import { translateAuthError } from '@/lib/authErrors';
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('');
@@ -39,7 +40,7 @@ export default function ResetPassword() {
     const { error } = await supabase.auth.updateUser({ password });
     setLoading(false);
     if (error) {
-      toast({ title: 'Kunde inte uppdatera lösenord', description: error.message, variant: 'destructive' });
+      toast({ title: 'Kunde inte uppdatera lösenord', description: translateAuthError(error), variant: 'destructive' });
     } else {
       toast({ title: 'Lösenordet har uppdaterats!' });
       router.push('/dashboard');
@@ -67,6 +68,11 @@ export default function ResetPassword() {
               {loading ? 'Uppdaterar...' : 'Uppdatera lösenord'}
             </Button>
           </form>
+          <p className="text-sm text-muted-foreground bg-muted rounded-lg p-3 mt-4 text-center">
+            Fick du inget mail?{' '}
+            <a href="mailto:info@iperiferi.se" className="text-primary underline font-medium">info@iperiferi.se</a>{' '}
+            hjälper dig.
+          </p>
         </CardContent>
       </Card>
     </div>

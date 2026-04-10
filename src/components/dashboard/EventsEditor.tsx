@@ -144,11 +144,33 @@ export default function EventsEditor({ businessId }: { businessId: string }) {
         <div className="grid grid-cols-2 gap-2">
           <div className="space-y-1">
             <Label className="text-xs">Starttid (valfritt)</Label>
-            <Input type="time" value={eventTime} onChange={e => setEventTime(e.target.value)} />
+            <Input
+              type="text"
+              inputMode="numeric"
+              placeholder="HH:MM"
+              maxLength={5}
+              value={eventTime}
+              onChange={e => {
+                let v = e.target.value.replace(/[^0-9:]/g, '');
+                if (v.length === 2 && !v.includes(':') && eventTime.length === 1) v = v + ':';
+                setEventTime(v);
+              }}
+            />
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Sluttid (valfritt)</Label>
-            <Input type="time" value={eventEndTime} onChange={e => setEventEndTime(e.target.value)} />
+            <Input
+              type="text"
+              inputMode="numeric"
+              placeholder="HH:MM"
+              maxLength={5}
+              value={eventEndTime}
+              onChange={e => {
+                let v = e.target.value.replace(/[^0-9:]/g, '');
+                if (v.length === 2 && !v.includes(':') && eventEndTime.length === 1) v = v + ':';
+                setEventEndTime(v);
+              }}
+            />
           </div>
         </div>
         <div className="flex gap-2">

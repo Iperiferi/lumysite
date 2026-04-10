@@ -4,6 +4,7 @@ import { Suspense, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import { getAuthRedirectUrl } from '@/lib/authRedirect';
 import { useOwnerBusiness } from '@/hooks/useBusiness';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from '@/hooks/use-toast';
+import { translateAuthError } from '@/lib/authErrors';
 import { defaultOpeningHours, sectionTypes, fontStyles, type OpeningHour, type SectionType } from '@/lib/types';
 import { t } from '@/lib/i18n';
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -78,8 +80,8 @@ function RegisterContent() {
     const clean = val.toLowerCase().replace(/[^a-z0-9-]/g, '');
     setSubdomain(clean);
     if (clean.length < 3) { setSubdomainAvailable(null); return; }
-    const { data } = await supabase.from('businesses_public' as any).select('id').eq('subdomain', clean).maybeSingle();
-    setSubdomainAvailable(!data);
+    const { data } = await (supabase as any).rpc('is_subdomain_available', { p_subdomain: clean });
+    setSubdomainAvailable(data === true);
   };
 
   const updateHour = (index: number, field: keyof OpeningHour, value: any) => {
@@ -90,9 +92,9 @@ function RegisterContent() {
 
   const handleCreateAccount = async () => {
     setLoading(true);
-    const { error, session: newSession } = await signUp(email, password);
+    const { error, session: newSession } = await signUp(email, password, getAuthRedirectUrl('/registrera'));
     if (error) {
-      toast({ title: 'Fel', description: error.message, variant: 'destructive' });
+      toast({ title: 'Kunde inte skapa konto', description: translateAuthError(error), variant: 'destructive' });
       setLoading(false);
       return;
     }
@@ -102,18 +104,14 @@ function RegisterContent() {
       setLoading(false);
       toast({
         title: 'Bekräfta din e-post',
-        description: 'Vi har skickat ett bekräftelsemail till ' + email + '. Klicka på länken i mailet och logga sedan in.',
+        description: 'Vi har skickat ett bekräftelsemail till ' + email + '. Kolla inkorgen (och skräpposten). Fick du inget mail? Kontakta info@iperiferi.se så hjälper vi dig.',
+        duration: 10000,
       });
       return;
     }
 
-    // Email confirmation disabled — sign in directly.
-    const { error: signInError } = await signIn(email, password);
+    // Session returned — user is already signed in via signUp.
     setLoading(false);
-    if (signInError) {
-      toast({ title: 'Fel vid inloggning', description: signInError.message, variant: 'destructive' });
-      return;
-    }
     setStep(1);
   };
 
@@ -331,9 +329,9 @@ function RegisterContent() {
                       <Switch checked={!h.closed} onCheckedChange={v => updateHour(i, 'closed', !v)} />
                       {!h.closed && (
                         <>
-                          <Input type="time" value={h.open} onChange={e => updateHour(i, 'open', e.target.value)} className="w-28 h-8" />
+                          <Input type="text" inputMode="numeric" placeholder="HH:MM" maxLength={5} value={h.open} onChange={e => { let v = e.target.value.replace(/[^0-9:]/g, ''); if (v.length === 2 && !v.includes(':') && h.open.length === 1) v = v + ':'; updateHour(i, 'open', v); }} className="w-28 h-8" />
                           <span>–</span>
-                          <Input type="time" value={h.close} onChange={e => updateHour(i, 'close', e.target.value)} className="w-28 h-8" />
+                          <Input type="text" inputMode="numeric" placeholder="HH:MM" maxLength={5} value={h.close} onChange={e => { let v = e.target.value.replace(/[^0-9:]/g, ''); if (v.length === 2 && !v.includes(':') && h.close.length === 1) v = v + ':'; updateHour(i, 'close', v); }} className="w-28 h-8" />
                         </>
                       )}
                       {h.closed && <span className="text-muted-foreground">Stängt</span>}

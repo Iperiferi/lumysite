@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
+import { translateAuthError } from '@/lib/authErrors';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
@@ -43,7 +44,7 @@ export default function AccountSettings() {
     setChangingPassword(true);
     const { error } = await supabase.auth.updateUser({ password: newPassword });
     if (error) {
-      toast({ title: 'Fel', description: error.message, variant: 'destructive' });
+      toast({ title: 'Fel', description: translateAuthError(error), variant: 'destructive' });
     } else {
       toast({ title: 'Lösenordet har ändrats!' });
       setNewPassword('');

@@ -13,7 +13,7 @@ export default function PrivacyPolicy() {
 
       <main className="max-w-3xl mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold mb-2">Integritetspolicy</h1>
-        <p className="text-sm text-muted-foreground mb-8">Senast uppdaterad: {new Date().toLocaleDateString('sv-SE')}</p>
+        <p className="text-sm text-muted-foreground mb-8">Senast uppdaterad: 2026-04-10</p>
 
         <div className="prose prose-sm max-w-none space-y-8 text-foreground">
 
@@ -89,6 +89,11 @@ export default function PrivacyPolicy() {
                   <tr className="border-t">
                     <td className="p-3">Google Maps</td>
                     <td className="p-3">Kartvisning på publika sidor (valfritt, aktiveras av dig)</td>
+                    <td className="p-3">USA (SCC)</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="p-3">Anthropic (Claude API)</td>
+                    <td className="p-3">Automatisk översättning av innehåll till engelska</td>
                     <td className="p-3">USA (SCC)</td>
                   </tr>
                 </tbody>
