@@ -61,7 +61,7 @@ export default function Index() {
             <span className="text-primary">på nätet?</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground mb-3 max-w-2xl mx-auto leading-relaxed">
-            LumySite ger dig en professionell sida på nätet som fungerar som en hemsida, fast enklare.
+            LumySite ger dig en professionell sida på nätet — enkel att fylla i, snygg att visa upp.
           </p>
           <p className="text-base text-muted-foreground mb-2 max-w-xl mx-auto">
             Fyll i din information, välj design och publicera. Inga tekniska kunskaper behövs.

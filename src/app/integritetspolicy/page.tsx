@@ -52,9 +52,9 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-semibold mb-3">4. Hur länge sparas uppgifterna?</h2>
             <ul className="list-disc pl-5 text-muted-foreground space-y-1">
-              <li><strong>Kontouppgifter:</strong> Så länge du har ett aktivt konto, plus 30 dagar efter uppsägning</li>
-              <li><strong>Företagsdata och bilder:</strong> Raderas inom 30 dagar efter att du avslutar ditt konto</li>
-              <li><strong>Betalningshistorik:</strong> Sparas i 7 år enligt bokföringslagen</li>
+              <li><strong>Kontouppgifter och företagsdata:</strong> Raderas omedelbart när du väljer att radera ditt konto via kontosidan — ingen fördröjning</li>
+              <li><strong>Uppladdade bilder och filer:</strong> Raderas omedelbart i samband med kontoradering</li>
+              <li><strong>Betalningshistorik:</strong> Sparas i 7 år enligt bokföringslagen (hanteras av Stripe)</li>
             </ul>
           </section>
 
@@ -126,7 +126,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-semibold mb-3">8. AI-användning och transparens (AI Act)</h2>
             <p className="text-muted-foreground">
-              LumySite kan i framtiden använda AI-baserade funktioner för att hjälpa dig skapa och förbättra din hemsida.
+              LumySite kan i framtiden använda AI-baserade funktioner för att hjälpa dig skapa och förbättra din sida.
               I enlighet med EU:s AI-förordning (AI Act) informerar vi om följande:
             </p>
             <ul className="list-disc pl-5 text-muted-foreground space-y-1 mt-2">

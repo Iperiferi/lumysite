@@ -26,7 +26,7 @@ export default function Contact() {
             <p>
               Med sin bakgrund inom digital utveckling för hotell, destinationer och kommuner skapade Josefin
               LumySite för att göra det enkelt för företag inom turism- och besöksnäring att få en professionell
-              hemsida — utan teknikkrångel. Fokus är att göra det begripligt och görbart för små team,
+              sida på nätet — utan teknikkrångel. Fokus är att göra det begripligt och görbart för små team,
               med konkreta verktyg som går att använda direkt.
             </p>
           </div>

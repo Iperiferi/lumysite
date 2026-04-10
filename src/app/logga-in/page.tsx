@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
+import { translateAuthError } from '@/lib/authErrors';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -23,7 +24,7 @@ export default function Login() {
     const { error } = await signIn(email, password);
     setLoading(false);
     if (error) {
-      toast({ title: 'Fel vid inloggning', description: error.message, variant: 'destructive' });
+      toast({ title: 'Inloggning misslyckades', description: translateAuthError(error), variant: 'destructive' });
     } else {
       router.push('/dashboard');
     }
@@ -34,7 +35,7 @@ export default function Login() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Logga in på LumySite</CardTitle>
-          <CardDescription>Hantera din hemsida</CardDescription>
+          <CardDescription>Hantera din sida</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

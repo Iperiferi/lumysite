@@ -45,8 +45,8 @@ const translations: Record<string, Record<Language, string>> = {
   'auth.hasAccount': { sv: 'Har du redan ett konto?', en: 'Already have an account?', de: 'Bereits ein Konto?' },
 
   // Landing
-  'landing.hero.title': { sv: 'Skapa din egen hemsida på minuter', en: 'Create your own website in minutes', de: 'Erstellen Sie Ihre eigene Website in Minuten' },
-  'landing.hero.subtitle': { sv: 'Den enklaste hemsidebyggaren för svensk turism- och besöksnäring', en: 'The simplest website builder for Swedish tourism & hospitality', de: 'Der einfachste Website-Builder für schwedischen Tourismus' },
+  'landing.hero.title': { sv: 'Skapa din sida på nätet på minuter', en: 'Create your page online in minutes', de: 'Erstellen Sie Ihre Seite online in Minuten' },
+  'landing.hero.subtitle': { sv: 'Det enklaste verktyget för svensk turism- och besöksnäring', en: 'The simplest tool for Swedish tourism & hospitality', de: 'Das einfachste Tool für schwedischen Tourismus' },
   'landing.hero.cta': { sv: 'Kom igång gratis', en: 'Get started free', de: 'Kostenlos starten' },
 
   // Dashboard

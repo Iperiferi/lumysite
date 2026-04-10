@@ -19,8 +19,8 @@ export default function CookiePolicy() {
           <section>
             <h2 className="text-xl font-semibold mb-3">1. Vad är cookies?</h2>
             <p className="text-muted-foreground">
-              Cookies är små textfiler som lagras på din enhet när du besöker en webbplats. De används för att
-              webbplatsen ska fungera korrekt och för att förbättra din upplevelse.
+              Cookies är små textfiler som lagras på din enhet när du besöker en sida på nätet. De används för att
+              sidan ska fungera korrekt och för att förbättra din upplevelse.
             </p>
           </section>
 
@@ -51,7 +51,7 @@ export default function CookiePolicy() {
                     <td className="p-3 font-mono text-xs">sidebar:state</td>
                     <td className="p-3">Sparar sidopanelens öppna/stängda läge</td>
                     <td className="p-3">Funktionell</td>
-                    <td className="p-3">Persistent</td>
+                    <td className="p-3">7 dagar</td>
                   </tr>
                 </tbody>
               </table>

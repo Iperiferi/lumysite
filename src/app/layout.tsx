@@ -3,8 +3,8 @@ import './globals.css';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: 'LumySite — Skapa din hemsida på minuter',
-  description: 'LumySite ger ditt företag en professionell närvaro på nätet. Ingen kod. Mobilanpassad. Flerspråkig. Prova gratis i 7 dagar.',
+  title: 'LumySite — Skapa din sida på nätet på minuter',
+  description: 'LumySite ger ditt företag en professionell sida på nätet. Ingen kod. Mobilanpassad. Flerspråkig. Prova gratis i 7 dagar.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

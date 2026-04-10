@@ -65,7 +65,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold mb-3">5. Personuppgiftsbiträdesavtal (DPA)</h2>
             <p className="text-muted-foreground mb-3">
-              När du använder LumySite för att skapa och publicera en hemsida agerar du som <strong>personuppgiftsansvarig</strong> för
+              När du använder LumySite för att skapa och publicera en sida på nätet agerar du som <strong>personuppgiftsansvarig</strong> för
               de personuppgifter som samlas in via din publika sida (t.ex. besökardata, kontaktformulär). LumySite (Iperiferi AB) agerar
               som <strong>personuppgiftsbiträde</strong> och behandlar dessa uppgifter enbart på dina instruktioner och i syfte att
               tillhandahålla tjänsten.
@@ -74,7 +74,7 @@ export default function TermsOfService() {
             <ul className="list-disc pl-5 text-muted-foreground space-y-2">
               <li>
                 <strong>Behandlingens syfte:</strong> Lagring, visning och distribution av det innehåll och den besökardata som genereras
-                via din publicerade hemsida
+                via din publicerade sida
               </li>
               <li>
                 <strong>Kategorier av personuppgifter:</strong> Kontaktuppgifter (namn, e-post, telefon), IP-adresser, formulärdata
