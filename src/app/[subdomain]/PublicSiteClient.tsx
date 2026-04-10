@@ -1,93 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { useBusinessBySubdomain } from '@/hooks/useBusiness';
 import { type Language, t, dayKeys } from '@/lib/i18n';
 import { fontStyles, type SectionType } from '@/lib/types';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Phone, Mail, MapPin, Clock, Globe } from 'lucide-react';
+import type { BusinessData } from '@/lib/types';
 
-const RESERVED_ROUTES = ['dashboard', 'logga-in', 'registrera', 'cookies', 'integritetspolicy', 'anvandarvillkor', 'kontakt', 'konto'];
+const TikTokIcon = () => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.88-2.88 2.89 2.89 0 0 1 2.88-2.88c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.76 1.52v-3.4a4.85 4.85 0 0 1-1-.3z"/></svg>
+);
 
-function SeoHead({ business, subdomain }: { business: any; subdomain: string }) {
-  useEffect(() => {
-    const title = `${business.business_name} – ${business.short_description || ''}`;
-    const description = business.about_text?.slice(0, 160) || business.short_description || '';
-    const canonicalUrl = `https://lumysite.com/${subdomain}`;
-
-    document.title = title;
-
-    const setMeta = (attr: string, key: string, content: string) => {
-      let el = document.querySelector(`meta[${attr}="${key}"]`);
-      if (el) { el.setAttribute('content', content); }
-      else { el = document.createElement('meta'); el.setAttribute(attr, key); el.setAttribute('content', content); document.head.appendChild(el); }
-    };
-
-    setMeta('name', 'description', description);
-    setMeta('name', 'robots', 'index, follow');
-    setMeta('property', 'og:title', title);
-    setMeta('property', 'og:description', description);
-    setMeta('property', 'og:type', 'website');
-    setMeta('property', 'og:url', canonicalUrl);
-    if (business.hero_image_url) setMeta('property', 'og:image', business.hero_image_url);
-    setMeta('name', 'twitter:card', 'summary_large_image');
-    setMeta('name', 'twitter:title', title);
-    setMeta('name', 'twitter:description', description);
-    if (business.hero_image_url) setMeta('name', 'twitter:image', business.hero_image_url);
-
-    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
-    if (canonical) { canonical.href = canonicalUrl; }
-    else { canonical = document.createElement('link'); canonical.rel = 'canonical'; canonical.href = canonicalUrl; document.head.appendChild(canonical); }
-
-    const prerenderUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/render-site?subdomain=${encodeURIComponent(subdomain)}`;
-    let alternate = document.querySelector('link[rel="alternate"][type="text/html"]') as HTMLLinkElement | null;
-    if (alternate) { alternate.href = prerenderUrl; }
-    else { alternate = document.createElement('link'); alternate.rel = 'alternate'; alternate.type = 'text/html'; alternate.href = prerenderUrl; document.head.appendChild(alternate); }
-
-    let script = document.getElementById('jsonld');
-    if (!script) { script = document.createElement('script'); script.id = 'jsonld'; script.setAttribute('type', 'application/ld+json'); document.head.appendChild(script); }
-    const hours = (business.opening_hours || []).filter((h: any) => !h.closed).map((h: any) => {
-      const dayMap: Record<string, string> = { monday: 'Mo', tuesday: 'Tu', wednesday: 'We', thursday: 'Th', friday: 'Fr', saturday: 'Sa', sunday: 'Su' };
-      return `${dayMap[h.day]} ${h.open}-${h.close}`;
-    });
-    const sameAs = [business.facebook_url, business.instagram_url, business.tiktok_url, business.youtube_url, business.linkedin_url].filter(Boolean);
-    script.textContent = JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'LocalBusiness',
-      name: business.business_name,
-      description: business.short_description,
-      url: canonicalUrl,
-      address: business.address,
-      telephone: business.phone,
-      email: business.email,
-      openingHours: hours,
-      image: business.hero_image_url,
-      logo: business.logo_url,
-      ...(sameAs.length > 0 ? { sameAs } : {}),
-    });
-
-    return () => { document.title = 'LumySite'; };
-  }, [business, subdomain]);
-  return null;
-}
-
-export default function PublicSiteClient({ subdomain }: { subdomain: string }) {
-  const router = useRouter();
-  const isReserved = RESERVED_ROUTES.includes(subdomain);
-  const { data, isLoading, error } = useBusinessBySubdomain(isReserved ? undefined : subdomain);
+export default function PublicSiteClient({ data, subdomain }: { data: BusinessData; subdomain: string }) {
   const [lang, setLang] = useState<Language>('sv');
   const [isDownloadingMenu, setIsDownloadingMenu] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    if (isReserved) router.replace('/');
-  }, [isReserved]);
-
-  if (isReserved) return null;
-  if (isLoading) return <div className="min-h-screen flex items-center justify-center">Laddar...</div>;
-  if (!data || error) return <div className="min-h-screen flex items-center justify-center"><h1 className="text-2xl">Sidan hittades inte</h1></div>;
 
   const { business, sections, services, gallery, menu, events, accommodations, experiences, testimonials, news, faq } = data;
   const fontConfig = fontStyles.find(f => f.value === business.font_style) || fontStyles[1];
@@ -112,10 +40,6 @@ export default function PublicSiteClient({ subdomain }: { subdomain: string }) {
   ];
 
   const dayLabels = dayKeys.map(k => t(k, lang));
-
-  const TikTokIcon = () => (
-    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.88-2.88 2.89 2.89 0 0 1 2.88-2.88c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.76 1.52v-3.4a4.85 4.85 0 0 1-1-.3z"/></svg>
-  );
 
   const socialLinks = [
     business.facebook_url && { url: business.facebook_url, label: 'Facebook', icon: <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> },
@@ -152,15 +76,31 @@ export default function PublicSiteClient({ subdomain }: { subdomain: string }) {
     }
   };
 
+  // Google Maps src resolution
+  const rawMapValue = business.google_maps_embed?.trim();
+  const iframeSrcMatch = rawMapValue?.match(/src=["']([^"']+)["']/i);
+  const extractedEmbedUrl = iframeSrcMatch?.[1]?.replace(/&amp;/g, '&');
+  const normalizedMapUrl = rawMapValue?.startsWith('<iframe') ? extractedEmbedUrl : rawMapValue?.startsWith('http') ? rawMapValue : null;
+  let mapSrc: string | null = null;
+  if (normalizedMapUrl?.includes('/maps/embed')) {
+    mapSrc = normalizedMapUrl;
+  } else if (normalizedMapUrl?.includes('google.com/maps') || normalizedMapUrl?.includes('maps.google.com')) {
+    const sep = normalizedMapUrl.includes('?') ? '&' : '?';
+    mapSrc = `${normalizedMapUrl}${sep}output=embed`;
+  } else if (business.address) {
+    mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(business.address)}&output=embed`;
+  }
+
   return (
     <div style={{ fontFamily: fontConfig.fontFamily, '--accent': accent, '--accent-fg': '#fff' } as any}>
-      <SeoHead business={business} subdomain={subdomain} />
 
       {/* Nav */}
       <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {business.logo_url ? <img src={business.logo_url} alt={business.business_name} className="h-8 w-auto" /> : <span className="font-bold text-lg">{business.business_name}</span>}
+            {business.logo_url
+              ? <img src={business.logo_url} alt={business.business_name} className="h-8 w-auto" />
+              : <span className="font-bold text-lg">{business.business_name}</span>}
           </div>
           <div className="hidden md:flex items-center gap-4 text-sm">
             {navItems.map(n => (
@@ -396,21 +336,14 @@ export default function PublicSiteClient({ subdomain }: { subdomain: string }) {
                 ))}
               </div>
             )}
-            {(business.google_maps_embed || business.address) && (() => {
-              const rawMapValue = business.google_maps_embed?.trim();
-              const iframeSrcMatch = rawMapValue?.match(/src=["']([^"']+)["']/i);
-              const extractedEmbedUrl = iframeSrcMatch?.[1]?.replace(/&amp;/g, '&');
-              const normalizedMapUrl = rawMapValue?.startsWith('<iframe') ? extractedEmbedUrl : rawMapValue?.startsWith('http') ? rawMapValue : null;
-              const mapSrc = normalizedMapUrl?.includes('/maps/embed') ? normalizedMapUrl : business.address ? `https://maps.google.com/maps?q=${encodeURIComponent(business.address)}&output=embed` : null;
-              return mapSrc ? (
-                <div className="mt-8">
-                  <h3 className="text-2xl font-bold mb-4" style={{ color: accent }}>{t('nav.map', lang)}</h3>
-                  <div className="rounded-xl overflow-hidden border">
-                    <iframe src={mapSrc} width="100%" height="400" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Google Maps" />
-                  </div>
+            {mapSrc && (
+              <div className="mt-8">
+                <h3 className="text-2xl font-bold mb-4" style={{ color: accent }}>{t('nav.map', lang)}</h3>
+                <div className="rounded-xl overflow-hidden border">
+                  <iframe src={mapSrc} width="100%" height="400" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Google Maps" />
                 </div>
-              ) : null;
-            })()}
+              </div>
+            )}
           </div>
         </section>
 
