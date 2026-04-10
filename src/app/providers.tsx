@@ -6,6 +6,7 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { AuthProvider } from '@/hooks/useAuth';
+import { CookieBanner } from '@/components/CookieBanner';
 
 export function Providers({ children }: { children: ReactNode }) {
   // Create QueryClient inside the component so each request gets its own instance.
@@ -18,6 +19,7 @@ export function Providers({ children }: { children: ReactNode }) {
           <Toaster />
           <Sonner />
           {children}
+          <CookieBanner />
         </TooltipProvider>
       </AuthProvider>
     </QueryClientProvider>

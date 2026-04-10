@@ -36,8 +36,10 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">3. Betalning och abonnemang</h2>
+            <h2 className="text-xl font-semibold mb-3">3. Provperiod, betalning och abonnemang</h2>
             <ul className="list-disc pl-5 text-muted-foreground space-y-1">
+              <li><strong>7 dagars gratis provperiod:</strong> Alla nya konton får automatiskt 7 dagars kostnadsfri provperiod. Inget kreditkort krävs för att starta provperioden</li>
+              <li>Efter provperiodens slut krävs ett aktivt abonnemang för att din sida ska fortsätta vara publicerad</li>
               <li>Tjänsten kostar <strong>99 kr/mån exkl. moms</strong></li>
               <li>Betalning sker månadsvis via Stripe</li>
               <li>Abonnemanget förnyas automatiskt varje månad tills du säger upp det</li>
@@ -88,7 +90,7 @@ export default function TermsOfService() {
                 av data i transit och vila, åtkomstkontroll på radnivå (RLS) samt regelbundna säkerhetsgenomgångar
               </li>
               <li>
-                <strong>Radering:</strong> Vid uppsägning av ditt konto raderas all data, inklusive besökardata, inom 30 dagar
+                <strong>Radering:</strong> Vid radering av ditt konto raderas all data, inklusive besökardata, omedelbart
                 i enlighet med vår integritetspolicy
               </li>
               <li>
@@ -142,9 +144,9 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold mb-3">9. Uppsägning</h2>
             <ul className="list-disc pl-5 text-muted-foreground space-y-1">
-              <li>Du kan säga upp ditt konto när som helst via kundportalen</li>
-              <li>Vid uppsägning avpubliceras din sida omedelbart</li>
-              <li>Dina uppgifter raderas inom 30 dagar efter uppsägning (se <Link href="/integritetspolicy" className="text-primary hover:underline">integritetspolicyn</Link>)</li>
+              <li>Du kan avsluta ditt abonnemang när som helst via kundportalen — tjänsten är aktiv till slutet av betalperioden</li>
+              <li>Du kan radera ditt konto permanent via <Link href="/konto" className="text-primary hover:underline">kontosidan</Link> — detta raderar omedelbart all data och avpublicerar din sida</li>
+              <li>All data (konto, sida, bilder) raderas omedelbart vid kontoradering (se <Link href="/integritetspolicy" className="text-primary hover:underline">integritetspolicyn</Link>)</li>
               <li>LumySite kan säga upp ditt konto vid brott mot dessa villkor</li>
             </ul>
           </section>
