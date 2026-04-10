@@ -53,6 +53,9 @@ export default function Index() {
         </div>
 
         <div className="max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-1.5 text-sm font-medium mb-6">
+            Testa gratis i 7 dagar — ingen bindningstid
+          </div>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
             Syns ditt företag<br />
             <span className="text-primary">på nätet?</span>
@@ -60,8 +63,11 @@ export default function Index() {
           <p className="text-lg md:text-xl text-muted-foreground mb-3 max-w-2xl mx-auto leading-relaxed">
             LumySite ger dig en professionell sida på nätet som fungerar som en hemsida, fast enklare.
           </p>
-          <p className="text-base text-muted-foreground mb-8 max-w-xl mx-auto">
+          <p className="text-base text-muted-foreground mb-2 max-w-xl mx-auto">
             Fyll i din information, välj design och publicera. Inga tekniska kunskaper behövs.
+          </p>
+          <p className="text-sm text-muted-foreground mb-8 max-w-xl mx-auto">
+            De första 7 dagarna är gratis. Därefter 99 kr/mån exkl. moms. Säg upp när du vill.
           </p>
           <div className="flex flex-wrap justify-center gap-6 mb-10 text-sm font-medium text-muted-foreground">
             <span className="flex items-center gap-2 bg-background/80 backdrop-blur border rounded-full px-4 py-2 shadow-sm">
@@ -77,7 +83,7 @@ export default function Index() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" asChild className="text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-shadow">
               <Link href="/registrera">
-                Kom igång <ArrowRight className="ml-2 w-5 h-5" />
+                Testa gratis i 7 dagar <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild className="text-lg px-8 py-6">
@@ -213,7 +219,7 @@ export default function Index() {
               ))}
             </ul>
             <Button size="lg" asChild className="w-full">
-              <Link href="/registrera">Testa gratis i 7 dagar <ArrowRight className="ml-2 w-4 h-4" /></Link>
+              <Link href="/registrera">Starta gratis provperiod <ArrowRight className="ml-2 w-4 h-4" /></Link>
             </Button>
             <p className="text-xs text-muted-foreground mt-4">Inget kreditkort krävs för att starta din provperiod.</p>
           </div>
