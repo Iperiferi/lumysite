@@ -117,11 +117,11 @@ export default function Index() {
                 <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
                 <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
                 <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
-                <span className="ml-3 text-xs text-muted-foreground truncate">lumysite.com/lumysite</span>
+                <span className="ml-3 text-xs text-muted-foreground truncate">lumysite.com/dittforetag</span>
               </div>
               <div className="rounded-t-lg overflow-hidden border border-b-0 bg-background">
                 <iframe
-                  src="https://lumysite.com/lumysite"
+                  src="https://lumysite.com/dittforetag"
                   title="Demo — LumySite exempelsida"
                   className="w-full h-[500px] md:h-[600px]"
                   loading="lazy"
@@ -132,7 +132,7 @@ export default function Index() {
             <div className="bg-muted/50 h-2 mx-16 rounded-b-xl" />
           </div>
           <Button size="lg" asChild className="mt-8">
-            <a href="https://lumysite.com/lumysite" target="_blank" rel="noopener noreferrer">
+            <a href="https://lumysite.com/dittforetag" target="_blank" rel="noopener noreferrer">
               Öppna demosidan <ArrowRight className="ml-2 w-4 h-4" />
             </a>
           </Button>
@@ -189,16 +189,17 @@ export default function Index() {
       <section className="py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Enkel prissättning</h2>
-          <p className="text-muted-foreground mb-8">Inga dolda avgifter, inga bindningstider</p>
+          <p className="text-muted-foreground mb-8">Testa gratis i 7 dagar — ingen bindningstid, säg upp när som helst</p>
           <div className="bg-background rounded-2xl border-2 border-primary p-8 max-w-md mx-auto">
-            <p className="text-sm font-medium text-primary mb-2">Allt inkluderat</p>
+            <div className="bg-primary text-primary-foreground text-sm font-semibold px-3 py-1 rounded-full inline-block mb-4">7 dagar gratis provperiod</div>
             <div className="flex items-baseline justify-center gap-1 mb-2">
               <span className="text-5xl font-bold">99</span>
               <span className="text-xl text-muted-foreground">kr/mån</span>
             </div>
-            <p className="text-sm text-muted-foreground mb-6">exkl. moms</p>
+            <p className="text-sm text-muted-foreground mb-6">exkl. moms &nbsp;·&nbsp; Ingen bindningstid &nbsp;·&nbsp; Säg upp när som helst</p>
             <ul className="text-sm text-left space-y-2 mb-8">
               {[
+                '7 dagars gratis provperiod — inget kort behövs',
                 'Egen webbadress (lumysite.com/dittforetag)',
                 'Mobilanpassad design',
                 'Flerspråkig (SV/EN/DE)',
@@ -212,9 +213,9 @@ export default function Index() {
               ))}
             </ul>
             <Button size="lg" asChild className="w-full">
-              <Link href="/registrera">Kom igång <ArrowRight className="ml-2 w-4 h-4" /></Link>
+              <Link href="/registrera">Testa gratis i 7 dagar <ArrowRight className="ml-2 w-4 h-4" /></Link>
             </Button>
-            <p className="text-xs text-muted-foreground mt-4">Du behöver ingen teknisk kunskap — vi har gjort det enkelt.</p>
+            <p className="text-xs text-muted-foreground mt-4">Inget kreditkort krävs för att starta din provperiod.</p>
           </div>
         </div>
       </section>
