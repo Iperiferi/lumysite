@@ -37,4 +37,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://bqakitontnhjruiphpbq.supabase.co/functions/v1/sitemap
+Sitemap: https://lumysite.com/sitemap.xml

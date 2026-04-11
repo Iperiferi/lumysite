@@ -87,21 +87,6 @@ export async function generateMetadata({
 
   const sameAs = [business.facebook_url, business.instagram_url, business.tiktok_url, business.youtube_url, business.linkedin_url].filter(Boolean);
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
-    name: business.business_name,
-    description: business.short_description,
-    url,
-    address: business.address,
-    telephone: business.phone,
-    email: business.email,
-    openingHours: hours,
-    image: business.hero_image_url,
-    logo: business.logo_url,
-    ...(sameAs.length > 0 ? { sameAs } : {}),
-  };
-
   return {
     title,
     description,
@@ -119,9 +104,6 @@ export async function generateMetadata({
       description,
       ...(business.hero_image_url ? { images: [business.hero_image_url] } : {}),
     },
-    other: {
-      'application/ld+json': JSON.stringify(jsonLd),
-    },
   };
 }
 
@@ -137,5 +119,40 @@ export default async function PublicSitePage({
   const data = await fetchBusinessData(subdomain);
   if (!data) notFound();
 
-  return <PublicSiteClient data={data} subdomain={subdomain} />;
+  const { business } = data;
+  const url = `https://lumysite.com/${subdomain}`;
+
+  const hours = (business.opening_hours || [])
+    .filter((h: any) => !h.closed)
+    .map((h: any) => {
+      const dayMap: Record<string, string> = { monday: 'Mo', tuesday: 'Tu', wednesday: 'We', thursday: 'Th', friday: 'Fr', saturday: 'Sa', sunday: 'Su' };
+      return `${dayMap[h.day]} ${h.open}-${h.close}`;
+    });
+
+  const sameAs = [business.facebook_url, business.instagram_url, business.tiktok_url, business.youtube_url, business.linkedin_url].filter(Boolean);
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: business.business_name,
+    description: business.short_description,
+    url,
+    ...(business.address ? { address: { '@type': 'PostalAddress', streetAddress: business.address } } : {}),
+    telephone: business.phone,
+    email: business.email,
+    openingHours: hours,
+    image: business.hero_image_url,
+    logo: business.logo_url,
+    ...(sameAs.length > 0 ? { sameAs } : {}),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <PublicSiteClient data={data} subdomain={subdomain} />
+    </>
+  );
 }
