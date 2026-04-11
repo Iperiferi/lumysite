@@ -17,7 +17,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { defaultOpeningHours, sectionTypes, fontStyles, type OpeningHour, type SectionType } from '@/lib/types';
 import { t } from '@/lib/i18n';
-import { LogOut, Eye, Settings, Facebook, Instagram, Youtube, Linkedin, Copy, Check, ExternalLink, AlertTriangle, Clock, CreditCard } from 'lucide-react';
+import { LogOut, Eye, Settings, Facebook, Instagram, Youtube, Linkedin, Copy, Check, ExternalLink, AlertTriangle, Clock, CreditCard, HelpCircle, Mail, Phone } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import FocalPointPicker from '@/components/dashboard/FocalPointPicker';
 import CharCount from '@/components/dashboard/CharCount';
 import { useQueryClient } from '@tanstack/react-query';
@@ -348,6 +349,27 @@ function DashboardContent() {
           >
             {data.business.is_published ? 'Avpublicera' : 'Publicera'}
           </Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="sm" aria-label="Hjälp & support">
+                <HelpCircle className="w-4 h-4" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-64 p-4" align="end">
+              <p className="font-semibold mb-1">Behöver du hjälp?</p>
+              <p className="text-sm text-muted-foreground mb-3">Vi svarar så snart vi kan.</p>
+              <div className="space-y-2 text-sm">
+                <a href="mailto:info@iperiferi.se" className="flex items-center gap-2 hover:text-primary transition-colors">
+                  <Mail className="w-4 h-4 shrink-0 text-muted-foreground" />
+                  info@iperiferi.se
+                </a>
+                <a href="tel:+46705085493" className="flex items-center gap-2 hover:text-primary transition-colors">
+                  <Phone className="w-4 h-4 shrink-0 text-muted-foreground" />
+                  070-508 54 93
+                </a>
+              </div>
+            </PopoverContent>
+          </Popover>
           <Button variant="ghost" size="sm" asChild>
             <Link href="/konto"><Settings className="w-4 h-4" /></Link>
           </Button>
