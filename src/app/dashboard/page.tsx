@@ -17,7 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { defaultOpeningHours, sectionTypes, fontStyles, type OpeningHour, type SectionType } from '@/lib/types';
 import { t } from '@/lib/i18n';
-import { LogOut, Eye, Settings, Facebook, Instagram, Youtube, Linkedin, Copy, Check, ExternalLink, AlertTriangle, Clock, CreditCard, HelpCircle, Mail, Phone } from 'lucide-react';
+import { LogOut, Eye, Settings, Facebook, Instagram, Youtube, Linkedin, Copy, Check, ExternalLink, AlertTriangle, Clock, CreditCard, HelpCircle, Mail, Phone, Info } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import FocalPointPicker from '@/components/dashboard/FocalPointPicker';
 import CharCount from '@/components/dashboard/CharCount';
@@ -420,6 +420,28 @@ function DashboardContent() {
             </Button>
           </div>
         )}
+
+        {/* URL bar */}
+        <div className="flex items-center gap-2 mb-4 p-3 rounded-lg border bg-background">
+          <span className="text-sm font-mono text-muted-foreground truncate flex-1">{publicUrl}</span>
+          <Button size="icon" variant="ghost" className="h-7 w-7 shrink-0" onClick={handleCopyUrl} aria-label="Kopiera länk">
+            {urlCopied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+          </Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button size="icon" variant="ghost" className="h-7 w-7 shrink-0" aria-label="Om din webbadress">
+                <Info className="w-4 h-4 text-muted-foreground" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-72 text-sm" align="end">
+              <p className="font-semibold mb-1">Din webbadress</p>
+              <p className="text-muted-foreground leading-relaxed">
+                Det här blir din webbadress — enkel, färdig och redo att delas. Ingen krånglig domänkoppling behövs.
+                Dela länken direkt med dina gäster eller lägg den på Google, sociala medier och andra plattformar.
+              </p>
+            </PopoverContent>
+          </Popover>
+        </div>
 
         <div className={`rounded-lg px-4 py-3 mb-6 text-sm ${data.business.is_published ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-amber-50 border border-amber-200 text-amber-800'}`}>
           {data.business.is_published
