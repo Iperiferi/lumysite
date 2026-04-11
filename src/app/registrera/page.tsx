@@ -246,19 +246,17 @@ function RegisterContent() {
                 <div className="space-y-2">
                   <Label>Lösenord</Label>
                   <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-                  {password.length > 0 && (
-                    <ul className="text-xs space-y-0.5 mt-1">
-                      <li className={password.length >= 8 ? 'text-green-600' : 'text-destructive'}>
-                        {password.length >= 8 ? '✓' : '✗'} Minst 8 tecken
+                  <ul className="text-xs space-y-0.5 mt-1">
+                    {[
+                      { label: 'Minst 8 tecken', ok: password.length >= 8 },
+                      { label: 'Minst en stor bokstav (A–Z)', ok: /[A-Z]/.test(password) },
+                      { label: 'Minst en siffra (0–9)', ok: /[0-9]/.test(password) },
+                    ].map(({ label, ok }) => (
+                      <li key={label} className={password.length === 0 ? 'text-muted-foreground' : ok ? 'text-green-600' : 'text-destructive'}>
+                        {password.length === 0 ? '·' : ok ? '✓' : '✗'} {label}
                       </li>
-                      <li className={/[A-Z]/.test(password) ? 'text-green-600' : 'text-destructive'}>
-                        {/[A-Z]/.test(password) ? '✓' : '✗'} Minst en stor bokstav
-                      </li>
-                      <li className={/[0-9]/.test(password) ? 'text-green-600' : 'text-destructive'}>
-                        {/[0-9]/.test(password) ? '✓' : '✗'} Minst en siffra
-                      </li>
-                    </ul>
-                  )}
+                    ))}
+                  </ul>
                 </div>
                 <div className="flex items-start gap-2">
                   <Checkbox

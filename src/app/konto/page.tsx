@@ -32,9 +32,11 @@ export default function AccountSettings() {
     if (!user) router.push('/logga-in');
   }, [user]);
 
+  const newPasswordValid = newPassword.length >= 8 && /[A-Z]/.test(newPassword) && /[0-9]/.test(newPassword);
+
   const handleChangePassword = async () => {
-    if (newPassword.length < 6) {
-      toast({ title: 'Fel', description: 'Lösenordet måste vara minst 6 tecken', variant: 'destructive' });
+    if (!newPasswordValid) {
+      toast({ title: 'Fel', description: 'Lösenordet uppfyller inte kraven', variant: 'destructive' });
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -101,13 +103,24 @@ export default function AccountSettings() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Nytt lösenord</Label>
-              <Input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="Minst 6 tecken" />
+              <Input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+              <ul className="text-xs space-y-0.5 mt-1">
+                {[
+                  { label: 'Minst 8 tecken', ok: newPassword.length >= 8 },
+                  { label: 'Minst en stor bokstav (A–Z)', ok: /[A-Z]/.test(newPassword) },
+                  { label: 'Minst en siffra (0–9)', ok: /[0-9]/.test(newPassword) },
+                ].map(({ label, ok }) => (
+                  <li key={label} className={newPassword.length === 0 ? 'text-muted-foreground' : ok ? 'text-green-600' : 'text-destructive'}>
+                    {newPassword.length === 0 ? '·' : ok ? '✓' : '✗'} {label}
+                  </li>
+                ))}
+              </ul>
             </div>
             <div className="space-y-2">
               <Label>Bekräfta nytt lösenord</Label>
               <Input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
             </div>
-            <Button onClick={handleChangePassword} disabled={changingPassword || !newPassword || !confirmPassword}>
+            <Button onClick={handleChangePassword} disabled={changingPassword || !newPasswordValid || !confirmPassword}>
               {changingPassword ? 'Sparar...' : 'Byt lösenord'}
             </Button>
           </CardContent>
