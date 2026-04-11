@@ -49,25 +49,29 @@ serve(async (req) => {
     const trialEndsAt = business?.trial_ends_at ?? null;
     const isTrialActive = trialEndsAt ? new Date(trialEndsAt) > new Date() : false;
 
-    // Check Stripe
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
-      apiVersion: "2025-08-27.basil",
-    });
-
+    // Check Stripe — wrapped in try/catch so a Stripe error never blocks trial users
     let hasActiveSub = false;
     let subscriptionEnd: string | null = null;
 
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    if (customers.data.length > 0) {
-      const subs = await stripe.subscriptions.list({
-        customer: customers.data[0].id,
-        status: "active",
-        limit: 1,
+    try {
+      const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+        apiVersion: "2025-08-27.basil",
       });
-      hasActiveSub = subs.data.length > 0;
-      if (hasActiveSub) {
-        subscriptionEnd = new Date(subs.data[0].current_period_end * 1000).toISOString();
+      const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+      if (customers.data.length > 0) {
+        const subs = await stripe.subscriptions.list({
+          customer: customers.data[0].id,
+          status: "active",
+          limit: 1,
+        });
+        hasActiveSub = subs.data.length > 0;
+        if (hasActiveSub) {
+          subscriptionEnd = new Date(subs.data[0].current_period_end * 1000).toISOString();
+        }
       }
+    } catch (stripeErr) {
+      // Stripe failure must not block trial users — log and continue
+      console.error("Stripe check failed:", stripeErr.message);
     }
 
     const subscribed = hasActiveSub || isTrialActive;
