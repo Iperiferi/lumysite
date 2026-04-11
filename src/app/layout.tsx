@@ -4,7 +4,7 @@ import { Providers } from './providers';
 
 export const metadata: Metadata = {
   title: 'LumySite',
-  description: 'LumySite ger ditt företag en professionell sida på nätet. Ingen kod. Mobilanpassad. Flerspråkig. Prova gratis i 7 dagar.',
+  description: 'LumySite ger ditt företag en professionell sida på nätet. Ingen kod. Mobilanpassad. Svenska och engelska. Prova gratis i 7 dagar.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -12,7 +12,7 @@ export default function Index() {
     { icon: Zap, title: 'Ingen teknik krävs', desc: 'Fyll i din information i enkla fält — ingen kod, inga tekniska termer. Klart på minuter.' },
     { icon: Smartphone, title: 'Ser bra ut överallt', desc: 'Din sida anpassar sig automatiskt till mobil, surfplatta och dator.' },
     { icon: Palette, title: 'Din egen stil', desc: 'Välj färg, typsnitt och ladda upp din logga. Sidan ser ut som ditt företag.' },
-    { icon: Globe, title: 'Tre språk automatiskt', desc: 'Besökare kan byta mellan svenska, engelska och tyska — utan extra jobb.' },
+    { icon: Globe, title: 'Två språk automatiskt', desc: 'Besökare kan byta mellan svenska och engelska — utan extra jobb.' },
     { icon: Bot, title: 'Bättre chanser i AI-chattar', desc: 'Vi bygger in strukturerad data som kan hjälpa AI-tjänster som ChatGPT och Gemini att hitta dig.' },
     { icon: Shield, title: 'Egen webbadress', desc: 'Få din egen adress: lumysite.com/dittforetag — enkelt att dela och komma ihåg.' },
   ];
@@ -71,7 +71,7 @@ export default function Index() {
           </p>
           <div className="flex flex-wrap justify-center gap-6 mb-10 text-sm font-medium text-muted-foreground">
             <span className="flex items-center gap-2 bg-background/80 backdrop-blur border rounded-full px-4 py-2 shadow-sm">
-              <Globe className="w-4 h-4 text-primary" /> 3 språk automatiskt
+              <Globe className="w-4 h-4 text-primary" /> 2 språk automatiskt
             </span>
             <span className="flex items-center gap-2 bg-background/80 backdrop-blur border rounded-full px-4 py-2 shadow-sm">
               <Smartphone className="w-4 h-4 text-primary" /> Mobilanpassad
@@ -208,7 +208,7 @@ export default function Index() {
                 '7 dagars gratis provperiod — inget kort behövs',
                 'Egen webbadress (lumysite.com/dittforetag)',
                 'Mobilanpassad design',
-                'Flerspråkig (SV/EN/DE)',
+                'Flerspråkig (SV/EN)',
                 'SEO & AI-optimerad med strukturerad data',
                 'Alla sektioner inkluderade',
                 'Obegränsade ändringar',
