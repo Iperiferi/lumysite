@@ -89,8 +89,10 @@ serve(async (req) => {
       // 2a. Delete all storage files for this business across every bucket
       for (const bucket of STORAGE_BUCKETS) {
         try {
-          // Files are stored under the subdomain or businessId prefix
-          const prefixes = [subdomain, bid];
+          // logos and hero-images use user.id as prefix (uploaded via dashboard/registration)
+          // gallery/events/accommodations/experiences/news use business.id as prefix
+          // subdomain included as extra safety net
+          const prefixes = [user.id, bid, subdomain];
           for (const prefix of prefixes) {
             const { data: files } = await admin.storage.from(bucket).list(prefix, { limit: 1000 });
             if (files && files.length > 0) {
