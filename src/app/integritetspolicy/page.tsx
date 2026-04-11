@@ -18,7 +18,7 @@ export default function PrivacyPolicy() {
 
       <main className="max-w-3xl mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold mb-2">Integritetspolicy</h1>
-        <p className="text-sm text-muted-foreground mb-8">Senast uppdaterad: 2026-04-10</p>
+        <p className="text-sm text-muted-foreground mb-8">Senast uppdaterad: 2026-04-11</p>
 
         <div className="prose prose-sm max-w-none space-y-8 text-foreground">
 
@@ -135,19 +135,26 @@ export default function PrivacyPolicy() {
 
           <section>
             <h2 className="text-xl font-semibold mb-3">8. AI-användning och transparens (AI Act)</h2>
-            <p className="text-muted-foreground">
-              LumySite kan i framtiden använda AI-baserade funktioner för att hjälpa dig skapa och förbättra din sida.
-              I enlighet med EU:s AI-förordning (AI Act) informerar vi om följande:
+            <p className="text-muted-foreground mb-3">
+              LumySite använder AI-teknik som en aktiv del av tjänsten. I enlighet med EU:s AI-förordning (AI Act) informerar vi öppet om detta:
             </p>
-            <ul className="list-disc pl-5 text-muted-foreground space-y-1 mt-2">
-              <li><strong>Nuläge:</strong> Inga AI-funktioner är för närvarande aktiva mot slutanvändare</li>
-              <li><strong>Transparens:</strong> Om AI-funktioner aktiveras kommer vi tydligt märka vilka funktioner som är AI-genererade</li>
-              <li><strong>Inget automatiserat beslutsfattande:</strong> Vi fattar inga beslut som påverkar dig baserat enbart på automatiserad behandling</li>
-              <li><strong>Dataskydd:</strong> AI-funktioner kommer inte att tränas på dina personuppgifter utan ditt samtycke</li>
+            <ul className="list-disc pl-5 text-muted-foreground space-y-1">
+              <li>
+                <strong>Automatisk översättning:</strong> När du sparar ditt innehåll i dashboarden skickas det företagsinnehåll du fyllt i (t.ex. beskrivningar, tjänster, FAQ) automatiskt till Anthropics Claude API för översättning till engelska. Översättningen visas sedan på din publika sida när besökare väljer engelska.
+              </li>
+              <li>
+                <strong>Vad som skickas:</strong> Enbart det affärsinnehåll du själv skriver — inga personuppgifter om dig som kontoinnehavare (inte e-post, lösenord eller betalningsuppgifter).
+              </li>
+              <li>
+                <strong>Träning på din data:</strong> Anthropic tränar inte sina modeller på data som skickas via API. Din text används endast för att generera översättningen och sparas inte av Anthropic.
+              </li>
+              <li>
+                <strong>Märkning:</strong> AI-genererade översättningar märks tydligt med "Translated by AI · may contain errors" på din publika sida.
+              </li>
+              <li>
+                <strong>Inget automatiserat beslutsfattande:</strong> AI används enbart för översättning — inga beslut som rör dig som person fattas automatiserat.
+              </li>
             </ul>
-            <p className="text-muted-foreground mt-3">
-              Denna sektion uppdateras löpande i takt med att nya funktioner introduceras.
-            </p>
           </section>
 
           <section>
