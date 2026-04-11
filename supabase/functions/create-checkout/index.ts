@@ -20,41 +20,61 @@ serve(async (req) => {
   );
 
   try {
-    const authHeader = req.headers.get("Authorization")!;
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) throw new Error("No authorization header");
+
     const token = authHeader.replace("Bearer ", "");
-    const { data } = await supabaseClient.auth.getUser(token);
+    const { data, error: userError } = await supabaseClient.auth.getUser(token);
+    if (userError) throw new Error(`Auth error: ${userError.message}`);
     const user = data.user;
     if (!user?.email) throw new Error("User not authenticated");
 
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+    console.log(`[create-checkout] User: ${user.email}`);
+
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+    if (!stripeKey) throw new Error("STRIPE_SECRET_KEY not configured");
+
+    const stripe = new Stripe(stripeKey, {
       apiVersion: "2025-08-27.basil",
     });
 
-    // Look up the active price for the product
-    const prices = await stripe.prices.list({ product: PRODUCT_ID, active: true, limit: 1 });
-    if (prices.data.length === 0) throw new Error(`No active price found for product ${PRODUCT_ID}`);
-    const priceId = prices.data[0].id;
+    // Look up active prices for the product
+    console.log(`[create-checkout] Looking up prices for product: ${PRODUCT_ID}`);
+    const prices = await stripe.prices.list({ product: PRODUCT_ID, active: true, limit: 10 });
+    console.log(`[create-checkout] Found ${prices.data.length} active price(s)`);
 
+    if (prices.data.length === 0) {
+      throw new Error(`Inga aktiva priser hittades för produkt ${PRODUCT_ID}. Kontrollera Stripe-dashboarden.`);
+    }
+    const priceId = prices.data[0].id;
+    console.log(`[create-checkout] Using price: ${priceId}`);
+
+    // Find or use existing Stripe customer
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    let customerId;
+    let customerId: string | undefined;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
+      console.log(`[create-checkout] Existing customer: ${customerId}`);
     }
 
+    const origin = req.headers.get("origin") || "https://lumysite.com";
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
       line_items: [{ price: priceId, quantity: 1 }],
       mode: "subscription",
-      success_url: `${req.headers.get("origin")}/dashboard?checkout=success`,
-      cancel_url: `${req.headers.get("origin")}/registrera?checkout=cancelled`,
+      success_url: `${origin}/dashboard?checkout=success`,
+      cancel_url: `${origin}/dashboard`,
     });
+
+    console.log(`[create-checkout] Session created: ${session.id}`);
 
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
+    console.error(`[create-checkout] ERROR: ${error.message}`);
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
