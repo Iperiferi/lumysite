@@ -1,109 +1,156 @@
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
-}
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import Stripe from 'https://esm.sh/stripe@18.5.0'
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import Stripe from "https://esm.sh/stripe@18.5.0";
 
-Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
+
+// All storage buckets that can contain user-uploaded files
+const STORAGE_BUCKETS = [
+  "logos",
+  "hero-images",
+  "gallery",
+  "accommodation-images",
+  "experience-images",
+  "news-images",
+  "event-images",
+];
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const authHeader = req.headers.get('Authorization')
+    const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Ej autentiserad' }), {
+      return new Response(JSON.stringify({ error: "Ej autentiserad" }), {
         status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    // Create client with user's token to get their ID
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!
-    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+    // Verify user identity via their token
+    const userClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
-    })
-
-    const { data: { user }, error: userError } = await userClient.auth.getUser()
+    });
+    const { data: { user }, error: userError } = await userClient.auth.getUser();
     if (userError || !user) {
-      return new Response(JSON.stringify({ error: 'Ogiltig session' }), {
+      return new Response(JSON.stringify({ error: "Ogiltig session" }), {
         status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    // Use service role to delete all user data
-    const adminClient = createClient(supabaseUrl, serviceRoleKey)
+    const admin = createClient(supabaseUrl, serviceRoleKey, {
+      auth: { persistSession: false },
+    });
 
-    // Get user's business
-    const { data: business } = await adminClient
-      .from('businesses')
-      .select('id')
-      .eq('owner_id', user.id)
-      .maybeSingle()
-
-    if (business) {
-      const businessId = business.id
-
-      // Delete all related data (foreign keys don't cascade from businesses)
-      const tables = [
-        'services', 'gallery_images', 'menu', 'events',
-        'accommodations', 'experiences', 'testimonials',
-        'news', 'faq', 'sections',
-      ]
-
-      for (const table of tables) {
-        await adminClient.from(table).delete().eq('business_id', businessId)
-      }
-
-      // Delete the business itself
-      await adminClient.from('businesses').delete().eq('id', businessId)
-    }
-
-    // Cancel Stripe subscription if exists
-    const stripeKey = Deno.env.get('STRIPE_SECRET_KEY')
+    // ── STEP 1: Cancel Stripe subscription ────────────────────────────────────
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (stripeKey && user.email) {
       try {
-        const stripe = new Stripe(stripeKey, { apiVersion: '2025-08-27.basil' })
-        const customers = await stripe.customers.list({ email: user.email, limit: 1 })
+        const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
+        const customers = await stripe.customers.list({ email: user.email, limit: 1 });
         if (customers.data.length > 0) {
-          const customerId = customers.data[0].id
-          const subscriptions = await stripe.subscriptions.list({ customer: customerId, status: 'active' })
-          for (const sub of subscriptions.data) {
-            await stripe.subscriptions.cancel(sub.id)
-            console.log('Cancelled Stripe subscription:', sub.id)
+          const customerId = customers.data[0].id;
+          // Cancel all active subscriptions immediately
+          const subs = await stripe.subscriptions.list({ customer: customerId, status: "active" });
+          for (const sub of subs.data) {
+            await stripe.subscriptions.cancel(sub.id);
+            console.log("[delete-account] Cancelled Stripe subscription:", sub.id);
           }
-          // Optionally delete the Stripe customer too
-          await stripe.customers.del(customerId)
-          console.log('Deleted Stripe customer:', customerId)
+          await stripe.customers.del(customerId);
+          console.log("[delete-account] Deleted Stripe customer:", customerId);
         }
-      } catch (stripeErr) {
-        console.error('Stripe cleanup error (non-fatal):', stripeErr)
+      } catch (stripeErr: any) {
+        // Non-fatal — log and continue so the rest of deletion proceeds
+        console.error("[delete-account] Stripe cleanup error (non-fatal):", stripeErr.message);
       }
     }
 
-    // Delete the auth user
-    const { error: deleteError } = await adminClient.auth.admin.deleteUser(user.id)
-    if (deleteError) {
-      console.error('Error deleting auth user:', deleteError)
-      return new Response(JSON.stringify({ error: 'Kunde inte radera kontot' }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+    // ── STEP 2: Delete all data ────────────────────────────────────────────────
+    const { data: business } = await admin
+      .from("businesses")
+      .select("id, subdomain")
+      .eq("owner_id", user.id)
+      .maybeSingle();
+
+    if (business) {
+      const bid = business.id;
+      const subdomain = business.subdomain;
+
+      // 2a. Delete all storage files for this business across every bucket
+      for (const bucket of STORAGE_BUCKETS) {
+        try {
+          // Files are stored under the subdomain or businessId prefix
+          const prefixes = [subdomain, bid];
+          for (const prefix of prefixes) {
+            const { data: files } = await admin.storage.from(bucket).list(prefix, { limit: 1000 });
+            if (files && files.length > 0) {
+              const paths = files.map((f: any) => `${prefix}/${f.name}`);
+              await admin.storage.from(bucket).remove(paths);
+              console.log(`[delete-account] Removed ${paths.length} file(s) from ${bucket}/${prefix}`);
+            }
+          }
+          // Also try listing root in case files were uploaded without prefix
+          const { data: rootFiles } = await admin.storage.from(bucket).list("", { limit: 1000 });
+          if (rootFiles) {
+            const matching = rootFiles.filter((f: any) =>
+              f.name.includes(subdomain) || f.name.includes(bid)
+            );
+            if (matching.length > 0) {
+              await admin.storage.from(bucket).remove(matching.map((f: any) => f.name));
+              console.log(`[delete-account] Removed ${matching.length} root file(s) from ${bucket}`);
+            }
+          }
+        } catch (storageErr: any) {
+          console.error(`[delete-account] Storage cleanup error for ${bucket} (non-fatal):`, storageErr.message);
+        }
+      }
+
+      // 2b. Delete all related DB rows
+      const tables = [
+        "services", "gallery_images", "menu", "events",
+        "accommodations", "experiences", "testimonials",
+        "news", "faq", "sections",
+      ];
+      for (const table of tables) {
+        await admin.from(table).delete().eq("business_id", bid);
+      }
+
+      // 2c. Delete the business itself
+      await admin.from("businesses").delete().eq("id", bid);
+      console.log("[delete-account] Deleted business and all related data for:", subdomain);
     }
 
+    // ── STEP 3: Delete the auth user ──────────────────────────────────────────
+    const { error: deleteError } = await admin.auth.admin.deleteUser(user.id);
+    if (deleteError) {
+      console.error("[delete-account] Failed to delete auth user:", deleteError.message);
+      return new Response(JSON.stringify({ error: "Kunde inte radera kontot" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    console.log("[delete-account] Account fully deleted for user:", user.email);
     return new Response(JSON.stringify({ success: true }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
-  } catch (error) {
-    console.error('Error:', error)
-    return new Response(JSON.stringify({ error: 'Serverfel' }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 200,
+    });
+
+  } catch (err: any) {
+    console.error("[delete-account] Unexpected error:", err.message);
+    return new Response(JSON.stringify({ error: "Serverfel vid kontoradering" }), {
       status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
-})
+});
