@@ -3,7 +3,7 @@ import './globals.css';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: 'LumySite — Skapa din sida på nätet på minuter',
+  title: 'LumySite',
   description: 'LumySite ger ditt företag en professionell sida på nätet. Ingen kod. Mobilanpassad. Flerspråkig. Prova gratis i 7 dagar.',
 };
 

@@ -1,5 +1,10 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, Mail, Phone, Globe, Building2 } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'LumySite — Kontakt',
+};
 
 export default function Contact() {
   return (
