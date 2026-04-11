@@ -246,6 +246,19 @@ function RegisterContent() {
                 <div className="space-y-2">
                   <Label>Lösenord</Label>
                   <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                  {password.length > 0 && (
+                    <ul className="text-xs space-y-0.5 mt-1">
+                      <li className={password.length >= 8 ? 'text-green-600' : 'text-destructive'}>
+                        {password.length >= 8 ? '✓' : '✗'} Minst 8 tecken
+                      </li>
+                      <li className={/[A-Z]/.test(password) ? 'text-green-600' : 'text-destructive'}>
+                        {/[A-Z]/.test(password) ? '✓' : '✗'} Minst en stor bokstav
+                      </li>
+                      <li className={/[0-9]/.test(password) ? 'text-green-600' : 'text-destructive'}>
+                        {/[0-9]/.test(password) ? '✓' : '✗'} Minst en siffra
+                      </li>
+                    </ul>
+                  )}
                 </div>
                 <div className="flex items-start gap-2">
                   <Checkbox
@@ -260,7 +273,7 @@ function RegisterContent() {
                     <Link href="/integritetspolicy" target="_blank" className="text-primary underline">integritetspolicyn</Link>
                   </label>
                 </div>
-                <Button onClick={handleCreateAccount} disabled={loading || !email || !password || !acceptedTerms} className="w-full">
+                <Button onClick={handleCreateAccount} disabled={loading || !email || !password || !acceptedTerms || password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)} className="w-full">
                   {loading ? 'Skapar konto...' : 'Skapa konto & fortsätt'}
                 </Button>
                 <p className="text-sm text-center text-muted-foreground">
