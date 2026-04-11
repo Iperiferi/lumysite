@@ -30,7 +30,6 @@ export default function EventsEditor({ businessId }: { businessId: string }) {
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ['events', businessId] });
-    queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
   };
 
   const handleAdd = async (imageFile?: File) => {

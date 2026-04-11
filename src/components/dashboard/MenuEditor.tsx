@@ -30,7 +30,6 @@ export default function MenuEditor({ businessId }: { businessId: string }) {
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ['menu', businessId] });
-    queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
   };
 
   const handleSave = async () => {

@@ -22,7 +22,6 @@ export default function TestimonialsEditor({ businessId }: { businessId: string 
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ['testimonials', businessId] });
-    queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
   };
 
   const handleAdd = async () => {

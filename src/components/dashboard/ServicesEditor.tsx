@@ -22,7 +22,6 @@ export default function ServicesEditor({ businessId }: { businessId: string }) {
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ['services', businessId] });
-    queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
   };
 
   const handleAdd = async () => {

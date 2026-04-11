@@ -43,7 +43,6 @@ export default function ImageItemEditor({
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: [table, businessId] });
-    queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
   };
 
   const handleAdd = async (imageFile?: File) => {
