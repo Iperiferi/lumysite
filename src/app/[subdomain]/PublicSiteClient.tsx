@@ -120,17 +120,22 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
               <a key={n.id} href={`#${n.id}`} className="hover:opacity-70 transition">{n.label}</a>
             ))}
           </div>
-          <div className="flex items-center gap-2">
-            <button className="md:hidden p-1.5 rounded-md hover:bg-gray-100 transition" onClick={() => setMobileMenuOpen(v => !v)} aria-label="Meny">
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-            <Globe className="w-4 h-4 text-muted-foreground" />
-            {(['sv', 'en'] as Language[]).map(l => (
-              <button key={l} onClick={() => setLang(l)}
-                className={`text-xs px-2 py-1 rounded ${lang === l ? 'font-bold' : 'text-muted-foreground hover:text-foreground'}`}
-                style={lang === l ? { backgroundColor: accent, color: '#fff' } : {}}
-              >{l.toUpperCase()}</button>
-            ))}
+          <div className="flex flex-col items-end gap-0.5">
+            <div className="flex items-center gap-2">
+              <button className="md:hidden p-1.5 rounded-md hover:bg-gray-100 transition" onClick={() => setMobileMenuOpen(v => !v)} aria-label="Meny">
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+              <Globe className="w-4 h-4 text-muted-foreground" />
+              {(['sv', 'en'] as Language[]).map(l => (
+                <button key={l} onClick={() => setLang(l)}
+                  className={`text-xs px-2 py-1 rounded ${lang === l ? 'font-bold' : 'text-muted-foreground hover:text-foreground'}`}
+                  style={lang === l ? { backgroundColor: accent, color: '#fff' } : {}}
+                >{l.toUpperCase()}</button>
+              ))}
+            </div>
+            {lang === 'en' && (
+              <span className="text-[10px] text-muted-foreground/60 italic leading-none">Translated by AI · may contain errors</span>
+            )}
           </div>
         </div>
         {mobileMenuOpen && (
