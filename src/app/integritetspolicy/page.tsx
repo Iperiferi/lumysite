@@ -18,7 +18,7 @@ export default function PrivacyPolicy() {
 
       <main className="max-w-3xl mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold mb-2">Integritetspolicy</h1>
-        <p className="text-sm text-muted-foreground mb-8">Senast uppdaterad: 2026-04-11</p>
+        <p className="text-sm text-muted-foreground mb-8">Senast uppdaterad: {new Date().toLocaleDateString('sv-SE')}</p>
 
         <div className="prose prose-sm max-w-none space-y-8 text-foreground">
 
