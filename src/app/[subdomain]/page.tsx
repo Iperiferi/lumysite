@@ -8,7 +8,7 @@ const SUPABASE_URL = 'https://rceyevpxtwyiunybomye.supabase.co';
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjZXlldnB4dHd5aXVueWJvbXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjkzNjksImV4cCI6MjA5MTMwNTM2OX0.O-gPkC3iA2uq3QYM2qR7zu6I0BuneNqu1E81n7bAVvM';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ISR: cache at edge for 60s, revalidate in background
 
 const RESERVED_ROUTES = [
   'dashboard', 'logga-in', 'registrera', 'cookies',
