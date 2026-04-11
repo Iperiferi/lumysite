@@ -390,7 +390,6 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
         )}
         <div className="flex justify-center gap-4 mb-2">
           <a href="/cookies" className="hover:underline">Cookiepolicy</a>
-          <a href="/integritetspolicy" className="hover:underline">Integritetspolicy</a>
         </div>
         <p>© {new Date().getFullYear()} {business.business_name}</p>
         <p className="mt-1">Skapad med <a href="/" className="underline">LumySite</a></p>
