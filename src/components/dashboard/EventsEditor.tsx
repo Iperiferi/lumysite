@@ -38,8 +38,10 @@ export default function EventsEditor({ businessId }: { businessId: string }) {
     try {
       let image_url: string | null = null;
       if (imageFile) {
-        const path = `${businessId}/${Date.now()}-${imageFile.name}`;
-        await supabase.storage.from('event-images').upload(path, imageFile);
+        const safeName = imageFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const path = `${businessId}/${Date.now()}-${safeName}`;
+        const { error: uploadError } = await supabase.storage.from('event-images').upload(path, imageFile);
+        if (uploadError) throw new Error(`Bilduppladdning misslyckades: ${uploadError.message}`);
         const { data: urlData } = supabase.storage.from('event-images').getPublicUrl(path);
         image_url = urlData.publicUrl;
       }

@@ -51,8 +51,10 @@ export default function ImageItemEditor({
     try {
       let image_url: string | null = null;
       if (imageFile) {
-        const path = `${businessId}/${Date.now()}-${imageFile.name}`;
-        await supabase.storage.from(bucket).upload(path, imageFile);
+        const safeName = imageFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const path = `${businessId}/${Date.now()}-${safeName}`;
+        const { error: uploadError } = await supabase.storage.from(bucket).upload(path, imageFile);
+        if (uploadError) throw new Error(`Bilduppladdning misslyckades: ${uploadError.message}`);
         const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(path);
         image_url = urlData.publicUrl;
       }
@@ -119,16 +121,22 @@ export default function ImageItemEditor({
         {dateField && <Input type="date" value={date} onChange={e => setDate(e.target.value)} />}
         <div className="flex gap-2">
           <Button size="sm" onClick={() => handleAdd()} disabled={!name.trim() || uploading}>+ Utan bild</Button>
-          <Button size="sm" variant="outline" disabled={!name.trim() || uploading} onClick={() => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = (e) => {
-              const file = (e.target as HTMLInputElement).files?.[0];
-              if (file) handleAdd(file);
-            };
-            input.click();
-          }}>+ Med bild</Button>
+          <label className={!name.trim() || uploading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}>
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              disabled={!name.trim() || uploading}
+              onChange={e => {
+                const file = e.target.files?.[0];
+                if (file) handleAdd(file);
+                e.target.value = '';
+              }}
+            />
+            <Button size="sm" variant="outline" asChild disabled={!name.trim() || uploading}>
+              <span>+ Med bild</span>
+            </Button>
+          </label>
         </div>
       </div>
     </div>
