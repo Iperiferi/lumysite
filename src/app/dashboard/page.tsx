@@ -167,11 +167,16 @@ function DashboardContent() {
         if (!s?.access_token) return;
         supabase.functions.invoke('translate-content', {
           headers: { Authorization: `Bearer ${s.access_token}` },
-        }).then(() => {
-          queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
-          toast({ title: 'Engelska uppdaterad' });
-        }).catch(() => {
-          // Translation failure is non-critical — don't show error
+        }).then(({ error: translateError }) => {
+          if (translateError) {
+            console.error('translate-content error:', translateError);
+            toast({ title: 'Engelska kunde inte uppdateras', description: translateError.message, variant: 'destructive' });
+          } else {
+            queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
+            toast({ title: 'Engelska uppdaterad' });
+          }
+        }).catch((e: any) => {
+          console.error('translate-content exception:', e);
         });
       });
     } catch (err: any) {
