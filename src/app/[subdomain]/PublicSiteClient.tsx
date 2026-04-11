@@ -100,8 +100,8 @@ export default function PublicSiteClient({ data, subdomain }: { data: BusinessDa
   } else if (normalizedMapUrl?.includes('google.com/maps') || normalizedMapUrl?.includes('maps.google.com')) {
     const sep = normalizedMapUrl.includes('?') ? '&' : '?';
     mapSrc = `${normalizedMapUrl}${sep}output=embed`;
-  } else if (business.address) {
-    mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(business.address)}&output=embed`;
+  } else {
+    mapSrc = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d16128752.12687744!2d-3.252201994353802!3d60.43131749506752!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x465cb2396d35f0f1%3A0x22b8eba28dad6f62!2sSverige!5e0!3m2!1ssv!2sse!4v1775890415793!5m2!1ssv!2sse';
   }
 
   return (
