@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
 import { Trash2 } from 'lucide-react';
 import FocalPointPicker from './FocalPointPicker';
+import CharCount from './CharCount';
 
 type TableName = 'accommodations' | 'experiences' | 'news';
 
@@ -21,10 +22,15 @@ interface Props {
   addLabel: string;
   dateField?: string;
   orderField?: string;
+  maxNameLength?: number;
+  maxDescLength?: number;
+  descRows?: number;
 }
 
 export default function ImageItemEditor({
-  businessId, table, bucket, nameField, namePlaceholder, descField, descPlaceholder, addLabel, dateField, orderField = 'sort_order',
+  businessId, table, bucket, nameField, namePlaceholder, descField, descPlaceholder,
+  addLabel, dateField, orderField = 'sort_order',
+  maxNameLength = 100, maxDescLength = 500, descRows = 3,
 }: Props) {
   const queryClient = useQueryClient();
   const { data: items = [] } = useQuery({
@@ -109,6 +115,7 @@ export default function ImageItemEditor({
           <div className="flex-1">
             <p className="font-medium text-sm">{item[nameField]}</p>
             {dateField && item[dateField] && <p className="text-xs text-muted-foreground">{item[dateField]}</p>}
+            {item[descField] && <p className="text-xs text-muted-foreground line-clamp-2">{item[descField]}</p>}
           </div>
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDelete(item.id)}>
             <Trash2 className="w-4 h-4" />
@@ -116,8 +123,25 @@ export default function ImageItemEditor({
         </div>
       ))}
       <div className="space-y-2">
-        <Input placeholder={namePlaceholder} value={name} onChange={e => setName(e.target.value)} />
-        <Textarea placeholder={descPlaceholder} value={desc} onChange={e => setDesc(e.target.value)} rows={2} />
+        <div className="space-y-1">
+          <Input
+            placeholder={namePlaceholder}
+            value={name}
+            maxLength={maxNameLength}
+            onChange={e => setName(e.target.value)}
+          />
+          {name.length > 0 && <CharCount current={name.length} max={maxNameLength} />}
+        </div>
+        <div className="space-y-1">
+          <Textarea
+            placeholder={descPlaceholder}
+            value={desc}
+            maxLength={maxDescLength}
+            onChange={e => setDesc(e.target.value)}
+            rows={descRows}
+          />
+          <CharCount current={desc.length} max={maxDescLength} />
+        </div>
         {dateField && <Input type="date" value={date} onChange={e => setDate(e.target.value)} />}
         <div className="flex gap-2">
           <Button size="sm" onClick={() => handleAdd()} disabled={!name.trim() || uploading}>+ Utan bild</Button>

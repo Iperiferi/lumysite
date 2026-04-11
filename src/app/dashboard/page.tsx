@@ -19,6 +19,7 @@ import { defaultOpeningHours, sectionTypes, fontStyles, type OpeningHour, type S
 import { t } from '@/lib/i18n';
 import { LogOut, Eye, Settings, Facebook, Instagram, Youtube, Linkedin, Copy, Check, ExternalLink, AlertTriangle, Clock, CreditCard } from 'lucide-react';
 import FocalPointPicker from '@/components/dashboard/FocalPointPicker';
+import CharCount from '@/components/dashboard/CharCount';
 import { useQueryClient } from '@tanstack/react-query';
 import ServicesEditor from '@/components/dashboard/ServicesEditor';
 import GalleryEditor from '@/components/dashboard/GalleryEditor';
@@ -415,17 +416,20 @@ function DashboardContent() {
             <Card>
               <CardHeader><CardTitle>Grundinformation</CardTitle></CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label>Företagsnamn</Label>
-                  <Input value={businessName} onChange={e => setBusinessName(e.target.value)} />
+                  <Input value={businessName} maxLength={100} onChange={e => setBusinessName(e.target.value)} />
+                  {businessName.length > 0 && <CharCount current={businessName.length} max={100} />}
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label>Kort beskrivning</Label>
-                  <Input value={shortDesc} onChange={e => setShortDesc(e.target.value)} />
+                  <Input value={shortDesc} maxLength={160} onChange={e => setShortDesc(e.target.value)} />
+                  <CharCount current={shortDesc.length} max={160} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label>Om oss</Label>
-                  <Textarea value={aboutText} onChange={e => setAboutText(e.target.value)} rows={4} />
+                  <Textarea value={aboutText} maxLength={2000} onChange={e => setAboutText(e.target.value)} rows={6} />
+                  <CharCount current={aboutText.length} max={2000} />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -460,9 +464,10 @@ function DashboardContent() {
                     className="font-mono text-xs"
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label>CTA-knapptext</Label>
-                  <Input value={ctaText} onChange={e => setCtaText(e.target.value)} />
+                  <Input value={ctaText} maxLength={60} onChange={e => setCtaText(e.target.value)} />
+                  {ctaText.length > 0 && <CharCount current={ctaText.length} max={60} />}
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -594,7 +599,8 @@ function DashboardContent() {
                         {s.type === 'testimonials' && <TestimonialsEditor businessId={data.business.id} />}
                         {s.type === 'news' && (
                           <ImageItemEditor businessId={data.business.id} table="news" bucket="news-images"
-                            nameField="title" namePlaceholder="Rubrik" descField="content" descPlaceholder="Innehåll" addLabel="Nyhet" dateField="published_date" />
+                            nameField="title" namePlaceholder="Rubrik" descField="content" descPlaceholder="Innehåll" addLabel="Nyhet" dateField="published_date"
+                            maxNameLength={150} maxDescLength={2000} descRows={6} />
                         )}
                       </>
                     )}
@@ -610,12 +616,14 @@ function DashboardContent() {
               <CardContent className="space-y-3">
                 {faqItems.map((f, i) => (
                   <div key={i} className="space-y-1 border rounded p-3">
-                    <Input placeholder="Fråga" value={f.question} onChange={e => {
+                    <Input placeholder="Fråga" value={f.question} maxLength={200} onChange={e => {
                       const u = [...faqItems]; u[i].question = e.target.value; setFaqItems(u);
                     }} />
-                    <Textarea placeholder="Svar" value={f.answer} onChange={e => {
+                    {f.question.length > 0 && <CharCount current={f.question.length} max={200} />}
+                    <Textarea placeholder="Svar" value={f.answer} maxLength={800} onChange={e => {
                       const u = [...faqItems]; u[i].answer = e.target.value; setFaqItems(u);
-                    }} rows={2} />
+                    }} rows={3} />
+                    <CharCount current={f.answer.length} max={800} />
                     <Button variant="ghost" size="sm" onClick={() => setFaqItems(faqItems.filter((_, j) => j !== i))}>
                       Ta bort
                     </Button>

@@ -6,6 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
 import { Trash2 } from 'lucide-react';
+import CharCount from './CharCount';
+
+const MAX_AUTHOR = 100;
+const MAX_CONTENT = 500;
 
 export default function TestimonialsEditor({ businessId }: { businessId: string }) {
   const queryClient = useQueryClient();
@@ -51,11 +55,26 @@ export default function TestimonialsEditor({ businessId }: { businessId: string 
           </Button>
         </div>
       ))}
-      <div className="space-y-2">
-        <Input placeholder="Författarens namn" value={authorName} onChange={e => setAuthorName(e.target.value)} />
-        <Textarea placeholder="Omdöme" value={content} onChange={e => setContent(e.target.value)} rows={2} />
-        <Button size="sm" onClick={handleAdd} disabled={!authorName.trim() || !content.trim()}>+ Lägg till omdöme</Button>
+      <div className="space-y-1">
+        <Input
+          placeholder="Författarens namn"
+          value={authorName}
+          maxLength={MAX_AUTHOR}
+          onChange={e => setAuthorName(e.target.value)}
+        />
+        {authorName.length > 0 && <CharCount current={authorName.length} max={MAX_AUTHOR} />}
       </div>
+      <div className="space-y-1">
+        <Textarea
+          placeholder="Omdöme"
+          value={content}
+          maxLength={MAX_CONTENT}
+          onChange={e => setContent(e.target.value)}
+          rows={3}
+        />
+        <CharCount current={content.length} max={MAX_CONTENT} />
+      </div>
+      <Button size="sm" onClick={handleAdd} disabled={!authorName.trim() || !content.trim()}>+ Lägg till omdöme</Button>
     </div>
   );
 }

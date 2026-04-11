@@ -8,6 +8,10 @@ import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
 import { Trash2 } from 'lucide-react';
 import FocalPointPicker from './FocalPointPicker';
+import CharCount from './CharCount';
+
+const MAX_TITLE = 100;
+const MAX_DESC = 500;
 
 export default function EventsEditor({ businessId }: { businessId: string }) {
   const queryClient = useQueryClient();
@@ -130,8 +134,14 @@ export default function EventsEditor({ businessId }: { businessId: string }) {
         </div>
       ))}
       <div className="space-y-2">
-        <Input placeholder="Titel" value={title} onChange={e => setTitle(e.target.value)} />
-        <Textarea placeholder="Beskrivning (valfritt)" value={description} onChange={e => setDescription(e.target.value)} rows={2} />
+        <div className="space-y-1">
+          <Input placeholder="Titel" value={title} maxLength={MAX_TITLE} onChange={e => setTitle(e.target.value)} />
+          {title.length > 0 && <CharCount current={title.length} max={MAX_TITLE} />}
+        </div>
+        <div className="space-y-1">
+          <Textarea placeholder="Beskrivning (valfritt)" value={description} maxLength={MAX_DESC} onChange={e => setDescription(e.target.value)} rows={3} />
+          {description.length > 0 && <CharCount current={description.length} max={MAX_DESC} />}
+        </div>
         <div className="grid grid-cols-2 gap-2">
           <div className="space-y-1">
             <Label className="text-xs">Startdatum</Label>

@@ -6,6 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
+import CharCount from './CharCount';
+
+const MAX_TITLE = 100;
+const MAX_CONTENT = 3000;
 
 export default function MenuEditor({ businessId }: { businessId: string }) {
   const queryClient = useQueryClient();
@@ -50,16 +54,28 @@ export default function MenuEditor({ businessId }: { businessId: string }) {
     setSaving(false);
   };
 
-
   return (
     <div className="mt-3 space-y-3 pl-4 border-l-2 border-primary/20">
-      <div className="space-y-2">
+      <div className="space-y-1">
         <Label>Titel</Label>
-        <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="T.ex. Lunchmeny" />
+        <Input
+          value={title}
+          maxLength={MAX_TITLE}
+          onChange={e => setTitle(e.target.value)}
+          placeholder="T.ex. Lunchmeny"
+        />
+        {title.length > 0 && <CharCount current={title.length} max={MAX_TITLE} />}
       </div>
-      <div className="space-y-2">
+      <div className="space-y-1">
         <Label>Menyinnehåll (text)</Label>
-        <Textarea value={content} onChange={e => setContent(e.target.value)} rows={4} placeholder="Skriv menyn som text..." />
+        <Textarea
+          value={content}
+          maxLength={MAX_CONTENT}
+          onChange={e => setContent(e.target.value)}
+          rows={6}
+          placeholder="Skriv menyn som text..."
+        />
+        <CharCount current={content.length} max={MAX_CONTENT} />
       </div>
       <Button size="sm" onClick={handleSave} disabled={saving}>{saving ? 'Sparar...' : 'Spara meny'}</Button>
     </div>

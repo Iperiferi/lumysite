@@ -6,6 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
 import { Trash2 } from 'lucide-react';
+import CharCount from './CharCount';
+
+const MAX_NAME = 100;
+const MAX_DESC = 300;
 
 export default function ServicesEditor({ businessId }: { businessId: string }) {
   const queryClient = useQueryClient();
@@ -27,9 +31,7 @@ export default function ServicesEditor({ businessId }: { businessId: string }) {
   const handleAdd = async () => {
     const trimmedName = name.trim();
     const trimmedDescription = description.trim();
-
     if (!trimmedName) return;
-
     try {
       const { error } = await supabase.from('services').insert({
         business_id: businessId,
@@ -37,9 +39,7 @@ export default function ServicesEditor({ businessId }: { businessId: string }) {
         description: trimmedDescription || null,
         sort_order: items.length,
       });
-
       if (error) throw error;
-
       setName('');
       setDescription('');
       invalidate();
@@ -53,7 +53,6 @@ export default function ServicesEditor({ businessId }: { businessId: string }) {
     try {
       const { error } = await supabase.from('services').delete().eq('id', id);
       if (error) throw error;
-
       invalidate();
       toast({ title: 'Tjänst borttagen' });
     } catch (err: any) {
@@ -80,12 +79,27 @@ export default function ServicesEditor({ businessId }: { businessId: string }) {
           </Button>
         </div>
       ))}
-      <div className="space-y-2">
-        <Input placeholder="Namn på tjänst" value={name} onChange={e => setName(e.target.value)} />
-        <Textarea placeholder="Beskrivning (valfritt)" value={description} onChange={e => setDescription(e.target.value)} rows={2} />
-        <p className="text-xs text-muted-foreground">Tjänsten sparas först när du klickar på “+ Lägg till tjänst”.</p>
-        <Button size="sm" onClick={handleAdd} disabled={!name.trim()}>+ Lägg till tjänst</Button>
+      <div className="space-y-1">
+        <Input
+          placeholder="Namn på tjänst"
+          value={name}
+          maxLength={MAX_NAME}
+          onChange={e => setName(e.target.value)}
+        />
+        {name.length > 0 && <CharCount current={name.length} max={MAX_NAME} />}
       </div>
+      <div className="space-y-1">
+        <Textarea
+          placeholder="Beskrivning (valfritt)"
+          value={description}
+          maxLength={MAX_DESC}
+          onChange={e => setDescription(e.target.value)}
+          rows={2}
+        />
+        {description.length > 0 && <CharCount current={description.length} max={MAX_DESC} />}
+      </div>
+      <p className="text-xs text-muted-foreground">Tjänsten sparas först när du klickar på "+ Lägg till tjänst".</p>
+      <Button size="sm" onClick={handleAdd} disabled={!name.trim()}>+ Lägg till tjänst</Button>
     </div>
   );
 }
