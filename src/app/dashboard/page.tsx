@@ -167,10 +167,16 @@ function DashboardContent() {
         if (!s?.access_token) return;
         supabase.functions.invoke('translate-content', {
           headers: { Authorization: `Bearer ${s.access_token}` },
-        }).then(({ error: translateError }) => {
+        }).then(async ({ data: translateData, error: translateError }) => {
           if (translateError) {
-            console.error('translate-content error:', translateError);
-            toast({ title: 'Engelska kunde inte uppdateras', description: translateError.message, variant: 'destructive' });
+            // Try to extract the real error message from the function response body
+            let detail = translateError.message;
+            try {
+              const body = await (translateError as any).context?.json?.();
+              if (body?.error) detail = body.error;
+            } catch { /* ignore */ }
+            console.error('translate-content error:', detail);
+            toast({ title: 'Engelska kunde inte uppdateras', description: detail, variant: 'destructive' });
           } else {
             queryClient.invalidateQueries({ queryKey: ['ownerBusiness'] });
             toast({ title: 'Engelska uppdaterad' });

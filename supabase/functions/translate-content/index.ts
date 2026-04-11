@@ -3,7 +3,7 @@ import { createClient } from "npm:@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 serve(async (req) => {
@@ -73,7 +73,9 @@ serve(async (req) => {
       });
     }
 
-    // Call Claude Haiku
+    console.log("[translate-content] Translating payload keys:", Object.keys(payload));
+
+    // Call Claude
     const anthropicRes = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -83,7 +85,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 4096,
+        max_tokens: 8096,
         system: `You are a professional translator specializing in Swedish tourism and hospitality businesses.
 Translate the provided Swedish text to natural, warm, and inviting English — as if written by a native English speaker.
 Do not translate proper nouns, place names, or business names.
@@ -98,15 +100,27 @@ Return ONLY a valid JSON object with exactly the same structure and keys as the 
 
     if (!anthropicRes.ok) {
       const err = await anthropicRes.text();
+      console.error("[translate-content] Anthropic API error:", err);
       throw new Error(`Anthropic API error: ${err}`);
     }
 
     const anthropicData = await anthropicRes.json();
+    const stopReason = anthropicData.stop_reason;
     const rawText = anthropicData.content?.[0]?.text ?? "";
+
+    console.log("[translate-content] Stop reason:", stopReason, "Response length:", rawText.length);
+
+    if (stopReason === "max_tokens") {
+      console.error("[translate-content] Response truncated — max_tokens reached");
+      throw new Error("Translation response was too long and got cut off. Try saving with less content at once.");
+    }
 
     // Extract JSON robustly — handle any accidental markdown wrapping
     const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error("Could not parse JSON from Claude response");
+    if (!jsonMatch) {
+      console.error("[translate-content] Could not find JSON in response:", rawText.slice(0, 200));
+      throw new Error("Could not parse translation response");
+    }
     const translated = JSON.parse(jsonMatch[0]);
 
     // Persist translations
@@ -115,12 +129,14 @@ Return ONLY a valid JSON object with exactly the same structure and keys as the 
       .update({ translations_en: translated })
       .eq("owner_id", userId);
 
+    console.log("[translate-content] Done — saved translations_en for user:", userId);
+
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
-  } catch (err) {
-    console.error("translate-content error:", err.message);
+  } catch (err: any) {
+    console.error("[translate-content] Error:", err.message);
     return new Response(JSON.stringify({ error: err.message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
