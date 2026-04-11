@@ -289,7 +289,7 @@ function DashboardContent() {
   // Subscription gate — show paywall if neither trial nor Stripe is active
   const isCheckoutSuccess = searchParams.get('checkout') === 'success';
   // Fallback: check trial_ends_at directly from business data in case check-subscription edge function fails
-  const clientTrialActive = data.business?.trial_ends_at
+  const clientTrialActive = (data.business as any)?.trial_ends_at
     ? new Date((data.business as any).trial_ends_at) > new Date()
     : false;
   if (!subscribed && !isCheckoutSuccess && !clientTrialActive) {
